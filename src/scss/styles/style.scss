@@ -1,0 +1,197 @@
+@import "./foundation/all";
+@import "./pages/home/home.scss";
+@import "./pages/orderDetails/orderDetails.scss";
+@import "./pages/receiptDetails/receiptDetails.scss";
+@import "./pages/wallet/wallet.scss";
+@import "./pages/userAccount/userAccount.scss";
+@import "./pages/technicalReceipt/technicalReceipt.scss";
+@import "./pages/missionList/missionList.scss";
+@import "./pages/responsive.scss";
+@import "./pages/new-style.scss";
+
+/*=============================================
+=                   FONT FAMILIES            =
+=============================================*/
+// @font-face {
+//   font-family: iranSans;
+//   src: url("../fonts/IRANSansMobile.ttf");
+//   src: url("../fonts/IRANSansMobile.ttf") format("truetype");
+// }
+@font-face {
+  font-family: iranSans;
+  src: url("../fonts/IRANSansMobile_Black.ttf");
+  src: url("../fonts/IRANSansMobile_Black.ttf") format("truetype");
+  font-weight: bolder;
+}
+@font-face {
+  font-family: iranSans;
+  src: url("../fonts/IRANSansMobile_Bold.ttf");
+  src: url("../fonts/IRANSansMobile_Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+@font-face {
+  font-family: iranSans;
+  src: url("../fonts/IRANSansMobile_Light.ttf");
+  src: url("../fonts/IRANSansMobile_Light.ttf") format("truetype");
+  font-weight: light;
+}
+@font-face {
+  font-family: iranSans;
+  src: url("../fonts/IRANSansMobile_Medium.ttf");
+  src: url("../fonts/IRANSansMobile_Medium.ttf") format("truetype");
+  font-weight: normal;
+}
+
+/*=====        End of FONT FAMILIES      ======*/
+
+body {
+  font-family: iranSans;
+  /* background-color: rgba(245, 245, 245, 1); */
+  margin: 0;
+}
+
+.home-container {
+  margin: auto;
+  max-width: 414px;
+  min-height: 100vh;
+  height: 100%;
+  background-color: rgba(245, 245, 245, 1);
+  position: relative;
+  margin-bottom: 70px;
+  /* padding: 0px 8px; */
+}
+
+.container-16 {
+  // padding: 0 16px;
+}
+
+.container-8 {
+  padding: 0 16px;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  background-color: white;
+  padding: 0 16px;
+}
+
+.call-box {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.login-box,
+.menu-box {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  margin-left: 10px;
+  border: 1px solid #aaa;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.menu-item {
+  color: $dark-gray;
+  margin: 0 5px;
+}
+
+.login-icon {
+  cursor: pointer;
+}
+select:focus {
+  outline: none;
+}
+
+.bottom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  background-color: $white;
+  padding: 10px 0px;
+  max-width: 390px;
+  width: 100%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  p {
+    margin: 5px 0px;
+    color: $gray;
+  }
+}
+
+input {
+  &:focus {
+    outline: none;
+  }
+}
+
+.color-danger {
+  color: red;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.dashed-divider {
+  border-bottom: 1px dashed $light-gray;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.pin-field {
+  background-color: rgb(248, 249, 250);
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 0.3rem;
+  font-size: 2rem;
+  margin: 0.25rem;
+  height: 3.5rem;
+  outline: none;
+  text-align: center;
+  transition-duration: 250ms;
+  transition-property: background, color, border, box-shadow, transform;
+  width: 3rem;
+}
+
+.pin-field:focus {
+  border-color: rgb(0, 123, 255);
+  outline: none;
+  transform: scale(1.05);
+}
+
+.pin-field:invalid {
+  animation: shake 3 linear 75ms;
+  border-color: rgb(220, 53, 69) !important;
+  box-shadow: 0 0 0.25rem rgba(220, 53, 69, 0.5) !important;
+}
+
+swd-pin-field[completed] .pin-field {
+  border-color: rgb(40, 167, 69);
+  background-color: rgba(40, 167, 69, 0.25);
+}

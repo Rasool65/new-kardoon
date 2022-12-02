@@ -1,0 +1,216 @@
+/*=============================================
+=                   Colors                    =
+=============================================*/
+/**
+ *
+ * brand Color
+ *
+ */
+:root {
+  --master-color: #CC0041;
+  --master-dark-color: #91002e;
+  --master-light-color: #ffdde8;
+  --master-superlight-color: #ffe3ec;
+  --fs-xss: 0.65rem;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.75rem;
+  --fs-base:0.85rem;
+  --fs-lg: 1.085rem;
+  --fs-xl: 1.40rem;
+  --fs-xxl: 1.70rem;
+}
+
+/* Utility Colors */
+/*=====  End of Section Colors  ======*/
+/*=============================================
+=                Typography                  =
+=============================================*/
+/* Font Size */
+/* Heading font sizes */
+/* Font Weights */
+/*=============================================
+=                  BreakPoints              =
+=============================================*/
+/*=====  End of Section comment block  ======*/
+/*=============================================
+=                  Spacings                   =
+=============================================*/
+/*=====  End of Spacings  ======*/
+.select-receipt {
+  height: 50px;
+  width: 100%;
+  box-shadow: 0px 1px 10px 0px rgba(117, 117, 117, 0.25);
+  flex-shrink: 0;
+  border-color: #aaa;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  margin: 20px 0px;
+  background-color: #fff;
+  font-family: iranSans;
+}
+
+.receipt-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.receipt-status-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 0 8px;
+  height: 50px;
+  border: 1px solid #aaa;
+  margin-top: 20px;
+}
+
+.receipt-status-menu {
+  display: none;
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  min-width: 100px;
+  border-radius: 12px;
+  background-color: #fff;
+  padding: 10px;
+}
+.receipt-status-menu.show {
+  display: block !important;
+}
+.receipt-status-menu label {
+  font-size: var(--fs-xs);
+  cursor: pointer;
+}
+
+.sm-secondary-btn {
+  background-color: var(--master-color);
+  color: #fff;
+  height: 30px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+}
+
+.status-title {
+  font-size: var(--fs-sm);
+  color: var(--master-color);
+}
+
+.details-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.receipt-details {
+  padding: 8px 18px;
+  margin: 10px 0px;
+}
+.receipt-details.active {
+  background-color: var(--master-color);
+  color: #fff;
+  border-radius: 10px;
+}
+
+.video-pics-box {
+  display: grid;
+  grid-template-columns: repeat(2, 2fr);
+  align-items: center;
+  justify-items: center;
+  grid-gap: 8px;
+}
+
+.video-pics-item {
+  box-shadow: 0px 1px 10px 0px rgba(117, 117, 117, 0.25);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border-style: 1px solid #aaa;
+  border-radius: 5px;
+}
+.video-pics-item img {
+  max-width: 100%;
+}
+
+.secondary-title {
+  color: var(--master-color);
+}
+
+.technician-box {
+  border: 1px solid rgb(106, 109, 115);
+  border-radius: 10px;
+}
+
+.number-box {
+  display: flex;
+  align-items: center;
+}
+.number-box p {
+  margin-left: 10px;
+}
+
+.technician {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 16px;
+}
+
+.technician-option-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 16px;
+}
+
+.technician-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.technician-option img {
+  background-color: #fff;
+  box-shadow: 0px 1px 10px 0px rgba(117, 117, 117, 0.25);
+  border-radius: 10px;
+  padding: 10px 10px;
+  width: 30px;
+  height: 30px;
+}
+.technician-option p {
+  margin-top: 4px;
+}
+
+.image-modal {
+  width: 90%;
+  position: fixed;
+  margin: 0 auto;
+  top: 30%;
+  left: 0;
+  right: 0;
+  display: none;
+  background-color: #fff;
+  border-radius: 12px;
+}
+.image-modal img {
+  width: 100%;
+  margin: 0 auto;
+}
+.image-modal.open {
+  display: block;
+}
+
+.img-ovrl {
+  background-color: rgba(18, 18, 18, 0.473);
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  display: none;
+}
+.img-ovrl.open {
+  display: block;
+}/*# sourceMappingURL=receiptDetails.css.map */

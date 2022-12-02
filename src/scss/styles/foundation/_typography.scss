@@ -1,0 +1,73 @@
+/*=============================================
+=                   FONT FAMILIES            =
+=============================================*/
+
+// @font-face {
+//   font-family: "iranSans";
+//   src: url("../../fonts/IRANSansMobile.ttf");
+//   src: url("../../fonts/IRANSansMobile.ttf") format("truetype");
+// }
+// @font-face {
+//   font-family: "iranSansBlack";
+//   src: url("../../fonts/IRANSansMobile_Black.ttf");
+//   src: url("../../fonts/IRANSansMobile_Black.ttf") format("truetype");
+// }
+// @font-face {
+//   font-family: "iranSansBold";
+//   src: url("../../fonts/IRANSansMobile_Bold.ttf");
+//   src: url("../../fonts/IRANSansMobile_Bold.ttf") format("truetype");
+// }
+// @font-face {
+//   font-family: "iranSansLight";
+//   src: url("../../fonts/IRANSansMobile_Light.ttf");
+//   src: url("../../fonts/IRANSansMobile_Light.ttf") format("truetype");
+// }
+// @font-face {
+//   font-family: "iranSansMedium";
+//   src: url("../../fonts/IRANSansMobile_Medium.ttf");
+//   src: url("../../fonts/IRANSansMobile_Medium.ttf") format("truetype");
+// }
+// @font-face {
+//   font-family: "iranSansUltraLight";
+//   src: url("../../fonts/IRANSansMobile_UltraLight.ttf");
+//   src: url("../../fonts/IRANSansMobile_UltraLight.ttf") format("truetype");
+// }
+
+/*=====        End of FONT FAMILIES      ======*/
+
+/*=============================================
+=                Body Font Sizes                =
+=============================================*/
+
+// $body-font-size: var(--dse-body-font-size, var(--fs-sm)) !default;
+// $body-font-weight: var(--dse-body-font-weight, $fw-normal) !default;
+$body-font-size: var(var(--fs-sm)) !default;
+$body-font-weight: var($fw-normal) !default;
+
+/*=====      End of Body text Sizes      ======*/
+
+/*=============================================
+=            Hesding Fpnt Sizes            =
+=============================================*/
+
+$h1-font-size: var(--dse-h1-font-size, $h-1) !default;
+$h2-font-size: var(--dse-h2-font-size, $h-2) !default;
+$h3-font-size: var(--dse-h3-font-size, $h-3) !default;
+$h4-font-size: var(--dse-h4-font-size, $h-4) !default;
+$h5-font-size: var(--dse-h5-font-size, $h-5) !default;
+$h6-font-size: var(--dse-h6-font-size, $h-6) !default;
+
+/*=====  End of Hesding text Sizes  ======*/
+
+/*=============================================
+=            Heading Font Weight            =
+=============================================*/
+
+$h1-text-weight: var(--dse-h1-text-weight, $fw-black) !default;
+$h2-text-weight: var(--dse-h2-text-weight, $fw-semibold) !default;
+$h3-text-weight: var(--dse-h3-text-weight, $fw-bold) !default;
+$h4-text-weight: var(--dse-h4-text-weight, $fw-medium) !default;
+$h5-text-weight: var(--dse-h5-text-weight, $fw-normal) !default;
+$h6-text-weight: var(--dse-h6-text-weight, $fw-light) !default;
+
+/*=====  End of Heading Font Weight  ======*/

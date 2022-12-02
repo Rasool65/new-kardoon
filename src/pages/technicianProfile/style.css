@@ -1,0 +1,103 @@
+main {
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
+  }
+  main > section {
+    border-radius: 10px;
+    width: 95%;
+    height: 80%;
+    background-color: aliceblue;
+  }
+  main > section > div:nth-of-type(1) {
+    padding: 10px 0;
+    display: flex;
+  }
+  main > section > div:nth-of-type(1) > div {
+    display: flex;
+    align-items: center;
+    width: 50%;
+  }
+  main > section > div:nth-of-type(1) > div:nth-of-type(1) {
+    justify-content: center;
+    padding-right: 10px;
+  }
+  main > section > div:nth-of-type(1) > div:nth-of-type(1) > figure > img {
+    width: 100px;
+  }
+  main > section > div:nth-of-type(1) > div:nth-of-type(2) {
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  main > section > div:nth-of-type(2) {
+    display: flex;
+  }
+  main > section > div:nth-of-type(2) > div {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  main > section > div:nth-of-type(2) > div:nth-of-type(2) {
+    padding: 25px 0;
+  }
+  main > section > div:nth-of-type(2) > div:nth-of-type(2) > span {
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgb(2, 198, 2);
+  }
+  main > section > div:nth-of-type(2) > div:nth-of-type(2) > span > span {
+    padding: 12px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  main > section > div:nth-of-type(3) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+  }
+  main > section > div:nth-of-type(3) > div {
+    border-radius: 10px;
+    width: 80%;
+    background-color: #198754;
+  }
+  main > section > div:nth-of-type(3) > div > div {
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: white;
+  }
+  main > section > div:nth-of-type(4) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 0;
+  }
+  main > section > div:nth-of-type(4) > div {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+  }
+  main > section > div:nth-of-type(4) > div > div {
+    border: 1px solid rgb(186, 186, 186);
+    border-radius: 10px;
+    width: 100px;
+    height: 90px;
+  }
+  main > section > div:nth-of-type(4) > div > div > div {
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+.transaction-list{
+  border-radius: 10px;
+   font-size: var(--fs-sm);
+  color: black;
+}

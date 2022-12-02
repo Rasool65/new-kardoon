@@ -1,0 +1,24 @@
+/*
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+@import url('./fontiran.scss');
+
+[dir='rtl'] * {
+  font-family: IRANSans !important;
+}
+
+[dir='rtl'] .header-navbar .navbar-container ul.navbar-nav li.dropdown-notification .dropdown-menu.dropdown-menu-end {
+  left: inherit !important;
+  right: -385px !important;
+}
+[dir='ltr'] .header-navbar .navbar-container ul.navbar-nav li.dropdown-notification .dropdown-menu.dropdown-menu-end {
+  left: -385px !important;
+  right: inherit !important;
+}
+
+.dropdown-user .dropdown-item {
+  width: 100%;
+}

@@ -1,0 +1,93 @@
+@import "../../foundation/variables";
+
+.account-data {
+  background-color: $white;
+  border-radius: 22px 22px 0px 0px;
+  padding: 16px 0px;
+}
+.user-data-item {
+  margin-top: 20px;
+}
+.account-data-input {
+  padding: 0 5px;
+  height: 44px;
+  border: 1px solid $light-gray;
+  border-radius: 10px;
+  width: 97%;
+  font-family: iranSans;
+  &:focus {
+    outline: none;
+  }
+}
+.rmdp-input{
+  border-radius: 10px !important;
+}
+
+.change-phone {
+  cursor: pointer;
+  text-align: left;
+  color: var(--master-color);
+  font-size: var(--fs-sm);
+}
+
+.change-number-modal {
+  position: fixed;
+  top: 20%;
+  left: 0;
+  right: 0;
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: none;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 450px;
+  display: none;
+
+  &.open {
+    display: block;
+  }
+}
+
+.nc-ovrl {
+  background-color: rgba(18, 18, 18, 0.473);
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  display: none;
+  &.open {
+    display: block;
+  }
+}
+
+.code-onput-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: ltr;
+  margin: 10px 0 40px 0;
+  label {
+    width: 35px;
+    height: 35px;
+    
+    input {
+      width: 35px;
+      height: 35px;
+      border: 1px solid $light-gray;
+      border-radius: 5px;
+      text-align: center;
+    }
+  }
+}
+.change-phone-dsc{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.change-phone-resend{
+    text-align: center;
+    p:nth-child(2){
+        color: var(--master-color);
+    }
+}

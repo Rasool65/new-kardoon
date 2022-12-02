@@ -1,0 +1,267 @@
+/*=============================================
+=                   Colors                    =
+=============================================*/
+/**
+ *
+ * brand Color
+ *
+ */
+:root {
+  --master-color: #CC0041;
+  --master-dark-color: #91002e;
+  --master-light-color: #ffdde8;
+  --master-superlight-color: #ffe3ec;
+  --fs-xss: 0.65rem;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.75rem;
+  --fs-base:0.85rem;
+  --fs-lg: 1.085rem;
+  --fs-xl: 1.40rem;
+  --fs-xxl: 1.70rem;
+}
+
+/* Utility Colors */
+/*=====  End of Section Colors  ======*/
+/*=============================================
+=                Typography                  =
+=============================================*/
+/* Font Size */
+/* Heading font sizes */
+/* Font Weights */
+/*=============================================
+=                  BreakPoints              =
+=============================================*/
+/*=====  End of Section comment block  ======*/
+/*=============================================
+=                  Spacings                   =
+=============================================*/
+/*=====  End of Spacings  ======*/
+.account-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #aaa;
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  height: 38px;
+  margin: 10px 0px;
+}
+.account-item.active {
+  background-color: var(--master-color);
+  color: #fff;
+  border-radius: 10px;
+}
+.account-item.active a {
+  text-decoration: none;
+  color: #fff;
+}
+.account-item a {
+  text-decoration: none;
+  color: rgb(106, 109, 115);
+}
+
+.account-info {
+  background-size: cover;
+  background-position: center;
+  height: 139px;
+  position: relative;
+  margin-top: 10px;
+}
+.account-info .img-holder {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 50px;
+  margin: auto;
+  background-color: #aaa;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+}
+.account-info img {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  margin: auto;
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 50%;
+}
+.account-info .change-image-icon {
+  position: absolute;
+  right: 0;
+  left: 23%;
+  top: 100px;
+  cursor: pointer;
+  z-index: 9;
+}
+
+.upload-image-input {
+  border: none;
+  background-repeat: no-repeat;
+  opacity: 0;
+  z-index: 10;
+  position: absolute;
+  right: 35%;
+  left: 23%;
+  top: 100px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.user-info {
+  text-align: center;
+  padding: 20px 0px;
+}
+.user-info h3 {
+  margin: 0.5rem;
+}
+.user-info p {
+  color: rgb(106, 109, 115);
+  margin: 5px 0px;
+}
+
+.wallet-info {
+  margin: 20px 0px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0px 1px 20px 0px rgba(117, 117, 117, 0.25);
+  border-radius: 10px;
+  padding: 4px 0px;
+}
+.wallet-info.succes-payment {
+  background-color: #EEFFF3;
+}
+.wallet-info.failed-payment {
+  background-color: rgba(244, 67, 54, 0.05);
+}
+
+.transaction-details-box {
+  background: #ffffff;
+  box-shadow: 0px 1px 10px rgba(117, 117, 117, 0.25);
+  border-radius: 10px 10px 0px 0px;
+  width: 80%;
+  margin: 15px auto;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.transaction-item p {
+  font-size: var(--fs-base);
+  font-weight: 300;
+  color: #1d1f22;
+}
+.transaction-item.title {
+  background-color: rgba(244, 67, 54, 0.05) !important;
+}
+.transaction-item .transaction-item-title {
+  color: var(--master-color);
+}
+.transaction-item:nth-child(odd) {
+  background-color: var(--master-superlight-color);
+}
+
+.transaction-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.success-title {
+  font-size: var(--fs-lg);
+  color: rgb(5, 161, 91);
+  margin: 0px 10px 0px 0px;
+}
+
+.failed-title {
+  font-size: var(--fs-lg);
+  color: var(--master-color);
+  margin: 0px 10px 0px 0px;
+}
+
+.transaction-btn-box {
+  margin-top: 40px;
+}
+.transaction-btn-box div {
+  font-size: var(--fs-base);
+  color: #1d1f22;
+  margin: 10px 0;
+}
+
+.transaction-description {
+  font-size: var(--fs-base);
+  color: #1d1f22;
+}
+
+.wallet-amount {
+  font-size: var(--fs-sm);
+  color: var(--master-color);
+}
+
+.wallet-btn-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin: 20px auto;
+}
+.wallet-btn-box .wallet-btn {
+  background-color: #fff;
+  height: 34px;
+  width: 30%;
+  box-shadow: 0px 1px 20px 0px rgba(117, 117, 117, 0.25);
+  border-radius: 10px;
+  border: none;
+  color: rgb(95, 95, 95);
+  font-weight: 600;
+}
+.wallet-btn-box .wallet-btn:hover {
+  border: 1px solid var(--master-color);
+  font-weight: bold;
+  color: var(--master-color);
+}
+
+.wallet-input-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.wallet-input-box .wallet-input {
+  border: none;
+  height: 40px;
+  background-color: rgba(1, 32, 198, 0.1000000015);
+  border-radius: 10px;
+  text-align: center;
+  font-family: iranSans;
+  min-width: 250px;
+}
+.wallet-input-box .wallet-input:focus {
+  outline: none;
+}
+.wallet-input-box .wallet-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--master-color);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  border: none;
+}
+
+.d-none {
+  display: none;
+}/*# sourceMappingURL=wallet.css.map */

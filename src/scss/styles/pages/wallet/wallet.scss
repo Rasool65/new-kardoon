@@ -1,0 +1,232 @@
+@import ".././../foundation/variables";
+
+.account-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid $light-gray;
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  height: 38px;
+  margin: 10px 0px;
+  &.active {
+    background-color: var(--master-color);
+    color: $white;
+    border-radius: 10px;
+    a{
+      text-decoration: none;
+      color: $white;
+    }
+  }
+  a{
+    text-decoration: none;
+    color: $gray;
+  }
+}
+
+.account-info {
+  // background-image: url("@src/scss/images/icons/blue-rectangle473441-c715.svg");
+  background-size: cover;
+  background-position: center;
+  height: 139px;
+  position: relative;
+  margin-top: 10px;
+  .img-holder {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 50px;
+    margin: auto;
+    // background-image: url("@src/scss/images/icons/blue-bxsuser3648-wt0k.svg");
+    background-color: $light-gray;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100px;
+    height: 100px;
+  }
+  img {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    margin: auto;
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+  }
+  .change-image-icon {
+    position: absolute;
+    right: 0;
+    left: 23%;
+    top: 100px;
+    cursor: pointer;
+    z-index: 9;
+  }
+}
+.upload-image-input {
+  border: none;
+  // background-image: url("/public/playground_assets/bxsuser3648-wt0k.svg");
+  background-repeat: no-repeat;
+  opacity: 0;
+  z-index: 10;
+  position: absolute;
+  right: 35%;
+  left: 23%;
+  top: 100px;
+  width: 20px;
+  cursor: pointer;
+}
+.user-info {
+  text-align: center;
+  padding: 20px 0px;
+  h3 {
+    margin: 0.5rem;
+  }
+  p {
+    color: $gray;
+    margin: 5px 0px;
+  }
+}
+
+.wallet-info {
+  margin: 20px 0px;
+  text-align: center;
+  background-color: $white;
+  box-shadow: 0px 1px 20px 0px rgba(117, 117, 117, 0.25);
+  border-radius: 10px;
+  padding: 4px 0px;
+  &.succes-payment {
+    background-color: $green-exLight;
+  }
+  &.failed-payment {
+    background-color: $red-exLight;
+  }
+}
+
+.transaction-details-box {
+  background: #ffffff;
+  box-shadow: 0px 1px 10px rgba(117, 117, 117, 0.25);
+  border-radius: 10px 10px 0px 0px;
+  width: 80%;
+  margin: 15px auto;
+}
+
+.transaction-item{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  p{
+    font-size: var(--fs-base);
+    font-weight: $fw-light;
+    color: $dark;
+  }
+  &.title{
+    background-color: $red-exLight !important;
+  }
+  .transaction-item-title{
+    color: var(--master-color);
+  }
+  &:nth-child(odd){
+    background-color: var(--master-superlight-color);
+  }
+}
+
+.transaction-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.success-title {
+  font-size: var(--fs-lg);
+  color: $green;
+  margin: 0px 10px 0px 0px;
+}
+
+.failed-title {
+  font-size: var(--fs-lg);
+  color: var(--master-color);
+  margin: 0px 10px 0px 0px;
+}
+
+.transaction-btn-box {
+  margin-top: 40px;
+  div {
+    font-size: var(--fs-base);
+    color: $dark;
+    margin: 10px 0;
+  }
+}
+.transaction-description {
+  font-size: var(--fs-base);
+  color: $dark;
+}
+
+.wallet-amount {
+  font-size: var(--fs-sm);
+  color: var(--master-color);
+}
+
+.wallet-btn-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin: 20px auto;
+  // padding: 10px 8px;
+  .wallet-btn {
+    background-color: $white;
+    height: 34px;
+    width: 30%;
+    box-shadow: 0px 1px 20px 0px rgba(117, 117, 117, 0.25);
+    border-radius: 10px;
+    border: none;
+    color: $dark-gray;
+    font-weight: $fw-semibold;
+    &:hover {
+      border: 1px solid var(--master-color);
+      font-weight: bold;
+      color: var(--master-color);
+    }
+  }
+}
+
+.wallet-input-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  .wallet-input {
+    border: none;
+    height: 40px;
+    background-color: rgba(1, 32, 198, 0.10000000149011612);
+    border-radius: 10px;
+    text-align: center;
+    font-family: iranSans;
+    min-width: 250px;
+    &:focus {
+      outline: none;
+    }
+  }
+  .wallet-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: var(--master-color);
+    font-size: var(--fs-xl);
+    font-weight: $fw-bold;
+    border: none;
+  }
+}
+
+.d-none {
+  display: none;
+}

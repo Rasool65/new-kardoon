@@ -1,0 +1,505 @@
+@import '../../foundation/variables';
+/*=============================================
+=                 HEADER                  =
+=============================================*/
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  background-color: white;
+  padding: 0 16px;
+}
+
+.call-box {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.login-box,
+.menu-box {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  margin-left: 10px;
+  border: 1px solid #aaa;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.menu-item {
+  color: var(--dl-color-default-primarygrey);
+  margin: 0 5px;
+}
+
+.login-icon {
+  cursor: pointer;
+}
+
+/*=====        End of HEADER        ======*/
+
+
+
+/*=============================================
+=                 BANNER                     =
+=============================================*/
+
+.banner{
+  text-align: center;
+  margin: 20px auto 20px auto;
+}
+
+/*=====         End of BANNER          ======*/
+
+
+
+/*=============================================
+=                SEARCH BOX                   =
+=============================================*/
+
+.search-section{
+  position: relative;
+}
+
+.search-box{
+  display: flex;
+  height: 50px;
+  box-sizing: border-box;
+  align-items: center;
+  border-color: rgba(203, 203, 203, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  justify-content: center;
+  background-color: $white;
+  margin-top: 20px;
+}
+
+.search-input{
+  height: 40px;
+  border: none;
+  width: 75%;
+  position: absolute;
+  font-family: var(--font-regular), iranSans;
+}
+.search-input:focus{
+  outline: none;
+}
+
+.search-divider{
+  border-left: 2px solid rgba(0, 0, 0, 0.411);
+  height: 25px;
+  width: 20px;
+  position: absolute;
+  left: 85px;
+}
+
+.search-select{
+  min-width: 50px;
+  height: 45px;
+  cursor: pointer;
+  direction: rtl;
+  display: flex;
+  background-color: var(--dl-color-default-white);
+  position: absolute;
+  left: 25px;
+  box-sizing: border-box;
+  align-items: center;
+  flex-shrink: 0;
+  border-color: transparent;
+  margin-right: 0;
+  border-radius: 0px 0px 0px 0px;
+  margin-bottom: 0;
+  font-size: var(--fs-xs);
+  justify-content: flex-end;
+  text-align: center;
+  font-family: var(--font-regular), iranSans;
+}
+
+.search-select:focus{
+  outline: none;
+}
+
+.search-icon{
+  width: 24px;
+  height: 24px;
+  display: flex;
+  padding: 0;
+  position: relative;
+  align-self: auto;
+  box-sizing: border-box;
+  align-items: flex-start;
+  flex-shrink: 1;
+  border-color: transparent;
+  border-style: none;
+  border-width: 0;
+  margin-right: 0;
+  border-radius: 0px 0px 0px 0px;
+  margin-bottom: 0;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.home-search2 {
+  top: 15px;
+  // right: 25px;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  box-sizing: border-box;
+}
+
+
+/*=====      End of SEARCH BOX         ======*/
+
+
+
+/*=============================================
+=            KARDOON SERVICES            =
+=============================================*/
+
+.srvice-card {
+  width: 350px;
+  height: 405px;
+  margin-top: 20px !important;
+  box-shadow: 0px 1px 20px 0px rgb(117 117 117 / 25%);
+  box-sizing: border-box;
+  border-color: transparent;
+  border-radius: 15px;
+  margin: 0 auto;
+  padding: 1px 16px;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.srvice-title {
+  color: var(--dl-color-default-fontcolor);
+  font-size: var(--fs-base);
+  text-align: center;
+  font-family: var(--font-regular), iranSans;
+  font-weight: 400;
+  line-height: normal;
+  font-stretch: normal;
+}
+.service-item-box {
+  display: grid;
+  grid-template-columns: repeat(3, 3fr);
+  align-items: center;
+  justify-items: center;
+}
+.service-item {
+  width: 90px;
+  height: 90px;
+  box-shadow: 0px 1px 10px 0px rgb(117 117 117 / 25%);
+  border-color: transparent;
+  margin-right: 0;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.service-item,
+p {
+  color: var(--dl-color-default-fontcolor);
+  font-size: var(--fs-xs);
+  font-style: Regular;
+  font-weight: 400;
+  margin-top: 15px;
+}
+
+/*=====  End of KARDOON SERVICES  ======*/
+
+/*=============================================
+=                 WHY KARDOON                 =
+=============================================*/
+
+.why-kardoon-box {
+  width: 100%;
+  height: 205px;
+  margin-top: 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-color: transparent;
+  margin-right: 0;
+  border-radius: 0px 0px 0px 0px;
+  margin-bottom: 0;
+  background-color: rgba(1, 32, 198, 0.10000000149011612);
+}
+
+.why-kardoon-items {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.why-kardoon-item {
+  // width: 90px;
+  height: 90px;
+  border-color: transparent;
+  margin-right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.why-kardoon-item p {
+  color: var(--dl-color-default-primaryblue);
+}
+
+.why-kardoon-item img {
+  padding: 15px;
+  border-radius: 50%;
+  border: 1px solid #aaa;
+  background-color: white;
+}
+
+/*=====       End of WHY KARDOON        ======*/
+
+/*=============================================
+=                  FOOTER                     =
+=============================================*/
+
+footer {
+  height: 450px;
+  box-shadow: 0px 0px 10px 0px rgb(117 117 117 / 25%);
+  background-color: $gray;
+  color: white !important;
+  padding: 10px 16px;
+  margin-top: 20px;
+}
+
+.footer-title{
+  color: white !important;
+  text-align: right;
+}
+
+.footer-item{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.footer-item p{
+  margin-right: 10px;
+  font-size: var(--fs-sm);
+  font-style: normal;
+  line-height: 22px;
+  color: white;
+}
+
+.social-media{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  max-width: 300px;
+  margin: 20px auto 0px auto;
+}
+
+.social-media img{
+  background-color: var(--master-color);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.copy-right{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copy-right p{
+  font-size: var(--fs-sm);
+  color: white;
+  margin-left: 10px;
+}
+
+.all-right{
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: white;
+}
+/*=====        End of FOOTER           ======*/
+
+
+
+/*=============================================
+=                Mobile MENU                 =
+=============================================*/
+.overlay { 
+  height: 100%;
+  width: 0;
+  max-width: 320px;
+  position: fixed; 
+  z-index: 1; 
+  right: 0;
+  top: 0;
+  background-color: #FFFF; 
+  overflow-x: hidden; 
+  transition: 0.5s; 
+}
+
+
+.overlay-content {
+  position: relative;
+  padding: 0px 20px;
+  top: 5%; 
+  width: 100%; 
+  text-align: right; 
+  margin-top: 30px;
+}
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: var(--fs-base);
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+.overlay a:hover, .overlay a:focus {
+  color: #777777;
+}
+.overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  font-size: 40px;
+}
+
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: var(--fs-lg)}
+  .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
+}
+/*=====       End of Mobile MENU       ======*/
+
+
+/*=============================================
+=                    MODAL                   =
+=============================================*/
+.myBtn{
+  z-index: 10000;
+  position: fixed;
+  top: 200px;
+  cursor: pointer;
+}
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 12;
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; 
+  padding: 20px;
+  border: none;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 450px;
+}
+.modal-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  h4{
+    margin: 5px 0;
+  }
+}
+.modal-header, h4{
+  color: rgb(95, 95, 95);
+}
+
+.hr-divider{
+  border-bottom: 1px solid rgb(214, 214, 214);
+  margin: 25px 0;
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xxl);
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primary-input{
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  height: 50px;
+  width: 100%;
+  margin: 20px 0px;
+  font-family: var(--font-regular), iranSans;
+  font-size: var(--fs-sm);
+}
+.primary-btn{
+  padding: 6px 20px;
+  margin-right: 0;
+  border-radius: 10px;
+  background-color: var(--master-color);
+  color: white;
+  width: 100%;
+  height: 44px;
+  margin: 15px 0px;
+  text-align: center;
+  transition: 0.3ms;
+  border: none;
+  font-size: var(--fs-lg);
+}
+
+.primary-btn-outlined{
+  padding: 6px 20px;
+  margin-right: 0;
+  border-radius: 10px;
+  background-color: transparent;
+  border: 1px solid var(--master-color) !important;
+  color: $dark-gray;
+  width: 100%;
+  height: 44px;
+  margin: 15px 0px;
+  text-align: center;
+  transition: 0.3ms;
+  border: none;
+  font-size: var(--fs-base);
+}
+
+.primary-btn:hover{
+  opacity: 0.9;
+  transition: 0.3ms;
+}
+
+
+.info-text{
+  text-align: right;
+  font-size: var(--fs-sm);
+  margin: 10px 0px;
+  color: var(--dl-color-gray-500);
+}
+
+button{
+  cursor: pointer;
+  font-family: var(--font-regular), iranSans;
+}
+
+/*=====  End of Section MODAL  ======*/
