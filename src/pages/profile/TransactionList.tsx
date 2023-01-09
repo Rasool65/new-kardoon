@@ -1,6 +1,5 @@
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import useHttpRequest from '@src/hooks/useHttpRequest';
-import { ITechnicianProfileResultModel } from '@src/models/output/technician/ITechnicianProfileResultModel';
 import { ITransactionResultModel } from '@src/models/output/technician/ITransactionResultModel';
 import { RootStateType } from '@src/redux/Store';
 import { DateHelper } from '@src/utils/dateHelper';
@@ -11,7 +10,6 @@ import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
 import InputIcon from 'react-multi-date-picker/components/input_icon';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import { IOutputResult } from '@src/models/output/IOutputResult';
 import { APIURL_GET_TRANSACTION } from '@src/configs/apiConfig/apiUrls';
 
@@ -22,8 +20,6 @@ const TransactionList: FunctionComponent<TransactionListProps> = () => {
   const [datePicker, setDatePicker] = useState<boolean>(true);
   const [fromDate, setFromDate] = useState<string>();
   const httpRequest = useHttpRequest();
-  const search = useLocation().search;
-  // const id = new URLSearchParams(search).get('id');
   const weekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
   const [transaction, setTransaction] = useState<ITransactionResultModel[]>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -52,7 +48,7 @@ const TransactionList: FunctionComponent<TransactionListProps> = () => {
     <>
       <h4 className="m-3">لیست تراکنش ها</h4>
       <div className="d-flex justify-content-between mt-3 mb-3">
-        <div className='m-2'>
+        <div className="m-2">
           از تاریخ{' '}
           <DatePicker
             render={<InputIcon style={{ height: 'calc(2.4em + 0.75rem - 6px)', width: '100%' }} />}
@@ -69,7 +65,7 @@ const TransactionList: FunctionComponent<TransactionListProps> = () => {
             calendarPosition="bottom-right"
           />
         </div>
-        <div className='m-2'>
+        <div className="m-2">
           تا تاریخ
           <DatePicker
             disabled={datePicker}
@@ -87,64 +83,57 @@ const TransactionList: FunctionComponent<TransactionListProps> = () => {
           />
         </div>
       </div>
-      
+
       {loading ? (
         <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-around' }}>
           <LoadingComponent />
         </div>
       ) : (
-
         <div className="row">
-{
-   transaction &&
-        transaction.length > 0 &&
-        transaction.map((item: ITransactionResultModel, index: number) => {
-          return (
-            <>
-              <div
-                className="col-12 col-sm-6 col-lg-4 p-2"
-              >
-                <div
-                  className="transaction-card"
-                  style={{ backgroundColor: `${item.isDebtor ? 'rgb(255 173 181 / 65%)' : 'rgb(125 227 142 / 45%)'}` }}
-                >
-                  <p className="justify-content-center" style={{ color: 'black', display: 'flex', marginBottom: '0px' }}>
-                    {item.description}
-                  </p>
-                  <div className="d-flex justify-content-around m-3 p-2 transaction-list">
-                    <div>
-                      <div>تاریخ :</div>
-                      <div>مبلغ :</div>
-                      <div>وضعیت :</div>
-                    </div>
-                    <div>
-                      <div>
-                        {DateHelper.isoDateTopersian(item.transactionDateTime)}-{DateHelper.splitTime(item.transactionDateTime)}
+          {transaction &&
+            transaction.length > 0 &&
+            transaction.map((item: ITransactionResultModel, index: number) => {
+              return (
+                <>
+                  <div className="col-12 col-sm-6 col-lg-4 p-2">
+                    <div
+                      className="transaction-card"
+                      style={{ backgroundColor: `${item.isDebtor ? 'rgb(255 173 181 / 65%)' : 'rgb(125 227 142 / 45%)'}` }}
+                    >
+                      <p className="justify-content-center" style={{ color: 'black', display: 'flex', marginBottom: '0px' }}>
+                        {item.description}
+                      </p>
+                      <div className="d-flex justify-content-around m-3 p-2 transaction-list">
+                        <div>
+                          <div>تاریخ :</div>
+                          <div>مبلغ :</div>
+                          <div>وضعیت :</div>
+                        </div>
+                        <div>
+                          <div>
+                            {DateHelper.isoDateTopersian(item.transactionDateTime)}-
+                            {DateHelper.splitTime(item.transactionDateTime)}
+                          </div>
+                          {item.isDebtor ? (
+                            <>
+                              <div>{UtilsHelper.threeDigitSeparator(item.debtorAmount)}</div>
+                              <div>بدهکار</div>
+                            </>
+                          ) : (
+                            <>
+                              <div>{UtilsHelper.threeDigitSeparator(item.creditorAmount)}</div>
+                              <div>بستانکار</div>
+                            </>
+                          )}
+                        </div>
                       </div>
-                      {item.isDebtor ? (
-                        <>
-                          <div>{UtilsHelper.threeDigitSeparator(item.debtorAmount)}</div>
-                          <div>بدهکار</div>
-                        </>
-                      ) : (
-                        <>
-                          <div>{UtilsHelper.threeDigitSeparator(item.creditorAmount)}</div>
-                          <div>بستانکار</div>
-                        </>
-                      )}
                     </div>
                   </div>
-                </div>
-              </div>
-            </>
-          );
-        })
-}
-      </div>
-       
-      )
-      
-      }
+                </>
+              );
+            })}
+        </div>
+      )}
     </>
   );
 };

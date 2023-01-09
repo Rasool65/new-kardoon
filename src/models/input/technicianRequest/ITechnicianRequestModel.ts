@@ -67,7 +67,7 @@ export interface IServiceTypeId {
   value?: number;
   label?: string;
 }
-interface IPresenceShift {
+export interface IPresenceShift {
   value?: number;
   label?: string;
 }

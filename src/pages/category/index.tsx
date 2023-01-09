@@ -11,7 +11,6 @@ import { ICategory } from '@src/models/output/productCategory/ICategory';
 import { URL_MAIN, URL_PRODUCTS, URL_PROVINCE } from './../../configs/urls';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
-import Header from '../../layout/Headers/Header';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import PrevHeader from '@src/layout/Headers/PrevHeader';
 
@@ -37,16 +36,20 @@ const Category: FunctionComponent<IPageProps> = (props) => {
   };
 
   const GetCategories = () => {
-    state && state.ServiceTypeId
-      ? (setLoading(true),
-        httpRequest
-          .getRequest<IOutputResult<ICategory>>(`${APIURL_GET_CATEGORIES}/?CityId=${cityId}&ServiceTypeId=${state.ServiceTypeId}`)
-          .then((result) => {
-            setCategories(result.data.data);
-            setLoading(false);
-          })
-          .finally(() => setLoading(false)))
-      : navigate(URL_MAIN);
+    cityId
+      ? state && state.ServiceTypeId
+        ? (setLoading(true),
+          httpRequest
+            .getRequest<IOutputResult<ICategory>>(
+              `${APIURL_GET_CATEGORIES}/?CityId=${cityId}&ServiceTypeId=${state.ServiceTypeId}`
+            )
+            .then((result) => {
+              setCategories(result.data.data);
+              setLoading(false);
+            })
+            .finally(() => setLoading(false)))
+        : navigate(URL_MAIN)
+      : navigate(URL_PROVINCE);
   };
 
   useEffect(() => {

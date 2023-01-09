@@ -8,19 +8,22 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Spinner } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
-import { IEStatusId } from '@src/models/output/order/IOrderListResultModel';
-import { URL_TECHNICIAN_MISSION_DETAIL, URL_TECHNICIAN_FACTOR } from '@src/configs/urls';
+import { IEServiceTypeId, IEStatusId, IEStatusMissionId } from '@src/models/output/order/IOrderListResultModel';
+import { URL_TECHNICIAN_MISSION_DETAIL } from '@src/configs/urls';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { IPageListOutputResult } from '@src/models/output/IPageListOutputResult';
 import Header from '@src/layout/Headers/Header';
 import Filter from './Filter';
 import Footer from '@src/layout/Footer';
+import TechnicianMissionLoading from './../../loading/technicianMissionLoading';
+import { useNotification } from '@src/hooks/useNotification';
 
 const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
   const TechnicianId = useSelector((state: RootStateType) => state.authentication.userData?.userId);
   const color = useSelector((state: RootStateType) => state.theme.color);
   const [loading, setLoading] = useState<boolean>(false);
   const httpRequest = useHttpRequest();
+  const { getStatusMissionCount, getWalletBalance } = useNotification();
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [technicianMissionList, setTechnicianMissionList] = useState<ITechnicianMissionList[]>([]);
   const [withoutFilter, setWithout] = useState<boolean>(false);
@@ -87,10 +90,13 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     setPageNumber(1);
     setHasMore(true);
     setWithout(false);
     handleSubmit(false, 1);
+    getStatusMissionCount();
+    getWalletBalance();
   }, []);
 
   useEffect(() => {
@@ -100,93 +106,96 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
   return (
     <>
       <Header />
-      <Footer activePage={1} />
-      <div className="home-container technician-mission">
-        <div className="container">
-          <section>
-            <div className="container mt-md-4">
-              <div>
-                {loading ? (
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '120px' }}>
-                    <Spinner style={{ width: '5rem', height: '5rem' }} />
-                  </div>
-                ) : (
-                  <InfiniteScroll
-                    className="row"
-                    dataLength={technicianMissionList?.length ? technicianMissionList?.length : 1}
-                    next={() => {
-                      setPageNumber(pageNumber + 1);
-                      handleSubmit(withoutFilter, pageNumber + 1);
-                    }}
-                    hasMore={hasMore!}
-                    loader={<Spinner style={{ position: 'fixed', top: '50%', left: '50%' }}>درحال بارگذاری...</Spinner>}
-                  >
-                    {technicianMissionList &&
-                      technicianMissionList.length > 0 &&
-                      technicianMissionList.map((mission: ITechnicianMissionList, index: number) => {
-                        return (
-                          <>
-                            <div className="col-md-6">
-                              <div
-                                className="mission-card pointer"
-                                onClick={() => navigate(`${URL_TECHNICIAN_MISSION_DETAIL}?id=${mission.requestDetailId}`)}
-                              >
-                                <div className="mission-item ">
-                                  <p className="mission-title">
-                                    {mission.serviceTypeTitle}-{mission.productTitle}
-                                  </p>
-                                  <p className="mission-amount">
-                                    {mission.presenceShift?.slice(0, 3)} {DateHelper.isoDateTopersian(mission.presenceDateTime)}
-                                  </p>
-                                  {mission.isUrgent ? <span className="sos-box">SOS</span> : ''}
-                                  <img
-                                    className="seemore-btn"
-                                    src={require(`@src/scss/images/icons/${color}-info.svg`)}
-                                    alt="VectorI344"
-                                  />
-                                </div>
-                                <div className="mission-item">
-                                  <p className="mission-info">
-                                    مشتری:{' '}
-                                    <span>
-                                      {mission.consumerFirstName} {mission.consumerLastName}
-                                    </span>
-                                  </p>
-                                  <div className="mission-status-box">
-                                    {/* <p className="mission-amount">وضعیت:</p> */}
-                                    <span className={IEStatusId[mission.statusId!]}>{mission.statusTitle}</span>
+      {loading ? (
+        <TechnicianMissionLoading />
+      ) : (
+        <>
+          <Footer activePage={1} />
+          <div className="home-container technician-mission">
+            <div className="container">
+              <section>
+                <div className="container mt-md-4">
+                  <div>
+                    <InfiniteScroll
+                      className="row"
+                      dataLength={technicianMissionList?.length ? technicianMissionList?.length : 1}
+                      next={() => {
+                        setPageNumber(pageNumber + 1);
+                        handleSubmit(withoutFilter, pageNumber + 1);
+                      }}
+                      hasMore={hasMore!}
+                      loader={<Spinner style={{ position: 'fixed', top: '50%', left: '50%' }}>درحال بارگذاری...</Spinner>}
+                    >
+                      {technicianMissionList &&
+                        technicianMissionList.length > 0 &&
+                        technicianMissionList.map((mission: ITechnicianMissionList, index: number) => {
+                          return (
+                            <>
+                              <div className="col-md-6">
+                                <div
+                                  className={`mission-card pointer ${IEServiceTypeId[mission.serviceTypeId!]} ${
+                                    IEStatusMissionId[mission.statusId!]
+                                  }`}
+                                  onClick={() => navigate(`${URL_TECHNICIAN_MISSION_DETAIL}?id=${mission.requestDetailId}`)}
+                                >
+                                  <div className="mission-item ">
+                                    <p className="mission-title">
+                                      {mission.serviceTypeTitle}-{mission.productTitle}
+                                    </p>
+                                    <p className="mission-amount">
+                                      {mission.presenceShift?.slice(0, 3)} {DateHelper.isoDateTopersian(mission.presenceDateTime)}
+                                    </p>
+                                    {mission.isUrgent ? <span className="sos-box">SOS</span> : ''}
+                                    <img
+                                      className="seemore-btn"
+                                      src={require(`@src/scss/images/icons/${color}-info.svg`)}
+                                      alt="VectorI344"
+                                    />
                                   </div>
-                                  <p className="mission-amount">{mission.address}</p>
-                                </div>
-                                <div className="d-flex justify-content-between">
-                                  {/* <p className="mission-info">
+                                  <div className="mission-item">
+                                    <p className="mission-info">
+                                      مشتری:{' '}
+                                      <span>
+                                        {mission.consumerFirstName} {mission.consumerLastName}
+                                      </span>
+                                    </p>
+                                    <div className="mission-status-box">
+                                      {/* <p className="mission-amount">وضعیت:</p> */}
+                                      <span className={IEStatusId[mission.statusId!]}>{mission.statusTitle}</span>
+                                    </div>
+                                    <p className="mission-amount">{mission.address}</p>
+                                  </div>
+                                  <div className="d-flex justify-content-between">
+                                    {/* <p className="mission-info">
                                     شماره درخواست: <span>{mission.requestNumber}</span>
                                   </p> */}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </>
-                        );
-                      })}
-                  </InfiniteScroll>
-                )}
-                <Filter
-                  showModal={showFilter}
-                  handleClick={handleClickFilter}
-                  handleStatusChange={handleStatusChange}
-                  handleServiceTypeChange={handleServiceTypeChange}
-                  handleProductTypeChange={handleProductTypeChange}
-                  handleConsumerChange={handleConsumerChange}
-                  pageNumber={pageNumber}
-                  loading={loading}
-                  onClickFilter={onClickFilter}
-                  onClickNoFilter={onClickNoFilter}
-                />
-              </div>
+                            </>
+                          );
+                        })}
+                    </InfiniteScroll>
+                    <Filter
+                      showModal={showFilter}
+                      handleClick={handleClickFilter}
+                      handleStatusChange={handleStatusChange}
+                      handleServiceTypeChange={handleServiceTypeChange}
+                      handleProductTypeChange={handleProductTypeChange}
+                      handleConsumerChange={handleConsumerChange}
+                      pageNumber={pageNumber}
+                      loading={loading}
+                      onClickFilter={onClickFilter}
+                      onClickNoFilter={onClickNoFilter}
+                      emptyList={() => setTechnicianMissionList([])}
+                    />
+                  </div>
+                </div>
+              </section>
             </div>
-          </section>
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

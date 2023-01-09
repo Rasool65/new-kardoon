@@ -18,7 +18,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Form, FormFeedback, Input } from 'reactstrap';
 import Select from 'react-select';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
-import ConfirmModal from './ConfirmModal';
 import {
   AddTechnicianSubRequestModelSchema,
   ITechnicianSubRequestModel,
@@ -118,8 +117,7 @@ const SubRequest: FunctionComponent<SubRequestProps> = () => {
       httpRequest
         .postRequest<IOutputResult<any>>(`${APIURL_POST_REQUEST_TECHNICIAN}`, body)
         .then((result) => {
-          resetForm();
-          toast.showSuccess(result.data.message);
+          result.data.isSuccess ? (toast.showSuccess(result.data.message), resetForm()) : toast.showError(result.data.message);
           setLoading(false);
         })
         .finally(() => {
@@ -229,7 +227,7 @@ const SubRequest: FunctionComponent<SubRequestProps> = () => {
                     )}
                   />
                 </div>
-                
+
                 <div className="col-12">
                   <Controller
                     name="requestDescription"

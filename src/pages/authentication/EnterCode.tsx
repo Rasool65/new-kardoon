@@ -121,38 +121,6 @@ const EnterCode: FunctionComponent<IModalModel> = ({ mobileNumber, display, hand
             </div>
           </div>
         </div>
-        {/* <div
-        className={`menu menu-box-bottom menu-box-detached rounded-m ${showEnterCodeModal ? 'menu-active' : ''}`}
-        data-menu-height="310"
-        style={{ display: 'inherit', direction: 'rtl' }}
-        data-menu-effect="menu-over"
-      >
-        <div className="card p-4" style={{ marginBottom: '0px' }}>
-          کد پیامک شده به شماره موبایل {GeneralHelpers.toPersianNumber(mobileNumber?.toString())} را وارد نمایید.
-          <div className="divider" style={{ marginTop: '15px', marginBottom: '15px' }} />
-          <div style={{ direction: 'ltr', alignSelf: 'center' }}>
-            {pinLoading ? (
-              <Spinner style={{ width: '1rem', height: '1rem' }} />
-            ) : (
-              <PinField
-                className="pin-field"
-                style={{ height: '55px' }}
-                length={6}
-                type="number"
-                validate={/^[0-9]$/}
-                onComplete={(e) => LoginWithSMS(e)}
-              />
-            )}
-          </div>
-          <div className="divider" style={{ marginTop: '15px', marginBottom: '15px' }} />
-          <Button onClick={Resent} className="btn btn-full rounded-sm shadow-l bg-highlight btn-m font-900 text-uppercase mb-0">
-            {remainingTimeSeconds > 0 ? `${t('PleaseWait')}(${remainingTimeSeconds})` : t('Resent')}
-          </Button>
-          <div className="color-theme pointer" style={{ marginTop: '25px' }} onClick={handleEditMobileNo}>
-            {t('EditMobileNumber')}
-          </div>
-        </div>
-      </div> */}
       </div>
     </>
   );

@@ -1,8 +1,8 @@
 import Form, { AjvError, IChangeEvent, ISubmitEvent, UiSchema } from '@rjsf/core';
 import { FunctionComponent, useEffect, useState } from 'react';
-import { Button, Spinner } from 'reactstrap';
+import { Button } from 'reactstrap';
 import useHttpRequest from '@src/hooks/useHttpRequest';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
@@ -16,11 +16,15 @@ import PrevHeader from '@src/layout/Headers/PrevHeader';
 const RequestDetailZero: FunctionComponent<IRequestDetailPageProp> = ({ handleClickNextToFirst }) => {
   const cityId = useSelector((state: RootStateType) => state.authentication.userData?.profile.residenceCityId);
   const httpRequest = useHttpRequest();
+  const userData = useSelector((state: RootStateType) => state.authentication.userData);
   const { t }: any = useTranslation();
   const { state }: any = useLocation();
   const [loading, setLoading] = useState<boolean>(false);
   const [schema, setSchema] = useState<JSONSchema7>();
   // const [Ui, setUi] = useState<UiSchema>();
+  const checkRole = (normalizedName: string) => {
+    return userData?.roles ? userData?.roles.some((roleName) => roleName.normalizedName === normalizedName) : false;
+  };
   const GetFormSchema = () => {
     setLoading(true);
     httpRequest
@@ -28,6 +32,7 @@ const RequestDetailZero: FunctionComponent<IRequestDetailPageProp> = ({ handleCl
         `${APIURL_GET_PRODUCTS_ATTRIBUTES}?CityId=${cityId}&ProductId=${state.ProductId}&ServiceTypeId=${state.ServiceTypeId}`
       )
       .then((result) => {
+        !checkRole('TECHNICIAN') && delete result.data.data.required;
         setSchema(result.data.data);
         !result.data.data && handleClickNextToFirst();
         setLoading(false);
@@ -73,8 +78,8 @@ const RequestDetailZero: FunctionComponent<IRequestDetailPageProp> = ({ handleCl
               <div>
                 {schema && (
                   <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit}>
-                    <Button className="btn btn-info green-btn w-100" type="submit">
-                      ثبت
+                    <Button className="btn btn-info w-100" type="submit">
+                      ادامه
                     </Button>
                   </Form>
                 )}

@@ -36,6 +36,7 @@ import PrevHeader from '@src/layout/Headers/PrevHeader';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import { IFiles } from '@src/models/output/missionDetail/IInvoiceActionResultModel';
 import ShowImageModal from '../../components/showImageModal/ShowImageModal';
+import CallModal from './CallModal';
 
 const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
   let { audioData, audioURL, isRecording, startRecording, stopRecording } = useRecorder();
@@ -49,6 +50,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
   const [genForm, setGenForm] = useState<IAttributesResultModel>();
   const [imageModalVisible, setImageModalVisible] = useState<boolean>(false);
   const [followUpModalVisible, setFollowUpModalVisible] = useState<boolean>(false);
+  const [displayCallModal, setDisplayCallModal] = useState<boolean>(false);
   const [suspendReasonModalVisible, setSuspendReasonModalVisible] = useState<boolean>(false);
   const [progressReasonModalVisible, setProgressReasonModalVisible] = useState<boolean>(false);
   const [suspendCauseList, setSuspendCasueList] = useState<number[]>([]);
@@ -64,6 +66,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
   const [displayImage, setDisplayImage] = useState<boolean>(false);
   const [statusValue, setStatusValue] = useState<number>();
   const [followUpDescription, setFollowUpDescription] = useState<string>();
+  const [nextTrackingDateTime, setNextTrackingDateTime] = useState<string>();
   const [followUpList, setFollowUpList] = useState<IFollowUpList[]>();
   const [audioDisplay, setAudioDisplay] = useState<string>('none');
   const [imageDisplay, setImageDisplay] = useState<string>('none');
@@ -96,7 +99,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
     };
     setLoading(true);
     httpRequest.updateRequest<IOutputResult<any>>(`${APIURL_UPDATE_REQUEST_DETAIL_STATUS}`, body).then((result) => {
-      toast.showSuccess(result.data.message);
+      result.data.isSuccess ? toast.showSuccess(result.data.message) : toast.showError(result.data.message);
       setLoading(false);
     });
   };
@@ -110,12 +113,15 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
     setFormLoading(true);
     httpRequest.updateRequest<IOutputResult<any>>(`${APIURL_UPDATE_REQUEST_ATTRIBUTES}`, body).then((result) => {
       FormGenDetail();
-      toast.showSuccess(result.data.message);
+      result.data.isSuccess ? toast.showSuccess(result.data.message) : toast.showError(result.data.message);
       setFormLoading(false);
     });
   };
   const handleDisplay = () => {
     setDisplayImage(!displayImage);
+  };
+  const handleCallModal = () => {
+    setDisplayCallModal(!displayCallModal);
   };
   const AddFollowUp = () => {
     if (followUpDescription == '') return toast.showError('توضیحات نمی تواند خالی باشد'), setLoading(false);
@@ -123,6 +129,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
       technicianId: userData?.userId,
       requestDetailId: parseInt(id!),
       description: followUpDescription,
+      nextTrackingDateTime: '2022-12-25T07:40:29.093Z',
     };
     setLoading(true);
     httpRequest
@@ -158,6 +165,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
         toast.showSuccess(result.data.message);
         setLoading(false);
         ClearMediaFiles();
+        GetMissionDetail();
       })
       .finally(() => {
         setLoading(false);
@@ -332,7 +340,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
                         {media.fileType == 'Audio' && <audio src={media.fileUrl} controls className="audio-item" />}
                         {media.fileType == 'Image' && (
                           <div
-                            className="image-item"
+                            className="image-item pointer"
                             onClick={() => {
                               setImageSrc(media.fileUrl), setDisplayImage(true);
                             }}
@@ -476,6 +484,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
                         state: {
                           requestDetailId: missionDetail?.requestDetailId,
                           productCategoryId: missionDetail?.productCategoryId,
+                          orderId: missionDetail?.orderId,
                         },
                       })
                     }
@@ -486,7 +495,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
               <span className="upload-icons">
                 <img
                   className="pointer"
-                  onClick={() => window.open(`tel:${missionDetail?.consumerPhoneNumber}`, '_self')}
+                  onClick={() => handleCallModal()}
                   src={require(`@src/scss/images/icons/${color}-call2.svg`)}
                   alt="VectorI344"
                 />
@@ -580,9 +589,8 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
                 <div className="d-flex justify-content-around" style={{ width: '20%' }}>
                   <img
                     hidden={isRecording}
-                    style={{ cursor: 'pointer' }}
                     src={require(`@src/scss/images/icons/${color}-delete.svg`)}
-                    className="delete-icon"
+                    className="delete-icon pointer"
                     onClick={() => {
                       setAudioFile(null);
                       setAudioDisplay('none');
@@ -601,7 +609,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
                   {imgSrcList &&
                     imgSrcList.length > 0 &&
                     imgSrcList.map((item: any, index: number) => {
-                      return <img className="m-1" width="75" height="75" src={item} />;
+                      return <img className="m-1 pointer" width="75" height="75" src={item} />;
                     })}
                 </div>
                 <div className="d-flex justify-content-around" style={{ width: '20%' }}>
@@ -630,9 +638,9 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
                 </div>
                 <div className="d-flex justify-content-around" style={{ width: '20%' }}>
                   <img
-                    style={{ zIndex: '1', cursor: 'pointer' }}
+                    style={{ zIndex: '1' }}
                     src={require(`@src/scss/images/icons/${color}-delete.svg`)}
-                    className="delete-icon"
+                    className="delete-icon pointer"
                     onClick={() => {
                       setVideoFile(null);
                       setVideoDisplay('none');
@@ -682,6 +690,10 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
         AddFollowUp={AddFollowUp}
         loading={loading}
         onChange={(e: any) => setFollowUpDescription(e.currentTarget.value)}
+        nextTrackingDateTime={(date: any) => {
+          const selectedDate = date.toDate();
+          setNextTrackingDateTime(selectedDate.toISOString());
+        }}
       />
       <SuspendCauseModal
         closeModal={closeModal}
@@ -722,6 +734,11 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
         reject={() => {
           setConfirmModalVisible(false);
         }}
+      />
+      <CallModal
+        callModalVisible={displayCallModal}
+        closeModal={handleCallModal}
+        phoneNumbers={[missionDetail?.consumerPhoneNumber, missionDetail?.userName]}
       />
     </>
   );

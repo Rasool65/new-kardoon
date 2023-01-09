@@ -7,10 +7,6 @@ import { ITechnicians } from '@src/models/output/orderDetail/IOrderDetailListRes
 import ShowImageModal from '../../components/showImageModal/ShowImageModal';
 import Form from '@rjsf/core';
 import { IProblemList } from '@src/models/output/missionDetail/IMissionDetailListResultModel';
-import { APIURL_POST_INVOICE_CHECKOUT } from '@src/configs/apiConfig/apiUrls';
-import { IOutputResult } from '@src/models/output/IOutputResult';
-import useHttpRequest from '@src/hooks/useHttpRequest';
-import { useToast } from '@src/hooks/useToast';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 
 interface RequestDetailInfoProps {
@@ -21,11 +17,8 @@ interface RequestDetailInfoProps {
 
 const RequestDetailInfo: FunctionComponent<RequestDetailInfoProps> = ({ requestDetailInfo, getOrder, loading }) => {
   const color = useSelector((state: RootStateType) => state.theme.color);
-  const httpRequest = useHttpRequest();
   const [displayImage, setDisplayImage] = useState<boolean>(false);
-  const [checkoutLoading, setCheckoutLoading] = useState<boolean>(false);
   const [imageSrc, setImageSrc] = useState<string>();
-  const toast = useToast();
 
   const handleDisplay = () => {
     setDisplayImage(!displayImage);
@@ -40,25 +33,6 @@ const RequestDetailInfo: FunctionComponent<RequestDetailInfoProps> = ({ requestD
     return requestDetailInfo?.files ? requestDetailInfo?.files?.some((x) => x.fileType == fileType) : false;
   };
 
-  const Checkout = (paymentId: number, consumerPaymentAmount: number) => {
-    const body = {
-      paymentId: paymentId,
-      consumerPaymentAmount: consumerPaymentAmount,
-    };
-    setCheckoutLoading(true);
-    !loading &&
-      httpRequest
-        .postRequest<IOutputResult<any>>(`${APIURL_POST_INVOICE_CHECKOUT}`, body)
-        .then((result) => {
-          toast.showSuccess(result.data.message);
-          getOrder();
-          setCheckoutLoading(false);
-        })
-        .finally(() => {
-          setCheckoutLoading(false);
-        });
-  };
-
   return (
     <>
       {loading ? (
@@ -66,106 +40,108 @@ const RequestDetailInfo: FunctionComponent<RequestDetailInfoProps> = ({ requestD
           <LoadingComponent />
         </div>
       ) : (
-        <div className="container order-details">
-          <div className="row">
-            <div className="col-12">
-              <div className="order-status">
-                <div className="title">وضعیت رسید</div>
-                <span>{requestDetailInfo?.statusTitle}</span>
-              </div>
-            </div>
-            {requestDetailInfo?.attributes && (
-              <div className="col-12 mt-4">
-                <Form
-                  children={true}
-                  schema={requestDetailInfo.attributes.attributes}
-                  formData={requestDetailInfo.attributes.attributeValues}
-                  uiSchema={uiSchema}
-                />
-              </div>
-            )}
-            {requestDetailInfo?.problemList && (
+        <div className="container order-details mb-5">
+          <div className="p-4 mx-8 page-tabs-body">
+            <div className="row">
               <div className="col-12">
-                <div className="title mt-4">علت درخواست</div>
-
-                <ul>
-                  {requestDetailInfo?.problemList &&
-                    requestDetailInfo?.problemList.length > 0 &&
-                    requestDetailInfo?.problemList.map((problems: IProblemList, index: number) => {
-                      return <li>{problems.label}</li>;
-                    })}
-                </ul>
+                <div className="order-status">
+                  <div className="title">وضعیت رسید</div>
+                  <span>{requestDetailInfo?.statusTitle}</span>
+                </div>
               </div>
-            )}
+              {requestDetailInfo?.attributes && (
+                <div className="col-12 mt-4">
+                  <Form
+                    children={true}
+                    schema={requestDetailInfo.attributes.attributes}
+                    formData={requestDetailInfo.attributes.attributeValues}
+                    uiSchema={uiSchema}
+                  />
+                </div>
+              )}
+              {requestDetailInfo?.problemList && (
+                <div className="col-12">
+                  <div className="title mt-4">علت درخواست</div>
 
-            {checkMedia('Image') && (
-              <div className="col-12">
-                <div className="title mt-4">تصاویر</div>
-                <div className="gallery-box">
+                  <ul>
+                    {requestDetailInfo?.problemList &&
+                      requestDetailInfo?.problemList.length > 0 &&
+                      requestDetailInfo?.problemList.map((problems: IProblemList, index: number) => {
+                        return <li>{problems.label}</li>;
+                      })}
+                  </ul>
+                </div>
+              )}
+
+              {checkMedia('Image') && (
+                <div className="col-12">
+                  <div className="title mt-4">تصاویر</div>
+                  <div className="gallery-box">
+                    {requestDetailInfo?.files &&
+                      requestDetailInfo?.files.length > 0 &&
+                      requestDetailInfo?.files.map((media: IFiles, index: number) => {
+                        return (
+                          <>
+                            {media.fileType == 'Image' && (
+                              <div
+                                className="gallery-image pointer"
+                                onClick={() => {
+                                  setImageSrc(media.fileUrl), setDisplayImage(true);
+                                }}
+                                style={{ backgroundImage: `url(${media.fileUrl})` }}
+                              />
+                            )}
+                          </>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
+              {checkMedia('Video') && (
+                <div className="col-12">
+                  <div className="title mt-4">ویدیوها</div>
+                  <div className="gallery-box">
+                    {requestDetailInfo?.files &&
+                      requestDetailInfo?.files.length > 0 &&
+                      requestDetailInfo?.files.map((media: IFiles, index: number) => {
+                        return <>{media.fileType == 'Video' && <video controls src={media?.fileUrl} />}</>;
+                      })}
+                  </div>
+                </div>
+              )}
+              {checkMedia('Audio') && (
+                <div className="col-12">
+                  <div className="title mt-4 mb-3">پیام صوتی</div>
                   {requestDetailInfo?.files &&
                     requestDetailInfo?.files.length > 0 &&
                     requestDetailInfo?.files.map((media: IFiles, index: number) => {
+                      return <>{media.fileType == 'Audio' && <audio src={media.fileUrl} controls />}</>;
+                    })}
+                </div>
+              )}
+              <div className="col-12 pb-5">
+                <div className="title mt-4 mb-3">اسامی تکنسین ها</div>
+                <ul className="technician-list">
+                  {requestDetailInfo?.technicianList &&
+                    requestDetailInfo?.technicianList.length > 0 &&
+                    requestDetailInfo?.technicianList.map((technician: ITechnicians, index: number) => {
                       return (
                         <>
-                          {media.fileType == 'Image' && (
-                            <div
-                              className="gallery-image pointer"
-                              onClick={() => {
-                                setImageSrc(media.fileUrl), setDisplayImage(true);
-                              }}
-                              style={{ backgroundImage: `url(${media.fileUrl})` }}
-                            />
-                          )}
+                          <li>
+                            <div className="technician-name">
+                              {technician.firstName} {technician.lastName}
+                            </div>
+                            <a href={`tel:${technician.phoneNumber}`} className="phonenumber">
+                              {' '}
+                              <span>{technician.phoneNumber}</span>{' '}
+                              <img src={require(`@src/scss/images/icons/${color}-phone.svg`)} alt="" />
+                            </a>
+                          </li>
                         </>
                       );
                     })}
-                </div>
+                </ul>
               </div>
-            )}
-            {checkMedia('Video') && (
-              <div className="col-12">
-                <div className="title mt-4">ویدیوها</div>
-                <div className="gallery-box">
-                  {requestDetailInfo?.files &&
-                    requestDetailInfo?.files.length > 0 &&
-                    requestDetailInfo?.files.map((media: IFiles, index: number) => {
-                      return <>{media.fileType == 'Video' && <video controls src={media?.fileUrl} />}</>;
-                    })}
-                </div>
-              </div>
-            )}
-            {checkMedia('Audio') && (
-              <div className="col-12">
-                <div className="title mt-4 mb-3">پیام صوتی</div>
-                {requestDetailInfo?.files &&
-                  requestDetailInfo?.files.length > 0 &&
-                  requestDetailInfo?.files.map((media: IFiles, index: number) => {
-                    return <>{media.fileType == 'Audio' && <audio src={media.fileUrl} controls />}</>;
-                  })}
-              </div>
-            )}
-            <div className="col-12 pb-5">
-              <div className="title mt-4 mb-3">اسامی تکنسین ها</div>
-              <ul className="technician-list">
-                {requestDetailInfo?.technicianList &&
-                  requestDetailInfo?.technicianList.length > 0 &&
-                  requestDetailInfo?.technicianList.map((technician: ITechnicians, index: number) => {
-                    return (
-                      <>
-                        <li>
-                          <div className="technician-name">
-                            {technician.firstName} {technician.lastName}
-                          </div>
-                          <a href={`tel:${technician.phoneNumber}`} className="phonenumber">
-                            {' '}
-                            <span>{technician.phoneNumber}</span>{' '}
-                            <img src={require(`@src/scss/images/icons/${color}-phone.svg`)} alt="" />
-                          </a>
-                        </li>
-                      </>
-                    );
-                  })}
-              </ul>
             </div>
           </div>
         </div>

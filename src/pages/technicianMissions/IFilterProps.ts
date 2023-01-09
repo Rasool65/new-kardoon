@@ -9,4 +9,5 @@ export interface IFilterProps {
   loading: boolean;
   onClickFilter: any;
   onClickNoFilter: any;
+  emptyList?: any;
 }

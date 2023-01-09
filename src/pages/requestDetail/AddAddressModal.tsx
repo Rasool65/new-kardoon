@@ -47,7 +47,8 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
   const toast = useToast();
   const messagesEndRef = useRef(null);
   const httpRequest = useHttpRequest();
-  const [forMe, setForMe] = useState<Boolean>(true);
+  const [forMe, setForMe] = useState<boolean>(true);
+  const [regionShow, setRegionShow] = useState<boolean>(false);
   const { t }: any = useTranslation();
 
   const scrollToBottom = () => {
@@ -78,28 +79,30 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
   };
 
   const GetCountryList = () => {
-    httpRequest.getRequest<IOutputResult<ICountryResultModel>>(`${APIURL_GET_COUNTRIES}`).then((result) => {
+    httpRequest.getRequest<IOutputResult<ICountryResultModel[]>>(`${APIURL_GET_COUNTRIES}`).then((result) => {
       setCountries(result.data.data);
     });
   };
   const GetProvincesList = (countryId: number) => {
-    httpRequest.getRequest<IOutputResult<IProvinceResultModel>>(`${APIURL_GET_PROVINES}?ParentId=${countryId}`).then((result) => {
-      setProvinces(result.data.data);
-    });
+    httpRequest
+      .getRequest<IOutputResult<IProvinceResultModel[]>>(`${APIURL_GET_PROVINES}?ParentId=${countryId}`)
+      .then((result) => {
+        setProvinces(result.data.data);
+      });
   };
   const GetCityList = (provinesId: number) => {
-    httpRequest.getRequest<IOutputResult<ICitiesResultModel>>(`${APIURL_GET_CITIES}?ParentId=${provinesId}`).then((result) => {
+    httpRequest.getRequest<IOutputResult<ICitiesResultModel[]>>(`${APIURL_GET_CITIES}?ParentId=${provinesId}`).then((result) => {
       setCities(result.data.data);
     });
   };
   const GetRegionList = (citiesId: number) => {
-    httpRequest.getRequest<IOutputResult<IRegionResultModel>>(`${APIURL_GET_REGIONES}?ParentId=${citiesId}`).then((result) => {
-      setRegion(result.data.data);
+    httpRequest.getRequest<IOutputResult<IRegionResultModel[]>>(`${APIURL_GET_REGIONES}?ParentId=${citiesId}`).then((result) => {
+      result.data.data.length > 0 ? setRegion(result.data.data) : GetDistrictList(citiesId), setRegionShow(true);
     });
   };
   const GetDistrictList = (regionId: number) => {
     httpRequest
-      .getRequest<IOutputResult<IDistrictsResultModel>>(`${APIURL_GET_DISTRICTS}?ParentId=${regionId}`)
+      .getRequest<IOutputResult<IDistrictsResultModel[]>>(`${APIURL_GET_DISTRICTS}?ParentId=${regionId}`)
       .then((result) => {
         setDistritcs(result.data.data);
       });
@@ -132,7 +135,8 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
       httpRequest
         .postRequest<IOutputResult<IAddAddressesResultModel>>(APIURL_POST_ADD_USER_ADDRESS, body)
         .then((result) => {
-          toast.showSuccess(result.data.message);
+          result.data.isSuccess ? toast.showSuccess(result.data.message) : toast.showError(result.data.message);
+          reject();
           GetAddresses();
           setLoading(false);
         })
@@ -147,17 +151,17 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
     GetCountryList();
   }, []);
   return (
-    <div className={`modal ${AddAddressModalVisible ? 'd-block' : ''}`}>
-      <div className="modal-content">
+    <div className={`modal select-address-modal ${AddAddressModalVisible ? 'd-block' : ''}`}>
         <div className="modal-header">
           <h2 className="header pointer" onClick={reject}>
             X
           </h2>
           <h1 className="header">افزودن آدرس جدید</h1>
         </div>
+      <div className="modal-content">
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <div className="card p-4" style={{ marginBottom: '0px' }}>
-            <div style={{ height: '550px', overflow: 'scroll' }}>
+          <div className="h-100-55" style={{ marginBottom: '0px' }}>
+            <div className="address-modal-fild">
               <Controller
                 name="title"
                 control={control}
@@ -185,11 +189,15 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
                 render={({ field }: any) => (
                   <>
                     <Input
+                    id='zipcode'
                       className="form-control"
                       type="number"
                       placeholder={t('EnterZipCode')}
                       autoComplete="off"
                       invalid={errors.zipCode && true}
+                      
+                      // onInput ="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength)"
+                      onInput={(e)=>{e.currentTarget.value.length<10?e:5  }}
                       {...field}
                     />
                     <FormFeedback>{errors.zipCode?.message}</FormFeedback>
@@ -282,6 +290,7 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
                   <>
                     <Select
                       isClearable
+                      isDisabled={regionShow}
                       isLoading={loading}
                       noOptionsMessage={() => t('ListIsEmpty')}
                       placeholder={t('SelectRegion')}
@@ -293,7 +302,7 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
                         field.onChange(e);
                         e ? (setRegionId(e.value), setDistrictId(e.value), GetDistrictList(e.value)) : setDistrictId(undefined),
                           setDistritcs([]);
-                        //   GetRegionList(cityId!);
+                        GetRegionList(cityId!);
                       }}
                     />
                     <FormFeedback className="d-block">{errors?.regionId?.value?.message}</FormFeedback>
@@ -402,10 +411,18 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
                 </Row>
               </Container>
 
-              <b>
-                <Button onClick={(e) => changeForMe(true)}>{t('ForMe')}</Button>
-                <Button onClick={(e) => changeForMe(false)}>{t('ForOther')}</Button>
-              </b>
+              <div className="toggle-center text-center">
+                <label className='ml-2' htmlFor="">برای خودم</label>
+                <Input
+                  defaultChecked={true}
+                  onChange={(e) => {
+                    e.currentTarget.checked ? changeForMe(true) : changeForMe(false);
+                  }}
+                  type="checkbox"
+                  className="toggle-checkbox"
+                />
+                <label className='mr-2' htmlFor="">برای دیگری</label>
+              </div>
 
               {forMe ? null : (
                 <div>
@@ -483,8 +500,9 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
                   />
                 </div>
               )}
+
             </div>
-            <Button type="submit" className="">
+            <Button type="submit" className="add-address-btn">
               {loading ? <LoadingComponent /> : 'ذخیره آدرس'}
             </Button>
           </div>

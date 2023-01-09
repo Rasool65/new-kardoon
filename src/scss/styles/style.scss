@@ -8,6 +8,8 @@
 @import "./pages/missionList/missionList.scss";
 @import "./pages/responsive.scss";
 @import "./pages/new-style.scss";
+@import "./pages/skeletonLoading/skeleton.scss";
+@import "./pages/guarantee/guarantee.scss";
 
 /*=============================================
 =                   FONT FAMILIES            =
@@ -41,7 +43,12 @@
   src: url("../fonts/IRANSansMobile_Medium.ttf") format("truetype");
   font-weight: normal;
 }
-
+@font-face {
+  font-family: ClarendonBlkBTBlack;
+  src: url("../fonts/ClarendonBlkBTBlack.ttf");
+  src: url("../fonts/ClarendonBlkBTBlack.ttf") format("truetype");
+  font-weight: normal;
+}
 /*=====        End of FONT FAMILIES      ======*/
 
 body {

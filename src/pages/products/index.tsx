@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { IProductsResultModel } from './../../models/output/products/IProductsResultModel';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
-import { URL_CITY, URL_MAIN, URL_ORDER_DETAIL, URL_PROVINCE, URL_REQUEST_DETAIL } from '@src/configs/urls';
-import { AccordionBody, AccordionHeader, Spinner, UncontrolledAccordion } from 'reactstrap';
+import { URL_MAIN, URL_PROVINCE, URL_REQUEST_DETAIL } from '@src/configs/urls';
+import { AccordionBody, AccordionHeader, UncontrolledAccordion } from 'reactstrap';
 import PrevHeader from '@src/layout/Headers/PrevHeader';
 import Footer from '@src/layout/Footer';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
@@ -96,7 +96,7 @@ const Products: FunctionComponent<IPageProps> = (props) => {
       <div>
         <div className="page-content select-product-page">
           <div className="container">
-            <h4 className='mt-4'>{t('PleaseSelectProduct')}</h4>
+            <h4 className="mt-4">{t('PleaseSelectProduct')}</h4>
             <div className="card mt-4">
               <div className="content">
                 {/* <h4>{t('SelectProduct')}</h4>

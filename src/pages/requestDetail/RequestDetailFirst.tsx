@@ -1,7 +1,7 @@
-import React, { Component, FunctionComponent, useCallback, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { Col, Container, Form, FormFeedback, Input, Row, Button, Label } from 'reactstrap';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Col, Form, FormFeedback, Input, Row, Button, Label, Spinner } from 'reactstrap';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
@@ -19,7 +19,6 @@ import { resizeFile } from '@src/utils/ResizerImage';
 
 const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleClickNextToSecond, handleClickMore }) => {
   let { audioData, audioURL, isRecording, startRecording, stopRecording } = useRecorder();
-  const cityId = useSelector((state: RootStateType) => state.authentication.userData?.profile.residenceCityId);
   const color = useSelector((state: RootStateType) => state.theme.color);
   const { t }: any = useTranslation();
   const { state }: any = useLocation();
@@ -34,6 +33,8 @@ const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleC
   const [videoFile, setVideoFile] = useState<any>();
   const [more, setMore] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [recordTime, setRecordTime] = useState<number>(0);
+
   const {
     register,
     control,
@@ -97,20 +98,27 @@ const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleC
     setVideoDisplay('flex');
   };
 
+  useEffect(() => {
+    recordTime != 0 &&
+      isRecording &&
+      setTimeout(() => {
+        setRecordTime(recordTime + 1);
+      }, 1000);
+  }, [recordTime]);
   return (
     <div>
       <PrevHeader />
       <div className="page-content request-details-1">
         <div className="container">
-          <div className="page-title pointer mt-4 mb-4">جزئیات سفارش</div>
+          <div className="page-title pointer mt-3 mb-3">جزئیات سفارش</div>
 
           <div className="">
             <div className="">
               <>
                 <Form onSubmit={handleSubmit(onSubmit)}>
                   {' '}
-                  <div className="mt-4">
-                    <div className="card mb-3">
+                  <div className="">
+                    <div className="card mb-2">
                       لطفا جزئیات سفارش خود را مشخص کنید.
                       <Controller
                         name="problemList"
@@ -152,7 +160,7 @@ const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleC
                     </div>
 
                     <div className="upload-section">
-                      <div className="card">
+                      <div className="card mb-2 p-2 px-3">
                         <Row>
                           <Col xs={12} style={{ textAlign: 'right', padding: '0 12px 0 2px' }}>
                             در صورت تمایل می توانید درخواست خود را در قالب یک پیام صوتی حداکثر دو دقیقه ای ارسال کنید.
@@ -166,6 +174,7 @@ const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleC
                                   src={require(`@src/scss/images/icons/${color}-voice.svg`)}
                                   onClick={() => {
                                     startRecording();
+                                    setRecordTime(1);
                                     setAudioDisplay('flex');
                                   }}
                                   width="46"
@@ -177,9 +186,10 @@ const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleC
                                 <img
                                   hidden={!isRecording}
                                   className="pointer stop-recording"
-                                  src={require(`@src/scss/images/icons/${color}-stop.svg`)}
+                                  src={require(`@src/scss/images/icons/red-stop.svg`)}
                                   onClick={() => {
                                     stopRecording();
+                                    setRecordTime(0);
                                   }}
                                   width="46"
                                   height="46"
@@ -188,6 +198,20 @@ const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleC
                               </div>
                               <p>ضبط صدا</p>
                             </div>
+                            {
+                              <div className="recording-box" hidden={!isRecording}>
+                                <div className="d-flex">
+                                  <div hidden={!isRecording} className="recording"></div>
+                                  <span hidden={!isRecording}>در حال ضبط</span>
+                                  <div>
+                                    <span className="time-count"> {recordTime}</span> ثانیه
+                                  </div>
+                                </div>
+                                <div className="record-line" hidden={!isRecording}>
+                                  <span></span>
+                                </div>
+                              </div>
+                            }
                           </Col>
                         </Row>
                         <div
@@ -223,7 +247,7 @@ const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleC
                         </div>
                       </div>
 
-                      <div className="card">
+                      <div className="card mb-2 p-2 px-3">
                         <Row>
                           <Col xs={12}>با افزودن عکس، متخصصان ما می توانند بهتر شما را راهنمایی کنند.</Col>
                           <Col xs={12}>
@@ -282,7 +306,7 @@ const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleC
                         </div>
                       </div>
 
-                      <div className="card">
+                      <div className="card mb-2 p-2 px-3">
                         <Row>
                           <Col xs={12}>با افزودن ویدئو، متخصصان ما می توانند بهتر شما را راهنمایی کنند.</Col>
                           <Col xs={12}>

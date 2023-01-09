@@ -22,10 +22,10 @@ const initial_Color = () => {
   return localStorage.getItem('color') || 'red';
 };
 const initial_Font = () => {
-  var themeFont = localStorage.getItem('font') || 'medium';
+  var themeFont = Number(localStorage.getItem('font')) || 14;
   const root = document.documentElement;
   switch (themeFont) {
-    case 'small':
+    case 12:
       root?.style.setProperty('--fs-xss', '0.5rem');
       root?.style.setProperty('--fs-xs', '0.65rem');
       root?.style.setProperty('--fs-sm', '0.65rem');
@@ -34,7 +34,7 @@ const initial_Font = () => {
       root?.style.setProperty('--fs-xl', '1.25rem');
       root?.style.setProperty('--fs-xxl', '1.5rem');
       break;
-    case 'medium':
+    case 14:
       root?.style.setProperty('--fs-xss', '0.65rem');
       root?.style.setProperty('--fs-xs', '0.75rem');
       root?.style.setProperty('--fs-sm', '0.75rem');
@@ -43,7 +43,7 @@ const initial_Font = () => {
       root?.style.setProperty('--fs-xl', '1.40rem');
       root?.style.setProperty('--fs-xxl', '1.70rem');
       break;
-    case 'large':
+    case 16:
       root?.style.setProperty('--fs-xss', '0.70rem');
       root?.style.setProperty('--fs-xs', '0.75rem');
       root?.style.setProperty('--fs-sm', '0.87rem');
@@ -53,7 +53,7 @@ const initial_Font = () => {
       root?.style.setProperty('--fs-xxl', '1.875rem');
       break;
   }
-  return localStorage.getItem('font') || 'medium';
+  return localStorage.getItem('font') || 14;
 };
 
 export const themeSlice = createSlice({

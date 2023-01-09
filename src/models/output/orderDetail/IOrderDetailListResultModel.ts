@@ -27,17 +27,27 @@ export interface IRequestDetailInfo {
   presenceShift?: string;
 }
 export interface IInvoices {
-  paymentId: number;
-  serviceTypeTitle?: string; // نوع خدمت
-  actionTitle?: string; // گروه خدمات
-  description?: string; // شرح اقدامات
+  invoiceId?: number;
+  totalPaymentAmount?: number;
+  totalPaymentAmountAfterDiscount?: number;
+  discount?: boolean;
+  productCategoryTitle?: string;
+  requestNumber?: string;
+  invoiceStatusId?: number;
+  invoiceStatusTitle?: string;
+  detailList?: IDetailInvoiceList[];
+}
+export interface IDetailInvoiceList {
+  paymentId?: number;
+  serviceTypeTitle?: string;
   productName?: string;
   price?: number;
-  discount?: boolean;
-  settlementStatus?: boolean;
   priceAfterDiscount: number;
-  status?: string; // نقدی | اعتباری | گارانتی
-  // paymentUrl?: string;
+  discount?: boolean;
+  settlementStatus: boolean;
+  status?: string;
+  actionTitle?: string;
+  description?: string;
   paymentType?: string;
   costSource?: number;
 }

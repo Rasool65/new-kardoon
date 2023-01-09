@@ -36,14 +36,14 @@ export const UpdateAddressModelSchema: yup.SchemaOf<IUpdateAddressModel> = yup.o
     label: yup.string(),
   }),
   regionId: yup.object({
-    value: yup.number().required('انتخاب نام منطقه الزامیست'),
+    value: yup.number(),
     label: yup.string(),
   }),
   districtId: yup.object({
     value: yup.number().required('انتخاب نام محله الزامیست'),
     label: yup.string(),
   }),
-  zipCode: yup.string().required(t('ZipCodeRequired')),
+  zipCode: yup.string().length(10, 'کد پستی میبایست 10 رقم باشد').required(t('ZipCodeRequired')),
   latitude: yup.number(),
   longitude: yup.number(),
   title: yup.object({ label: yup.string(), value: yup.number().required(t('TitleRequired')) }),

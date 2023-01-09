@@ -8,19 +8,16 @@ import { IOutputResult } from '@src/models/output/IOutputResult';
 import { RootStateType } from '@src/redux/Store';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Spinner } from 'reactstrap';
 
 const ProvinceList: FunctionComponent<IPageProps> = ({ title }) => {
-  const userData = useSelector((state: RootStateType) => state.authentication.userData);
   const color = useSelector((state: RootStateType) => state.theme.color);
   const [loading, setLoading] = useState<boolean>(false);
   const [province, setProvince] = useState<IProvinceResultModel[]>();
   const httpRequest = useHttpRequest();
   const { t }: any = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const GetProvincesList = () => {
     setLoading(true);

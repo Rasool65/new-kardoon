@@ -75,7 +75,7 @@ const FooterCard: FunctionComponent<IFooterCardModel> = () => {
                     className="home-vector33"
                   />
                   <a href="https://goo.gl/maps/ttNeos4hBXxwjyZo9">
-                    شهران جنوبی، خیابان اردوشاهی، کوچه رز، کوچه رضوان، پلاک 1، ساختمتن مشتریان گلدیران، طبقه پنجم
+                    شهران جنوبی، خیابان اردوشاهی، کوچه رز، کوچه رضوان، پلاک 1، ساختمان مشتریان گلدیران، طبقه پنجم
                   </a>
                 </li>
                 <li>

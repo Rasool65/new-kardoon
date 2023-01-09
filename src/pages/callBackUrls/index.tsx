@@ -22,7 +22,6 @@ const CallBackUrl: FunctionComponent<CallBackUrl> = () => {
   const search = useLocation().search;
   const [timer, setTimer] = useState<boolean>(true);
   const resCode = new URLSearchParams(search).get('ResCode');
-  // const refId = new URLSearchParams(search).get('RefId');
   const paymentId = new URLSearchParams(search).get('SaleOrderId');
   const URL = new URLSearchParams(search).get('DestinationUrl');
 
@@ -58,13 +57,11 @@ const CallBackUrl: FunctionComponent<CallBackUrl> = () => {
             <div className=" text-center">
               <p className="title">پرداخت موفق</p>
               <h2 className="color-white mt-4 mb-4">{resultCode[resCode]}</h2>
-              <p className="description">
-                در صورتی که بصورت خودکار به صفحه پرداخت منتقل نشده اید روی دکمه زیر کلیک نمایید
-              </p>
+              <p className="description">در صورتی که بصورت خودکار به صفحه پرداخت منتقل نشده اید روی دکمه زیر کلیک نمایید</p>
               {
                 <>
-                  <h5 className='wating-text'>در حال بازگشت به صفحه پرداخت... </h5>
-                  <div className='time-count'>{remainingTimeSeconds}</div>
+                  <h5 className="wating-text">در حال بازگشت به صفحه پرداخت... </h5>
+                  <div className="time-count">{remainingTimeSeconds}</div>
                 </>
               }
               <div className="row">
@@ -78,20 +75,19 @@ const CallBackUrl: FunctionComponent<CallBackUrl> = () => {
                   >
                     بازگشت به صفحه پرداخت
                   </button>
-                  
                 </div>
                 <div className="col-12 col-md-6">
-                    {timer && (
-                      <button
-                        onClick={() => {
-                          ShowDetailPayment();
-                        }}
-                        style={{ cursor: 'pointer' }}
-                        className="success-btn fz-16 mt-0"
-                      >
-                        {loading ? <Spinner style={{ width: '1rem', height: '1rem' }} /> : 'مشاهده جزییات تراکنش'}
-                      </button>
-                    )}
+                  {timer && (
+                    <button
+                      onClick={() => {
+                        ShowDetailPayment();
+                      }}
+                      style={{ cursor: 'pointer' }}
+                      className="success-btn fz-16 mt-0"
+                    >
+                      {loading ? <Spinner style={{ width: '1rem', height: '1rem' }} /> : 'مشاهده جزییات تراکنش'}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -109,13 +105,11 @@ const CallBackUrl: FunctionComponent<CallBackUrl> = () => {
                   resultCode[resCode]
                 }
               </h2>
-              <p className="description">
-                چنانچه مبلغ از حساب شما کسر شده ، ظرف 24 ساعت آینده ، مبلغ کسر شده واریز خواهد شد.
-              </p>
+              <p className="description">چنانچه مبلغ از حساب شما کسر شده ، ظرف 24 ساعت آینده ، مبلغ کسر شده واریز خواهد شد.</p>
               {
                 <>
-                  <h5 className='wating-text'>در حال بازگشت به صفحه پرداخت... </h5>
-                  <div className='time-count'>{remainingTimeSeconds}</div>
+                  <h5 className="wating-text">در حال بازگشت به صفحه پرداخت... </h5>
+                  <div className="time-count">{remainingTimeSeconds}</div>
                 </>
               }
               <div className="row">
@@ -148,8 +142,6 @@ const CallBackUrl: FunctionComponent<CallBackUrl> = () => {
             <div className="card-overlay bg-red-light opacity-95"></div>
           </div>
         </div>
-
-        
       )}
       {/* payment Detail */}
       {!timer && (

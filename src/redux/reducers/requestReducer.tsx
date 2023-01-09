@@ -4,7 +4,7 @@ import { IRequestReducerState } from '../states/IRequestReducerState';
 export const requestSlice = createSlice({
   name: 'request',
   initialState: [
-    // {
+    // { در صورت نیاز در local storage ذخیره شود
     //   requestDetail: undefined,
     //   formGenDetail: undefined,
     // },

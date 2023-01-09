@@ -115,10 +115,9 @@ const RequestDetail: FunctionComponent<IPageProps> = (props) => {
       httpRequest
         .postRequest<IOutputResult<ICreateRequestResultModel>>(APIURL_POST_CREATE_REQUEST, formData)
         .then((result) => {
-          toast.showSuccess(result.data.message);
-          dispatch(handleResetRequest());
-          navigate(URL_MAIN);
-          setIsLoading(false);
+          result.data.isSuccess
+            ? (toast.showSuccess(result.data.message), dispatch(handleResetRequest()), navigate(URL_MAIN), setIsLoading(false))
+            : toast.showError(result.data.message);
         })
         .finally(() => {
           setIsLoading(false);

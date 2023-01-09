@@ -1,34 +1,32 @@
-import { ITechnicians } from '../orderDetail/IOrderDetailListResultModel';
-
 export interface IFactorResultModel {
-  requestNumber: string;
-  currentDateTime: string;
-  consumer: IConsumerFactor;
-  technician: ITechnicians;
-  totalPrice: number;
-  totalTechnicianShare: number;
-  totalKardoonShare: number;
-  totalAgentShare: number;
-  invoice: IInvoiceFactor[];
+  requestNumber?: string;
+  consumerFullName?: string;
+  nationalCode?: string;
+  contactNumber?: string;
+  address?: string;
+  zipCode?: string;
+  technicianFullName?: string;
+  actionName?: string;
+  count?: number;
+  price?: number;
+  totalPrice?: number;
+  presenceTime?: string;
+  presenceTimeShamsi?: string;
+  totalAmount?: number;
+  orderDetails?: IInvoiceOrderDetail[];
+  createdByFirstName?: string;
+  createdByLastName?: string;
+  totalTechnicianAmount?: number;
+  totalAgentAmount?: number;
+  totalKardoonAmount?: number;
 }
 
-export interface IInvoiceFactor {
-  serviceTypeTitle: string;
-  description: string;
-  productName: string;
-  actionTitle: string;
-  count: number;
-  unitPrice: number;
-  totalPrice: number;
-  technicianShare: number;
-  kardoonShare: number;
-  agentShare: number;
-}
-
-interface IConsumerFactor {
-  firstName: string;
-  lastName: string;
-  nationalCode: string;
-  address: string;
-  postalCode: string;
+export interface IInvoiceOrderDetail {
+  actionName?: string;
+  count?: number;
+  price?: number;
+  totalPrice?: number;
+  technicianAmount?: number;
+  agentAmount?: number;
+  kardoonAmount?: number;
 }

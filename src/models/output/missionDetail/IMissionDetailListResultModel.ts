@@ -1,6 +1,7 @@
 import { IFiles } from './IInvoiceActionResultModel';
 export interface IMissionDetailResultModel {
   consumerId: number;
+  userName?: string;
   requestDetailId: number;
   description: string;
   requestNumber: string;
@@ -27,6 +28,7 @@ export interface IMissionDetailResultModel {
   isUrgent: boolean;
   regionName?: string;
   files?: IFiles[];
+  orderId: number;
 }
 export interface IProblemList {
   value?: number;

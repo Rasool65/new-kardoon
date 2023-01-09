@@ -1,5 +1,5 @@
-import React, { Component, FunctionComponent, useEffect, useRef, useState } from 'react';
-import { Button, Col, Container, Input, Row, Spinner } from 'reactstrap';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { Col, Row } from 'reactstrap';
 import useHttpRequest from '@src/hooks/useHttpRequest';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
@@ -18,12 +18,12 @@ import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 
 const RequestDetailConfirm: FunctionComponent<IRequestDetailPageProp> = ({ handleClickMore, handleSubmit, isLoading }) => {
-  // const toast = useToast();
   const [selectDate, setSelectDate] = useState<string>('');
   const [addressList, setAddressList] = useState<IAddressesResultModel[]>();
   const [currentAddress, setCurrentAddress] = useState<IAddressesResultModel>();
   const [refKey, setRefKey] = useState<number>();
   const [isUrgent, setIsUrgent] = useState<boolean>(false);
+  const [active, setActive] = useState<boolean>();
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [editAddressModalVisible, setEditAddressModalVisible] = useState<boolean>(false);
@@ -156,6 +156,9 @@ const RequestDetailConfirm: FunctionComponent<IRequestDetailPageProp> = ({ handl
               <div className="card p-0 h-100">
                 <div className="card-header">
                   <h6>انتخاب آدرس</h6>
+                  <button onClick={() => handleAddAddressModal()} className="green-btn">
+                    + افزودن آدرس
+                  </button>
                 </div>
                 <div className="card-body p-4">
                   {loading ? (
@@ -165,7 +168,12 @@ const RequestDetailConfirm: FunctionComponent<IRequestDetailPageProp> = ({ handl
                     addressList.length &&
                     addressList.map((item: IAddressesResultModel, index: number) => {
                       return (
-                        <div className="address-box">
+                        <div
+                          className={`address-box ${active && 'active'}`}
+                          onClick={() => {
+                            setActive(true);
+                          }}
+                        >
                           <label className="" htmlFor={`radio${index}`}>
                             <div className="d-flex align-items-center">
                               <input
@@ -173,6 +181,8 @@ const RequestDetailConfirm: FunctionComponent<IRequestDetailPageProp> = ({ handl
                                 type="radio"
                                 name="inlineRadioOptions"
                                 onClick={(e) => {
+                                  // handleActive(index)
+
                                   setRefKey(item.refkey);
                                 }}
                                 value=""
@@ -203,16 +213,30 @@ const RequestDetailConfirm: FunctionComponent<IRequestDetailPageProp> = ({ handl
                             </div> */}
                           </label>
                           <div className="d-flex">
-                            <button
+                            <img
+                              src={require(`@src/scss/images/icons/${color}-delete.svg`)}
+                              className="delete-icon pointer"
                               onClick={() => {
                                 setRefKey(item.refkey!);
                                 setDeleteModalVisible(true);
                               }}
-                              className="delete-btn"
-                            >
-                              حذف
-                            </button>
-                            <button
+                              width="46"
+                              height="46"
+                              alt=""
+                            />
+                            <img
+                              src={require(`@src/scss/images/icons/more.svg`)}
+                              className="delete-icon pointer mr-2"
+                              onClick={() => {
+                                setCurrentAddress(item);
+                                setRefKey(item.refkey!);
+                                setEditAddressModalVisible(true);
+                              }}
+                              width="46"
+                              height="46"
+                              alt=""
+                            />
+                            {/* <button
                               onClick={() => {
                                 setCurrentAddress(item);
                                 setRefKey(item.refkey!);
@@ -221,15 +245,12 @@ const RequestDetailConfirm: FunctionComponent<IRequestDetailPageProp> = ({ handl
                               className="more-dtails-btn"
                             >
                               جزییات
-                            </button>
+                            </button> */}
                           </div>
                         </div>
                       );
                     })
                   )}
-                  <button onClick={() => handleAddAddressModal()} className="border-btn">
-                    + افزودن آدرس
-                  </button>
                 </div>
               </div>
             </div>

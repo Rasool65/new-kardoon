@@ -13,7 +13,7 @@ import {
   URL_TECHNICIAN_MISSION_DETAIL,
   URL_TECHNICIAN_MISSION_DETAIL_ACTION,
   URL_CHANGE_PASSWORD,
-  URL_TECHNICIAN_FACTOR,
+  URL_INVOICE,
   URL_CALLBACK,
   URL_CONVERSATION,
   URL_CHAT,
@@ -22,25 +22,26 @@ import {
   URL_TECHNICIAN_REQUEST,
   URL_NOT_FOUND,
   URL_TECHNICIAN_REGISTER_REQUEST,
+  URL_BLOG as URL_BLOG,
+  URL_GUARANTEE,
 } from './../urls';
 
 import IRoute from './IRoute';
 import RouteType from './RouteType';
-import LoginModal from '@src/pages/authentication/LoginModal';
+// import LoginModal from '@src/pages/authentication/LoginModal';
 import Profile from '@src/pages/profile';
-import test from '@src/pages/test';
 import Category from '@src/pages/category';
 import Products from '@src/pages/products';
 import Main from '@src/pages/main';
 import Order from '@src/pages/order';
 import RequestDetail from '@src/pages/requestDetail';
 import OrderDetail from '@src/pages/orderDetail';
-import TechnicianProfile from '@src/pages/technicianProfile';
+// import TechnicianProfile from '@src/pages/technicianProfile';
 import TechnicianMission from '@src/pages/technicianMissions';
 import technicianMissionDetail from '@src/pages/technicianMissionDetail';
 import Action from '@src/pages/technicianMissionDetail/technicianAction';
 import ChangePassword from '@src/pages/changePassword';
-import Factor from '@src/pages/factor';
+import Invoice from '@src/pages/invoice';
 import CallBackUrl from '@src/pages/callBackUrls';
 import Chat from '@src/pages/conversation/Chat';
 import Login from '@src/pages/authentication/Login';
@@ -51,6 +52,9 @@ import City from '@src/pages/province/City';
 import TechnicianRequest from '@src/pages/technicianMissionDetail/technicianRequest';
 import NotFound from '@src/pages/notFound';
 import TechnicianRequestConsumer from '@src/pages/TechnicianRequestConsumer';
+import ArchiveBlog from '@src/pages/blog/ArchiveBlog';
+import Blog from '@src/pages/blog';
+import Guarantee from '@src/pages/guarantee';
 
 const routes: IRoute[] = [
   {
@@ -91,14 +95,6 @@ const routes: IRoute[] = [
     type: RouteType.all,
     props: {
       title: 'محصولات',
-    },
-  },
-  {
-    path: '/test',
-    component: test,
-    type: RouteType.public,
-    props: {
-      title: 'test',
     },
   },
   {
@@ -149,14 +145,14 @@ const routes: IRoute[] = [
       title: 'جرئیات بیشتر سفارش',
     },
   },
-  {
-    path: URL_TECHNICIAN_PROFILE,
-    component: TechnicianProfile,
-    type: RouteType.private,
-    props: {
-      title: 'پروفایل متخصص',
-    },
-  },
+  // {
+  //   path: URL_TECHNICIAN_PROFILE,
+  //   component: TechnicianProfile,
+  //   type: RouteType.private,
+  //   props: {
+  //     title: 'پروفایل متخصص',
+  //   },
+  // },
   {
     path: URL_TECHNICIAN_MISSION,
     component: TechnicianMission,
@@ -190,11 +186,11 @@ const routes: IRoute[] = [
     },
   },
   {
-    path: URL_TECHNICIAN_FACTOR,
-    component: Factor,
+    path: URL_INVOICE,
+    component: Invoice,
     type: RouteType.all,
     props: {
-      title: 'صدور فاکتور',
+      title: 'مشاهده فاکتور',
     },
   },
   {
@@ -243,6 +239,22 @@ const routes: IRoute[] = [
     type: RouteType.private,
     props: {
       title: 'ثبت نام و درخواست برای مشتری',
+    },
+  },
+  {
+    path: URL_BLOG,
+    component: Blog,
+    type: RouteType.private,
+    props: {
+      title: 'اطلاع رسانی ها',
+    },
+  },
+  {
+    path: URL_GUARANTEE,
+    component: Guarantee,
+    type: RouteType.all,
+    props: {
+      title: 'لیست گارانتی ها',
     },
   },
 ];

@@ -10,7 +10,7 @@ import { FunctionComponent, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row, Spinner } from 'reactstrap';
+import { Button, Form, FormFeedback, Input, Label, Spinner } from 'reactstrap';
 import { IModalModel } from './ModalModel';
 
 const Register: FunctionComponent<IModalModel> = ({ showRegisterModal, display, handleClose }) => {

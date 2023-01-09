@@ -26,7 +26,7 @@ const SelectTheme: FunctionComponent<SelectThemeProps> = () => {
         root?.style.setProperty('--master-light-color', '#ffdde8');
     }
     switch (themeFont) {
-      case 'small':
+      case 12:
         root?.style.setProperty('--fs-xss', '0.5rem');
         root?.style.setProperty('--fs-xs', '0.65rem');
         root?.style.setProperty('--fs-sm', '0.65rem');
@@ -35,7 +35,7 @@ const SelectTheme: FunctionComponent<SelectThemeProps> = () => {
         root?.style.setProperty('--fs-xl', '1.25rem');
         root?.style.setProperty('--fs-xxl', '1.5rem');
         break;
-      case 'medium':
+      case 14:
         root?.style.setProperty('--fs-xss', '0.65rem');
         root?.style.setProperty('--fs-xs', '0.75rem');
         root?.style.setProperty('--fs-sm', '0.75rem');
@@ -44,7 +44,7 @@ const SelectTheme: FunctionComponent<SelectThemeProps> = () => {
         root?.style.setProperty('--fs-xl', '1.40rem');
         root?.style.setProperty('--fs-xxl', '1.70rem');
         break;
-      case 'large':
+      case 16:
         root?.style.setProperty('--fs-xss', '0.70rem');
         root?.style.setProperty('--fs-xs', '0.75rem');
         root?.style.setProperty('--fs-sm', '0.87rem');
@@ -85,14 +85,36 @@ const SelectTheme: FunctionComponent<SelectThemeProps> = () => {
           </button>
         </div>
         <div className="d-flex">
-          <button className="btn text-size-s" onClick={() => dispatch(font('small'))}>
-            A
+          <button
+            className="btn text-size-s"
+            onClick={() => {
+              themeFont > 12 && dispatch(font(themeFont - 2));
+            }}
+          >
+            <svg
+              width="24px"
+              height="24px"
+              viewBox="-5 -11 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              preserveAspectRatio="xMinYMin"
+              className="jam jam-minus"
+            >
+              <path d="M1 0h12a1 1 0 0 1 0 2H1a1 1 0 1 1 0-2z" />
+            </svg>
           </button>
-          <button className="btn text-size-m" onClick={() => dispatch(font('medium'))}>
-            A
+          <button
+            className="btn text-size-m"
+            // onClick={() => dispatch(font(14))}
+          >
+            {themeFont}
           </button>
-          <button className="btn text-size-l" onClick={() => dispatch(font('large'))}>
-            A
+          <button
+            className="btn text-size-l"
+            onClick={() => {
+              themeFont < 16 && dispatch(font(Number(themeFont) + 2));
+            }}
+          >
+            +
           </button>
         </div>
       </div>

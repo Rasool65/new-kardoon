@@ -4,10 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useHttpRequest from '@src/hooks/useHttpRequest';
-import { IProvinceResultModel } from '@src/models/output/countryDivision/IProvinceResultModel';
 import { RootStateType } from '@src/redux/Store';
 import { IOutputResult } from '@src/models/output/IOutputResult';
-import { APIURL_GET_CITIES, APIURL_GET_PROVINES, APIURL_UPDATE_RESIDENCE_CITY } from '@src/configs/apiConfig/apiUrls';
+import { APIURL_GET_CITIES, APIURL_UPDATE_RESIDENCE_CITY } from '@src/configs/apiConfig/apiUrls';
 import { ICitiesResultModel } from '@src/models/output/countryDivision/ICitiesResultModel';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import { useToast } from '@src/hooks/useToast';
@@ -31,7 +30,7 @@ const City: FunctionComponent<IPageProps> = (props) => {
   const GetCitiesList = () => {
     state.city
       ? httpRequest
-          .getRequest<IOutputResult<ICitiesResultModel>>(`${APIURL_GET_CITIES}?ParentId=${state.city.value}`)
+          .getRequest<IOutputResult<ICitiesResultModel[]>>(`${APIURL_GET_CITIES}?ParentId=${state.city.value}`)
           .then((result) => {
             setCities(result.data.data);
           })

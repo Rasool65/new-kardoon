@@ -4,9 +4,9 @@ import { mixed } from 'yup';
 export interface ITechnicianActionModel {
   id?: number;
   technicianId?: number;
-  price: number;
+  price: string;
   action: IAction;
-  count: number;
+  count?: string;
   serviceTypeId: IService;
   description: string;
   sourceCost: ISourceCost;
@@ -27,8 +27,9 @@ export const AddTechnicianActionModelSchema: yup.SchemaOf<ITechnicianActionModel
     label: yup.string().required('انتخاب نوع خدمت اجباریست'),
   }),
   technicianId: yup.number(),
-  price: yup.number().required('مقدار هزینه اجباریست').min(1, 'مبلغ نمی تواند صفر باشد '),
-  count: yup.number().required('تعداد اجباریست').min(1, 'تعداد نمی تواند کمتر از یک باشد '),
+  price: yup.string().required('مقدار هزینه اجباریست'),
+  // count: yup.string().required('تعداد اجباریست'),
+  count: yup.string(),
   description: yup.string().required('توضیحات شرح اقدام اجباریست'),
   action: yup.object({
     price: yup.number().nullable(),
@@ -36,7 +37,7 @@ export const AddTechnicianActionModelSchema: yup.SchemaOf<ITechnicianActionModel
     label: yup.string().required('انتخاب گروه خدمات اجباریست'),
   }),
   sourceCost: yup.object({
-    value: yup.number().required('انتخاب منبع هزینه اجباریست'),
+    value: yup.number().required('انتخاب  اجباریست'),
     label: yup.string().required('انتخاب منبع هزینه اجباریست'),
   }),
   // discountAmount: yup.string(),

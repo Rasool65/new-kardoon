@@ -48,7 +48,7 @@ const Register: FunctionComponent<RegisterProps> = ({ handleClickNext }) => {
       .getRequest<IOutputResult<IUserInfoTechnicianRequestModelResult>>(`${APIURL_GET_CONSUMER_INFO}?UserName=${phoneNumber}`)
       .then((result) => {
         result.data.data.id && toast.showSuccess('این کاربر قبلا ثبت نام کرده است');
-        result.data.data.id && handleClickNext(result.data.data.userName, 1);
+        result.data.data.id && handleClickNext(result.data.data.id, result.data.data.userName, 1);
       });
   };
 
@@ -90,7 +90,7 @@ const Register: FunctionComponent<RegisterProps> = ({ handleClickNext }) => {
   }, []);
   return (
     <>
-      <div className="container">
+      <div className="container p-4 pt-0 pb-0">
         <Form onSubmit={handleSubmit(onSubmit)}>
           <div className="row">
             <div className="col-12 col-md-6 col-lg-3">

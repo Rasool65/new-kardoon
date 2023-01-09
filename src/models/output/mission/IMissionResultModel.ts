@@ -9,6 +9,7 @@ export interface ITechnicianMissionList {
   consumerLastName?: string;
   address?: string;
   serviceTypeTitle?: string;
+  serviceTypeId?: number;
   productTitle?: string;
   presenceShiftId?: number;
   presenceShift?: string;

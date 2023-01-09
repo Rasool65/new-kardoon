@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
-import { IUserModel } from '@src/models/output/authentication/ILoginResultModel';
 import { APIURL_UPDATE_RESIDENCE_CITY } from '../../configs/apiConfig/apiUrls';
 import { updateUserData } from '@src/redux/reducers/authenticationReducer';
 import { URL_MAIN } from '@src/configs/urls';

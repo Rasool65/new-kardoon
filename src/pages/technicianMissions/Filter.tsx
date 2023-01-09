@@ -21,6 +21,7 @@ const Filter: FunctionComponent<IFilterProps> = ({
   loading,
   onClickFilter,
   onClickNoFilter,
+  emptyList,
 }) => {
   const cityId = useSelector((state: RootStateType) => state.authentication.userData?.profile.residenceCityId);
   const TechnicianId = useSelector((state: RootStateType) => state.authentication.userData?.userId);
@@ -112,18 +113,10 @@ const Filter: FunctionComponent<IFilterProps> = ({
             </div>
           </div>
           <div className="filter-btn-box">
-            <button
-              // onMouseDown={() => setTechnicianMissionList([])}
-              onClick={onClickFilter}
-              className="primary-btn"
-            >
+            <button onMouseDown={emptyList} onClick={onClickFilter} className="primary-btn">
               {loading ? <Spinner /> : 'اعمال فیلتر'}
             </button>
-            <button
-              // onMouseDown={() => setTechnicianMissionList([])}
-              onClick={onClickNoFilter}
-              className="primary-btn-outlined"
-            >
+            <button onMouseDown={emptyList} onClick={onClickNoFilter} className="primary-btn-outlined">
               {loading ? <Spinner /> : 'حذف فیلتر'}
             </button>
           </div>

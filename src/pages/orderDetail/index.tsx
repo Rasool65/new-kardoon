@@ -5,7 +5,7 @@ import PrevHeader from '@src/layout/Headers/PrevHeader';
 import RequestDetailInfo from './RequestDetailInfo';
 import Invoices from './Invoices';
 import FooterCard from '@src/layout/Footer';
-import { IRequestDetailInfo, IOrderDetailListResultModel } from '@src/models/output/orderDetail/IOrderDetailListResultModel';
+import { IOrderDetailListResultModel } from '@src/models/output/orderDetail/IOrderDetailListResultModel';
 import { APIURL_GET_ORDER_DETAILS } from '@src/configs/apiConfig/apiUrls';
 import { IOutputResult } from '@src/models/output/IOutputResult';
 import useHttpRequest from '@src/hooks/useHttpRequest';
@@ -46,7 +46,11 @@ const UserAccount: FunctionComponent<IPageProps> = (props) => {
   const GetOrder = () => {
     setLoading(true);
     httpRequest
-      .getRequest<IOutputResult<IOrderDetailListResultModel>>(`${APIURL_GET_ORDER_DETAILS}?id=${requestDetailId}`)
+      .getRequest<IOutputResult<IOrderDetailListResultModel>>(
+        `${
+          APIURL_GET_ORDER_DETAILS // 'http://127.0.0.1:2500/test'
+        }?id=${requestDetailId}`
+      )
       .then((result) => {
         setOrder(result.data.data);
         setLoading(false);
@@ -67,23 +71,23 @@ const UserAccount: FunctionComponent<IPageProps> = (props) => {
       <PrevHeader />
       <div className="container">
         <div className="px-2 w-100">
-          <div className="account-box">
-            <h4
+          <div className="page-tabs">
+            <button
+              className={`primary-btn m-3 w-50 ${activeTab == 0 ? 'active' : ''}`}
               onClick={() => {
                 handleClickTab(0);
               }}
-              className={`account-item pointer ${activeTab == 0 ? 'active' : ''}`}
             >
-              <a>جزییات رسید</a>
-            </h4>
-            <h4
+              جزئیات رسید
+            </button>
+            <button
+              className={`primary-btn m-3 w-50 float-end ${activeTab == 1 ? 'active' : ''}`}
               onClick={() => {
                 handleClickTab(1);
               }}
-              className={`account-item pointer ${activeTab == 1 ? 'active' : ''}`}
             >
-              <a>جزییات سفارش</a>
-            </h4>
+              جزییات سفارش
+            </button>
           </div>
         </div>
       </div>

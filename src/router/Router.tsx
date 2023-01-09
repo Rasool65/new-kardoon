@@ -31,7 +31,7 @@ const Routers: FunctionComponent = () => {
                       key={index}
                       path={route.path}
                       element={
-                        // <PrivateLayout {...route.props}> // problem with menu-main modal
+                        // <PrivateLayout {...route.props}>
                         <route.component name={route.name} {...route.props} />
                         // </PrivateLayout>
                       }

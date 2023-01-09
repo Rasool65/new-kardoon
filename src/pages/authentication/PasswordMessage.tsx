@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { FunctionComponent, useState } from 'react';
-import { Button, Form, FormFeedback, Input, Spinner } from 'reactstrap';
+import { FunctionComponent, useState } from 'react';
+import { Form, FormFeedback, Input } from 'reactstrap';
 import EnterCode from './EnterCode';
 import { IModalModel } from './ModalModel';
 import { ForgetPasswordModelSchema, IForgetPasswordModel } from './../../models/input/authentication/IForgetPasswordModel';
@@ -86,54 +86,6 @@ const PasswordMessage: FunctionComponent<IModalModel> = ({ display, handleClose 
         </Form>
       </div>
       <EnterCode handleClose={handleEditMobileNo} display={show} mobileNumber={mobileNumber} />
-      {/* <div
-        className={`menu menu-box-bottom menu-box-detached rounded-m ${showForgetPasswordModal ? 'menu-active' : ''}`}
-        style={{ display: 'inherit', height: 'fit-content' }}
-        data-menu-effect="menu-over"
-      >
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <div className="card p-4" style={{ marginBottom: '0px' }}>
-            {t('LoginWithSMS')}
-            <div
-              style={{ marginTop: '15px' }}
-              className={`input-style has-borders no-icon validate-field mb-4 ${input.mobile ? 'input-style-active' : ''}`}
-            >
-              <Controller
-                name="mobileNumber"
-                control={control}
-                render={({ field }: any) => (
-                  <>
-                    <Input
-                      id="form1a"
-                      onFocus={() => setInput({ mobile: true })}
-                      style={{ backgroundPosition: 'left', marginTop: '0', height: '53px' }}
-                      className="form-control validate-text"
-                      type="number"
-                      placeholder={t('EnterMobile')}
-                      autoComplete="off"
-                      invalid={errors.mobileNumber && true}
-                      {...field}
-                    />
-                    <label htmlFor="form4" className="color-highlight">
-                      {t('UserName')}
-                    </label>
-                    <em className={`${input.mobile ? 'disabled' : ''}`}>({t('Required')})</em>
-                    <FormFeedback>{errors.mobileNumber?.message}</FormFeedback>
-                  </>
-                )}
-              />
-            </div>
-            <Button
-              type="submit"
-              style={{ marginTop: '15px' }}
-              className="btn btn-full rounded-sm shadow-l bg-highlight btn-m font-900 text-uppercase mb-0"
-            >
-              {loading ? <Spinner style={{ width: '1rem', height: '1rem' }} /> : t('ReceivePassword')}
-            </Button>
-          </div>
-        </Form>
-      </div> */}
-      {/* <EnterCode showEnterCodeModal={show} mobileNumber={mobileNumber} handleEditMobileNo={handleEditMobileNo} /> */}
     </>
   );
 };

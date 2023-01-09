@@ -222,8 +222,7 @@ const Request: FunctionComponent<RequestProps> = () => {
       httpRequest
         .postRequest<IOutputResult<any>>(`${APIURL_POST_REQUEST_TECHNICIAN_WITH_ADDRESS}`, body)
         .then((result) => {
-          resetForm();
-          toast.showSuccess(result.data.message);
+          result.data.isSuccess ? (toast.showSuccess(result.data.message), resetForm()) : toast.showError(result.data.message);
           setLoading(false);
         })
         .finally(() => {

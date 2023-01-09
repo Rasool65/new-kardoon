@@ -36,6 +36,7 @@ export interface IIntrductionInfo {
   introductionCode: string;
 }
 export interface IUserModel {
+  guId: string;
   userId: number;
   userName: string;
   profile: IProfileUser;

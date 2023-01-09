@@ -2,28 +2,38 @@ import Footer from '@src/layout/Footer';
 import Header from '@src/layout/Headers/Header';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { IProfilePageProp } from './IProfilePageProp';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
-import { Input } from 'reactstrap';
+import { Input, Spinner } from 'reactstrap';
 import { IOutputResult } from '@src/models/output/IOutputResult';
 import useHttpRequest from '@src/hooks/useHttpRequest';
 import { ITechnicianProfileResultModel } from '@src/models/output/technician/ITechnicianProfileResultModel';
-import { APIURL_GET_TECHNICIAN_PROFILE, APIURL_POST_WALLET_PAYMENT } from '@src/configs/apiConfig/apiUrls';
+import {
+  APIURL_GET_TECHNICIAN_PROFILE,
+  APIURL_POST_WALLET_PAYMENT,
+  APIURL_POST_WALLET_WITH_DRAW,
+  API_URL_GET_WALLET_BALANCE,
+} from '@src/configs/apiConfig/apiUrls';
 import { UtilsHelper } from '@src/utils/GeneralHelpers';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import { BASE_URL } from '@src/configs/apiConfig/baseUrl';
 import { URL_CALLBACK } from '@src/configs/urls';
 import TransactionList from './TransactionList';
+import { useToast } from '@src/hooks/useToast';
+import { IWalletBalanceResultModel } from './../../models/output/orderDetail/IWalletBalanceResultModel';
+import { handleWalletBalance } from '@src/redux/reducers/messageReducer';
 
 const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
   const color = useSelector((state: RootStateType) => state.theme.color);
   const userData = useSelector((state: RootStateType) => state.authentication.userData);
   const httpRequest = useHttpRequest();
+  const toast = useToast();
   const [payment, setPayment] = useState<number>(0);
   const [profile, setProfile] = useState<ITechnicianProfileResultModel>();
   const [checkOutLoading, setCheckOutLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [walletBalance, setWalletBalance] = useState<number>();
+  const dispatch = useDispatch();
   const CheckOutPayment = (walletBalance: number) => {
     setCheckOutLoading(true);
     const body = {
@@ -53,8 +63,38 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
         setPayment(Math.abs(result.data.data.walletBalance));
       });
   };
+
+  const checkRole = (normalizedName: string) => {
+    return userData?.roles ? userData?.roles.some((roleName) => roleName.normalizedName === normalizedName) : false;
+  };
+
+  const GetWalletBalance = () => {
+    httpRequest.getRequest<IOutputResult<IWalletBalanceResultModel>>(`${API_URL_GET_WALLET_BALANCE}`).then((result) => {
+      setWalletBalance(result.data.data.balance);
+      dispatch(handleWalletBalance(result.data.data.balance));
+    });
+  };
+  const CashPayment = () => {
+    setCheckOutLoading(true);
+    const body = {
+      description: 'برداشت وجه',
+      amount: Math.abs(payment),
+      userId: userData?.userId,
+    };
+    httpRequest
+      .postRequest<IOutputResult<any>>(`${APIURL_POST_WALLET_WITH_DRAW}`, body)
+      .then((result) => {
+        setCheckOutLoading(false);
+        toast.showSuccess('برداشت وجه با موفقیت انجام شد');
+      })
+      .catch(() => {
+        setCheckOutLoading(false);
+      });
+  };
+
   useEffect(() => {
     GetTechnicianProfile();
+    GetWalletBalance();
   }, []);
   return (
     <>
@@ -91,7 +131,7 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
           <section className="profile-section">
             <div className="account-profile">
               <div
-                className={`profile-image user-activity ${!profile?.isActive && ' user-disable'}`}
+                className={`profile-image user-activity ${!profile?.isActive && checkRole('TECHNICIAN') && ' user-disable'}`}
                 style={{
                   backgroundImage: `url(${
                     userData?.profile?.profileImageUrl
@@ -115,15 +155,16 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
             <section>
               <div className="wallet-info">
                 <h5 className="item-label">موجودی کیف پول</h5>
-                <p className="wallet-amount">
-                  {UtilsHelper.threeDigitSeparator(
-                    profile?.walletBalance && profile?.walletBalance < 0
-                      ? '(' + profile?.walletBalance.toString().substring(1) + ') ریال بدهکار'
-                      : profile?.walletBalance.toString() + 'ریال بستانکار'
-                  )}{' '}
+                <p className={`wallet-amount ${walletBalance && walletBalance < 0 ? 'debtor-text' : 'creditor-text'}`}>
+                  {walletBalance
+                    ? UtilsHelper.threeDigitSeparator(
+                        walletBalance && walletBalance < 0
+                          ? '(' + walletBalance.toString().substring(1) + ') ریال بدهکار'
+                          : walletBalance.toString() + ' ریال بستانکار'
+                      )
+                    : '0 ریال'}{' '}
                 </p>
               </div>
-              {/* <!-- succes-payment --> */}
               <div className="wallet-info failed-payment">
                 <div className="mw-670">
                   <h5 className="item-label">افزایش کیف پول (ریال)</h5>
@@ -151,6 +192,7 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
                       className="primary-input form-control"
                       onChange={(e: any) => setPayment(e.currentTarget.value)}
                       type="number"
+                      value={payment}
                       placeholder="مبلغ مورد نظر را وارد کنید"
                     />
                     <button className="wallet-icon-btn">
@@ -171,90 +213,22 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
                     >
                       {checkOutLoading ? <LoadingComponent /> : ' افزایش موجودی'}
                     </button>
-                    {profile?.walletBalance && profile?.walletBalance > 0 && <button className="success-btn">برداشت وجه</button>}
+                    {profile?.walletBalance && profile?.walletBalance > 0 && (
+                      <button
+                        onClick={() => {
+                          CashPayment();
+                        }}
+                        className="success-btn"
+                      >
+                        {checkOutLoading ? <Spinner /> : 'برداشت وجه'}
+                      </button>
+                    )}
                   </div>
                 </div>
                 <TransactionList />
-                {/* <div className="mw-670">
-                  <div className="transaction-status">
-                    <img src={require(`@src/scss/images/icons/${color}-successCheck.svg`)} />
-                    <h4 className="success-title">پرداخت موفق</h4>
-                  </div>
-                  <p className="transaction-description">موجودی کیف پول شما افزایش یافت</p>
-                  <div className="transaction-btn-box">
-                    <button className="primary-btn">مشاهده جزییات تراکنش</button>
-                    <div>بازگشت</div>
-                  </div>
-                </div>
-                <div className="mw-670">
-                  <div className="transaction-status">
-                    <img src={require(`@src/scss/images/icons/${color}-closeCheck.svg`)} />
-                    <h4 className="failed-title">پرداخت ناموفق</h4>
-                  </div>
-                  <p className="transaction-description">موجودی کیف پول شما افزایش نیافت</p>
-                  <div className="transaction-btn-box">
-                    <button
-                      // onclick="bottomSheet()"
-                      className="primary-btn"
-                    >
-                      مشاهده جزییات تراکنش
-                    </button>
-                    <div>بازگشت</div>
-                  </div>
-                </div> */}
               </div>
             </section>
           </div>
-
-          {/* <div
-            id="botm-ovr"
-            className="filter-ovely"
-            // onclick="bottomSheet()"
-          >
-            .
-          </div>
-          <div id="bottom-sheet" className="bottom-sheet">
-            <div className="container-16">
-              <div className="sort-title">
-                <h4>جزئیات تراکنش</h4>
-                <img
-                  src="../public/playground_assets/close-btn.svg"
-                  // onclick="bottomSheet()"
-                />
-              </div>
-              <hr />
-              <div className="transaction-details-box">
-                <div className="transaction-item container-16 title">
-                  <p>عنوان</p>
-                  <p>جزئیات</p>
-                </div>
-                <div className="transaction-item container-16">
-                  <p className="transaction-item-title">پرداخت کننده</p>
-                  <p>آریا زمانی</p>
-                </div>
-                <div className="transaction-item container-16">
-                  <p className="transaction-item-title">مبلغ پرداخت</p>
-                  <p>۳۴۵۰۰ ریال</p>
-                </div>
-                <div className="transaction-item container-16">
-                  <p className="transaction-item-title">تاریخ و زمان</p>
-                  <p>۱۴۰۱ ساعت ۱۰</p>
-                </div>
-                <div className="transaction-item container-16">
-                  <p className="transaction-item-title">توضیحات</p>
-                  <p>بابت شارژ کیف پول</p>
-                </div>
-                <div className="transaction-item container-16">
-                  <p className="transaction-item-title"> شناسه پرداخت </p>
-                  <p>۱۴۰۱</p>
-                </div>
-                <div className="transaction-item container-16">
-                  <p className="transaction-item-title"> شناسه مرجع </p>
-                  <p>28fsd545656sdfvv3</p>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </>

@@ -1,4 +1,13 @@
 export interface IInvoiceActionResultModel {
+  requestLinkId?: string;
+  invoiceList: IInvoiceActionList[];
+}
+
+export enum ECostSource {
+  'مشتری' = 0,
+  'گارانتی' = 1,
+}
+export interface IInvoiceActionList {
   paymentId: number;
   serviceTypeTitle?: string; // نوع خدمت
   actionTitle?: string; // گروه خدمات
@@ -13,13 +22,9 @@ export interface IInvoiceActionResultModel {
   paymentType?: string;
   costSource?: number;
   files?: IFiles[];
+  orderId?: number;
+  hasInvoice: boolean;
 }
-
-export enum ECostSource {
-  'مشتری' = 0,
-  'گارانتی' = 1,
-}
-
 export interface IFiles {
   fileType?: string;
   tag?: string;

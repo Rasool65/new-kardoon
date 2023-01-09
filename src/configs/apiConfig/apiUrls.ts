@@ -43,6 +43,9 @@ export const APIURL_GET_PREVIOUS_CONSUMER_REQUEST = '/Consumer/Request/GetPrevio
 
 //ORDER DETAIL
 export const APIURL_GET_ORDER_DETAILS = '/Consumer/Request/GetRequestDetail';
+export const APIURL_POST_INVOICE_ONLINE_CHECKOUT = '/Payment/InvoiceOnlineCheckOut';
+export const APIURL_POST_INVOICE_WALLET_CHECKOUT = '/Payment/InvoiceWalletCheckOut';
+export const API_URL_GET_WALLET_BALANCE = '/Wallet/GetWalletBalance';
 
 //TECHNICIAN PROFILE
 export const APIURL_GET_TECHNICIAN_PROFILE = '/Technician/GetTechnicianProfile';
@@ -57,7 +60,6 @@ export const APIURL_GET_MISSION_ATTRIBUTES_DETAILS = '/Request/GetRequestDetailA
 export const APIURL_UPDATE_REQUEST_DETAIL_STATUS = '/Order/EditRequestDetailStatus';
 export const APIURL_GET_BANK_ACCOUNT_INFO = '/UserManagement/GetBankAccountInfo';
 export const APIURL_UPDATE_BANK_ACCOUNT_INFO = '/UserManagement/UpdateBankAccountInfo';
-
 export const APIURL_GET_SERVICES_TYPES = '/BaseInformation/ServiceTypeList';
 export const APIURL_GET_SERVICES_TITLE = '/ProductCategory/ProductCategoryActionInfoList';
 
@@ -72,9 +74,11 @@ export const APIURL_GET_TECHNICIAN_INVOICE = '/Order/GetTechnicianInvoiceList';
 export const APIURL_POST_TECHNICIAN_INVOICE_CHECKOUT = '/Financial/TechnicianOrderDetailCashCheckout';
 export const APIURL_POST_TECHNICIAN_INVOICE_CHECKOUT_ONLINE = '/Payment/OrderDetailOnlineCheckout';
 export const APIURL_POST_INVOICE_CHECKOUT = '/Financial/OrderDetailCashCheckout';
+export const APIURL_POST_ORDER_INVOICE_ISSUANCE = '/Financial/OrderInvoiceIssuance';
 export const APIURL_POST_INVOICE_CHECKOUT_ALL = '/Financial/RequestCashCheckout';
 export const APIURL_GET_REQUEST_STATUS_LIST = '/BaseInformation/GetRequestDetailStatusList';
 export const APIURL_POST_TECHNICIAN_MEDIA_FILES = '/Request/AddTechnicianMediaFiles';
+export const APIURL_PUT_UPDATE_CONSUMER_NATIONAL_CODE = '/Order/UpdateTechnicianRequestConsumerNationalCode';
 
 //TECHNICIAN MISSION ACTION
 export const APIURL_POST_TRACKING = '/Order/AddTracking';
@@ -83,8 +87,8 @@ export const APIURL_GET_TRACKING_LIST = '/Order/GetTracking';
 //CHANGE PASSWORD
 export const APIURL_CHANGE_PASSWORD = '/UserManagement/ChangeUserPassword';
 
-//FACTOR
-export const APIURL_GET_FACTOR = '/Order/GetTechnicianInvoice';
+//INVOICE
+export const APIURL_GET_INVOICE = '/Consumer/Invoice/InvoiceInformation';
 
 //CALL BACK
 export const APIURL_GET_CALLBACK_DETAIL = '/Payment/GetPayment';
@@ -102,3 +106,13 @@ export const APIURL_POST_REGISTER_BY_TECHNICIAN = '/UserManagement/RegisterUserB
 export const APIURL_POST_ADDRESS_BY_TECHNICIAN = '/UserManagement/AddUserAddressByTechnician';
 export const APIURL_POST_CREATE_REQUEST_BY_TECHNICIAN = '/Request/CreateTechnicianConsumerRequestByAddressId';
 export const APIURL_GET_CONSUMER_INFO = '/UserManagement/GetUserPrimitiveInfo';
+
+// SYSTEM MESSAGE INFORMATION
+export const APIURL_GET_SYSTEM_MESSAGE = '/Message/GetSystemChanges';
+export const APIURL_GET_ARCHIVE_SYSTEM_MESSAGE = '/Message/GetPreviousSystemChanges';
+export const APIURL_GET_COUNT_SYSTEM_MESSAGE = '/Message/GetSystemChangesCount';
+export const APIURL_GET_STATUS_MISSION = '/Order/GetStatusCount';
+
+//SIDE BAR
+export const APIURL_GET_GUARANTEE = '/UserManagement/GetUserUniqueGuid';
+export const APIURL_GET_GUARANTEE_INFO = '/Guarantee/GetGuarantee';

@@ -1,7 +1,7 @@
 import { APIURL_GET_BANK_ACCOUNT_INFO, APIURL_UPDATE_BANK_ACCOUNT_INFO } from '@src/configs/apiConfig/apiUrls';
 import useHttpRequest from '@src/hooks/useHttpRequest';
 import { FunctionComponent, useState, useEffect } from 'react';
-import { Button, Form, FormFeedback, Input } from 'reactstrap';
+import { Form, FormFeedback, Input } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
 import { IOutputResult } from '@src/models/output/IOutputResult';
@@ -15,8 +15,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useToast } from '@src/hooks/useToast';
 import { useTranslation } from 'react-i18next';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
-
-import { IUserModel } from '@src/models/output/authentication/ILoginResultModel';
 import { updateUserData } from '@src/redux/reducers/authenticationReducer';
 
 interface CreditInfoProps {
@@ -29,16 +27,15 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
   const httpRequest = useHttpRequest();
   const toast = useToast();
   const dispatch = useDispatch();
-  // const [bankAccount, setBankAccount] = useState<IBankAccountInfoResultModel>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  // const GetBankAccountInfo = () => {
-  //   httpRequest
-  //     .getRequest<IOutputResult<IBankAccountInfoResultModel>>(`${APIURL_GET_BANK_ACCOUNT_INFO}?UserId=${userData?.userId}`)
-  //     .then((result) => {
-  //       setBankAccount(result.data.data);
-  //     });
-  // };
+  const GetBankAccountInfo = () => {
+    httpRequest.getRequest<IOutputResult<IBankAccountInfoResultModel>>(`${APIURL_GET_BANK_ACCOUNT_INFO}`).then((result) => {
+      let NewUserData = { ...userData };
+      NewUserData['accountInfo'] = result.data.data;
+      dispatch(updateUserData(NewUserData));
+    });
+  };
 
   const {
     register,
@@ -50,7 +47,6 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
 
   const onSubmit = (data: IUpdateProfileBankAccountModel) => {
     const body = {
-      userId: userData?.userId,
       bankName: data.bankName,
       acountNumber: data.acountNumber,
       cardNumber: data.cardNumber,
@@ -62,7 +58,6 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
       httpRequest
         .updateRequest<IOutputResult<any>>(APIURL_UPDATE_BANK_ACCOUNT_INFO, body)
         .then((result) => {
-          delete body.userId;
           let NewUserData = { ...userData };
           NewUserData['accountInfo'] = body;
           dispatch(updateUserData(NewUserData));
@@ -73,7 +68,7 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
   };
 
   useEffect(() => {
-    // GetBankAccountInfo();
+    GetBankAccountInfo();
   }, []);
   return (
     <>

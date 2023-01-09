@@ -33,15 +33,19 @@ const TechnicianRequestConsumer: FunctionComponent<IPageProps> = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [CurrentTab, setCurrentTab] = useState(RegisterRequestTabs[activeTab]);
   const [userName, setUserName] = useState<string>();
+  const [refKey, setRefKey] = useState<number>();
+  const [id, setId] = useState<number>();
   const handleClickTab = (tabNumber: number) => {
     setActiveTab(tabNumber);
     setCurrentTab(RegisterRequestTabs[tabNumber]);
   };
 
-  const handleClickNext = (userName: string, tabNumber: number) => {
+  const handleClickNext = (id?: number, userName?: string, tabNumber?: number, refKey?: number) => {
+    setRefKey(refKey);
     setUserName(userName);
-    setActiveTab(tabNumber);
-    setCurrentTab(RegisterRequestTabs[tabNumber]);
+    setId(id);
+    setActiveTab(tabNumber!);
+    setCurrentTab(RegisterRequestTabs[tabNumber!]);
   };
 
   useEffect(() => {
@@ -57,7 +61,7 @@ const TechnicianRequestConsumer: FunctionComponent<IPageProps> = () => {
               onClick={() => {
                 handleClickTab(0);
               }}
-              className={`account-item pointer ${activeTab == 0 ? 'active' : ''}`}
+              className={`account-item mw-30p pointer ${activeTab == 0 ? 'active' : ''}`}
             >
               <a>ثبت نام</a>
             </h4>
@@ -65,22 +69,28 @@ const TechnicianRequestConsumer: FunctionComponent<IPageProps> = () => {
               onClick={() => {
                 handleClickTab(1);
               }}
-              className={`account-item pointer ${activeTab == 1 ? 'active' : ''}`}
+              className={`account-item mw-30p pointer ${activeTab == 1 ? 'active' : ''}`}
             >
-              <a>افزودن آدرس</a>
+              <a>ثبت آدرس</a>
             </h4>
             <h4
               onClick={() => {
                 handleClickTab(2);
               }}
-              className={`account-item pointer ${activeTab == 2 ? 'active' : ''}`}
+              className={`account-item mw-30p pointer ${activeTab == 2 ? 'active' : ''}`}
             >
-              <a>افزودن درخواست</a>
+              <a>ثبت درخواست</a>
             </h4>
           </div>
         </div>
       </div>
-      <CurrentTab.Component handleClickTab={handleClickTab} handleClickNext={handleClickNext} />
+      <CurrentTab.Component
+        handleClickTab={handleClickTab}
+        handleClickNext={handleClickNext}
+        userName={userName}
+        refKey={refKey}
+        id={id}
+      />
     </>
   );
 };

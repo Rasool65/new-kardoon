@@ -1,20 +1,8 @@
-import { FunctionComponent, useEffect, useLayoutEffect, useState } from 'react';
-import Resizer from 'react-image-file-resizer';
+import { FunctionComponent, useEffect, useState } from 'react';
 import Num2persian from 'num2persian';
 import { IPageProps } from '@src/configs/routerConfig/IPageProps';
-import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  Button,
-  ButtonDropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Form,
-  FormFeedback,
-  Input,
-  Spinner,
-  UncontrolledDropdown,
-} from 'reactstrap';
+import { useNavigate, useLocation, generatePath } from 'react-router-dom';
+import { Button, Form, FormFeedback, Input, Spinner } from 'reactstrap';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
@@ -30,6 +18,7 @@ import {
   APIURL_GET_SERVICES_TYPES,
   APIURL_GET_SOURCE_OF_COST,
   APIURL_GET_TECHNICIAN_INVOICE,
+  APIURL_POST_ORDER_INVOICE_ISSUANCE,
   APIURL_POST_REQUEST_DETAIL_ACTION,
   APIURL_POST_REQUEST_DETAIL_ACTION_FORMDATA,
   APIURL_POST_TECHNICIAN_INVOICE_CHECKOUT,
@@ -46,18 +35,21 @@ import {
 } from '@src/models/input/technicianMission/ITechnicianActionModel';
 import { useToast } from '@src/hooks/useToast';
 import { useTranslation } from 'react-i18next';
-import { APIURL_POST_TECHNICIAN_INVOICE_CHECKOUT_ONLINE } from './../../../configs/apiConfig/apiUrls';
 import RemoveConfirmModal from './RemoveConfirmModal';
 import PrevHeader from '@src/layout/Headers/PrevHeader';
-import { IFiles } from './../../../models/output/missionDetail/IInvoiceActionResultModel';
+import { IFiles, IInvoiceActionList } from './../../../models/output/missionDetail/IInvoiceActionResultModel';
 import ShowImageModal from './ShowImageModal';
 import { resizeFile } from '@src/utils/ResizerImage';
 import InputIcon from 'react-multi-date-picker/components/input_icon';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import ConfirmModal from './ConfirmModal';
+import { URL_INVOICE } from '@src/configs/urls';
+import UpdateNationalCodeModal from './UpdateNationalCodeModal';
 
 const Action: FunctionComponent<IPageProps> = (props) => {
+  const [totalConsumerPayment, setTotalConsumerPayment] = useState<number>(0);
   const toast = useToast();
+  const navigate = useNavigate();
   const weekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
   const { t }: any = useTranslation();
   const { state }: any = useLocation();
@@ -69,6 +61,8 @@ const Action: FunctionComponent<IPageProps> = (props) => {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [serviceTypes, setServiceTypes] = useState<any>();
   const [warrantyStartDate, setWarrantyStartDate] = useState<string>();
+
+  const [btnIssuance, setBtnIssuance] = useState<boolean>(false);
 
   const [guarantee, setGuarantee] = useState<boolean>(false);
 
@@ -95,15 +89,17 @@ const Action: FunctionComponent<IPageProps> = (props) => {
 
   const [serviceTitle, setServiceTitle] = useState<any>();
   const [sourceCost, setSourceCost] = useState<any>();
-  const [invoice, setInvoice] = useState<IInvoiceActionResultModel[]>();
+  const [invoice, setInvoice] = useState<IInvoiceActionResultModel>();
   const [price, setPrice] = useState<any>();
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number>(1);
   const [paymentId, setPaymentId] = useState<number>();
   const [totalPrice, setTotalPrice] = useState<Number>(0);
   const [checkoutLoading, setCheckoutLoading] = useState<boolean>(false);
   const [confirmRemoveModalVisible, setConfirmRemoveModalVisible] = useState<boolean>(false);
+  const [showUpdateNationalCodeModal, setShowUpdateNationalCodeModal] = useState<boolean>(false);
   const technicianId = useSelector((state: RootStateType) => state.authentication.userData?.userId);
   const color = useSelector((state: RootStateType) => state.theme.color);
+
   const RemoveAction = (id: number) => {
     const body = {
       technicianId: technicianId,
@@ -112,7 +108,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
     };
     setLoading(true);
     httpRequest.deleteRequest<IOutputResult<any>>(`${APIURL_DELETE_ACTION}`, body).then((result) => {
-      toast.showSuccess(result.data.message);
+      result.data.isSuccess ? toast.showSuccess(result.data.message) : toast.showError(result.data.message);
       setLoading(false);
       GetInvoiceAction();
     });
@@ -146,14 +142,31 @@ const Action: FunctionComponent<IPageProps> = (props) => {
     state.requestDetailId &&
       (setLoading(true),
       httpRequest
-        .getRequest<IOutputResult<IInvoiceActionResultModel[]>>(
+        .getRequest<IOutputResult<IInvoiceActionResultModel>>(
           `${APIURL_GET_TECHNICIAN_INVOICE}?TechnicianId=${technicianId}&RequestDetailId=${state.requestDetailId}`
         )
         .then((result) => {
+          var totalPrice = 0;
+          result.data.data.invoiceList.forEach((e) => {
+            !e.settlementStatus ? (totalPrice += e.priceAfterDiscount) : (totalPrice += 0);
+          });
+          setTotalConsumerPayment(totalPrice);
+
+          var showButton = result.data.data.invoiceList.some((e) => {
+            return e.serviceTypeTitle == 'گارانتی'
+              ? !e.settlementStatus
+              : e.costSource == 0 && e.settlementStatus
+              ? false
+              : e.hasInvoice
+              ? false // منتظر تایید
+              : true;
+          });
+          setBtnIssuance(showButton);
           setInvoice(result.data.data);
           setLoading(false);
         }));
   };
+
   const Checkout = (paymentId: number, consumerPaymentAmount: number) => {
     const body = {
       paymentId: paymentId,
@@ -166,7 +179,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
       httpRequest
         .postRequest<IOutputResult<any>>(`${APIURL_POST_TECHNICIAN_INVOICE_CHECKOUT}`, body)
         .then((result) => {
-          toast.showSuccess(result.data.message);
+          result.data.isSuccess ? toast.showSuccess(result.data.message) : toast.showError(result.data.message);
           GetInvoiceAction();
           setCheckoutLoading(false);
         })
@@ -174,45 +187,36 @@ const Action: FunctionComponent<IPageProps> = (props) => {
           setCheckoutLoading(false);
         });
   };
+
   const handleDisplay = () => {
     setDisplayImage(!displayImage);
   };
-  const CheckoutOnline = (paymentId: number, consumerPaymentAmount: number) => {
-    const body = {
-      paymentId: paymentId,
-      consumerPaymentAmount: consumerPaymentAmount,
-      userId: technicianId,
-    };
-    setCheckoutLoading(true);
-    !loading &&
-      httpRequest
-        .postRequest<IOutputResult<any>>(`${APIURL_POST_TECHNICIAN_INVOICE_CHECKOUT_ONLINE}`, body)
-        .then((result) => {
-          window.open(result.data.data, '_self');
-          setCheckoutLoading(false);
-        })
-        .finally(() => {
-          setCheckoutLoading(false);
-        });
-  };
+
   const InvoiceIssue = () => {
     const body = {
-      requestDetailId: state.requestDetailId,
+      invoiceId: Number(state.orderId),
+      consumerPaymentAmount: totalConsumerPayment,
     };
     setCheckoutLoading(true);
     !loading &&
       httpRequest
-        .postRequest<IOutputResult<any>>(`${'APIURL_POST_TECHNICIAN_INVOICE_CHECKOUT_ONLINE'}`, body)
+        .postRequest<IOutputResult<any>>(`${APIURL_POST_ORDER_INVOICE_ISSUANCE}`, body)
         .then((result) => {
+          result.data.isSuccess ? toast.showSuccess(result.data.message) : toast.showError(result.data.message);
           setShowConfirmModal(false);
           setCheckoutLoading(false);
+          GetInvoiceAction();
         })
-        .catch(() => {
+        .catch((result) => {
+          toast.showError(result.data.message);
           setCheckoutLoading(false);
         });
   };
   const handleShowModal = () => {
     setShowConfirmModal(!showConfirmModal);
+  };
+  const handleShowUpdateModal = () => {
+    setShowUpdateNationalCodeModal(!showUpdateNationalCodeModal);
   };
   const {
     register,
@@ -249,12 +253,12 @@ const Action: FunctionComponent<IPageProps> = (props) => {
     setPurchaseInvoiceSrc(undefined);
   };
   const resetForm = () => {
-    setCount(0);
+    setCount(1);
     setTotalPrice(0);
     reset({
       action: { label: '', value: 0 },
       sourceCost: { label: '', value: 0 },
-      count: 0,
+      count: '0',
       serviceTypeId: { label: '', value: 0 },
       description: '',
     });
@@ -262,6 +266,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
   };
   const onSubmit = (data: ITechnicianActionModel) => {
     if (guarantee) {
+      if (price < 3600000) return toast.showWarning('حداقل مبلغ گارانتی 360 هزار تومان میباشد');
       setLoading(true);
       const formData = new FormData();
       if (state.requestDetailId) formData.append('id', state.requestDetailId);
@@ -269,7 +274,8 @@ const Action: FunctionComponent<IPageProps> = (props) => {
       formData.append('price', data.price.toString());
       formData.append('action', data.action?.value.toString());
       formData.append('sourceCost', data.sourceCost.value.toString());
-      formData.append('count', data.count.toString());
+      // formData.append('count', data.count.toString());
+      formData.append('count', '1');
       formData.append('serviceTypeId', data.serviceTypeId.value.toString());
       formData.append('userId', technicianId!.toString());
       formData.append('description', data.description);
@@ -289,11 +295,12 @@ const Action: FunctionComponent<IPageProps> = (props) => {
         httpRequestForm
           .postRequest<IOutputResult<any>>(`${APIURL_POST_REQUEST_DETAIL_ACTION_FORMDATA}`, formData)
           .then((result) => {
-            resetForm();
-            resetFiles();
-            toast.showSuccess(result.data.message);
-            GetInvoiceAction();
-            setLoading(false);
+            result.data.isSuccess
+              ? (toast.showSuccess(result.data.message), resetForm(), resetFiles(), GetInvoiceAction())
+              : toast.showError(result.data.message),
+              setLoading(false);
+            // result.data.statusCode == 'Success' && result.data.isSuccess == false && handleShowUpdateModal(); // show national code modal
+            result.data.statusCode == 'Success' && !result.data.isSuccess && handleShowUpdateModal(); // show national code modal
           })
           .finally(() => {
             setLoading(false);
@@ -306,7 +313,8 @@ const Action: FunctionComponent<IPageProps> = (props) => {
         price: data.price,
         action: data.action?.value,
         sourceCost: data.sourceCost.value,
-        count: data.count,
+        // count: data.count,
+        count: 1,
         serviceTypeId: data.serviceTypeId.value,
         userId: technicianId,
         // discountAmount: data.discountAmount,
@@ -317,10 +325,11 @@ const Action: FunctionComponent<IPageProps> = (props) => {
         httpRequest
           .postRequest<IOutputResult<any>>(`${APIURL_POST_REQUEST_DETAIL_ACTION}`, body)
           .then((result) => {
-            resetForm();
-            toast.showSuccess(result.data.message);
-            GetInvoiceAction();
-            setLoading(false);
+            result.data.isSuccess
+              ? (toast.showSuccess(result.data.message), resetForm(), GetInvoiceAction())
+              : toast.showError(result.data.message),
+              setLoading(false);
+            // (result.data.statusCode=="Success") && handleShowUpdateModal(); // show national code modal
           })
           .finally(() => {
             setLoading(false);
@@ -368,6 +377,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
       }
     });
   };
+
   return (
     <>
       <PrevHeader />
@@ -381,10 +391,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                   control={control}
                   render={({ field }) => (
                     <>
-                      <div className="d-flex align-items-center">
-                        <label htmlFor="form1a" className="ml-2 space-nowrap">
-                          نوع خدمات
-                        </label>
+                      <div className="label-over-box">
                         <Select
                           isClearable
                           isLoading={loading}
@@ -400,6 +407,9 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                             e.value && GetServiceTitle(e?.value);
                           }}
                         />
+                        <label htmlFor="form1a" className="ml-2 space-nowrap">
+                          نوع خدمات
+                        </label>
                       </div>
                       <FormFeedback className="d-block">{errors?.serviceTypeId?.value?.message}</FormFeedback>
                     </>
@@ -413,10 +423,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                   control={control}
                   render={({ field }) => (
                     <>
-                      <div className="d-flex align-items-center">
-                        <label htmlFor="form1a" className="ml-2 space-nowrap">
-                          گروه خدمات
-                        </label>
+                      <div className="label-over-box">
                         <Select
                           isClearable
                           isLoading={loading}
@@ -430,6 +437,9 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                             setPrice(e.price);
                           }}
                         />
+                        <label htmlFor="form1a" className="ml-2 space-nowrap">
+                          گروه خدمات
+                        </label>
                       </div>
                       <FormFeedback className="d-block">{errors?.action?.value?.message}</FormFeedback>
                     </>
@@ -453,8 +463,8 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                           invalid={errors?.description && true}
                           {...field}
                         />
+                        <FormFeedback>{errors?.description?.message}</FormFeedback>
                       </div>
-                      <FormFeedback>{errors?.description?.message}</FormFeedback>
                     </>
                   )}
                 />
@@ -782,10 +792,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
 
             <div className="row">
               <div className="col-12 col-md-4">
-                <div className="d-flex align-items-center">
-                  <label htmlFor="form1b" className="ml-2 space-nowrap">
-                    منبع هزینه
-                  </label>
+                <div className="label-over-box">
                   <div className="w-100">
                     <Controller
                       name="sourceCost"
@@ -807,20 +814,20 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                       )}
                     />
                   </div>
+                  <label htmlFor="form1b" className="ml-2 space-nowrap">
+                    منبع هزینه
+                  </label>
                 </div>
               </div>
 
-              <div className="col-12 col-md-4">
+              {/* <div className="col-12 col-md-4">
                 <Controller
                   name="count"
                   control={control}
                   // defaultValue={1}
                   render={({ field }) => (
                     <>
-                      <div className="d-flex align-items-center">
-                        <label htmlFor="count-input" className="ml-2 space-nowrap">
-                          تعداد
-                        </label>
+                      <div className="label-over-box">
                         <Input
                           id="count-input"
                           className="form-control"
@@ -829,17 +836,18 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                           invalid={errors?.count && true}
                           {...field}
                           onChange={(e: any) => {
-                            e.target.value
-                              ? (field.onChange(e), setTotalPrice(e.target.value * price), setCount(e.target.value))
-                              : setCount(0);
+                            field.onChange(e), setTotalPrice(e.target.value * price), setCount(e.target.value);
                           }}
                         />
+                        <FormFeedback>{errors?.count?.message}</FormFeedback>
+                        <label htmlFor="count-input" className="ml-2 space-nowrap">
+                          تعداد
+                        </label>
                       </div>
-                      <FormFeedback>{errors?.count?.message}</FormFeedback>
                     </>
                   )}
                 />
-              </div>
+              </div> */}
 
               <div className="col-12 col-md-4">
                 <Controller
@@ -847,25 +855,23 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                   control={control}
                   render={({ field }) => (
                     <>
-                      <FormFeedback>{errors?.price?.message}</FormFeedback>
-                      <div className="d-flex align-items-center">
-                        <label htmlFor="price-input" className="ml-2 space-nowrap">
-                          قیمت
-                        </label>
+                      <div className="label-over-box">
                         <Input
                           id="price-input"
                           className="form-control"
                           type="number"
-                          placeholder={UtilsHelper.threeDigitSeparator(price)}
+                          // placeholder={UtilsHelper.threeDigitSeparator(price)}
                           autoComplete="off"
                           invalid={errors?.price && true}
                           {...field}
                           onChange={(e: any) => {
-                            e.target.value
-                              ? (field.onChange(e), setTotalPrice(e.target.value * count), setPrice(e.target.value))
-                              : setPrice(0);
+                            field.onChange(e), setTotalPrice(e.target.value * count), setPrice(e.target.value);
                           }}
                         />
+                        <FormFeedback>{errors?.price?.message}</FormFeedback>
+                        <label htmlFor="price-input" className="ml-2 space-nowrap">
+                          قیمت
+                        </label>
                       </div>
                     </>
                   )}
@@ -932,76 +938,55 @@ const Action: FunctionComponent<IPageProps> = (props) => {
 
             <div className="running-items row">
               {invoice &&
-                invoice.length &&
-                invoice.map((invoice: IInvoiceActionResultModel, index: number) => {
+                invoice.invoiceList.length &&
+                invoice.invoiceList.map((invoiceItem: IInvoiceActionList, index: number) => {
                   return (
                     <div className="col-12  col-lg-6 mb-2">
-                      <div className="running-item">
+                      <div className={`running-item ${invoiceItem.settlementStatus && 'issuance-invoice-item'}`}>
                         <div className="d-flex align-items-center w-100">
                           <div className="space-nowrap">
-                            {index + 1}- {invoice.serviceTypeTitle} :
+                            {index + 1}- {invoiceItem.serviceTypeTitle} :
                           </div>
 
-                          <div className="description">{invoice.actionTitle}</div>
+                          <div className="description">{invoiceItem.actionTitle}</div>
                           <UncontrolledTooltip placement="top" target={`registerTip${index}`}>
-                            {invoice.description}
+                            {invoiceItem.description}
                           </UncontrolledTooltip>
                           <img
                             src={require(`@src/scss/images/icons/${color}-message.svg`)}
                             className="info-btn"
                             id={`registerTip${index}`}
-                          ></img>
+                          />
                         </div>
                         <div className="d-flex align-items-center mt-2 w-100">
-                          {invoice.settlementStatus ? (
+                          {invoiceItem.settlementStatus ? (
                             <img src={require(`@src/scss/images/icons/${color}-checked.svg`)} className="waiting-glass" />
                           ) : (
                             <img src={require(`@src/scss/images/icons/hourglass.svg`)} className="waiting-glass" />
                           )}
-                          مبلغ : {UtilsHelper.threeDigitSeparator(invoice.price)} <span className="rial ml-auto">ریال</span>
+                          مبلغ : {UtilsHelper.threeDigitSeparator(invoiceItem.price)} <span className="rial ml-auto">ریال</span>
                           <div className="">
-                            {invoice.settlementStatus ? (
-                              <div>{invoice.paymentType}</div>
-                            ) : invoice.costSource == 1 ? (
-                              <div>{ECostSource[invoice.costSource]}</div>
+                            {invoiceItem.settlementStatus ? (
+                              <>
+                                {invoiceItem.hasInvoice ? <div>{invoiceItem.status}</div> : <div>{invoiceItem.paymentType}</div>}
+                              </> // نقدی
+                            ) : invoiceItem.costSource == 1 ? (
+                              <div>{ECostSource[invoiceItem.costSource]}</div>
                             ) : (
                               <>
-                                {/* <img
-                                  onClick={() => {
-                                    Checkout(invoice.paymentId, invoice.priceAfterDiscount);
-                                  }}
-                                  src={require(`@src/scss/images/icons/${color}-cash.svg`)}
-                                  className="cash-btn"
-                                /> */}
-                                <Button
-                                  className="cash-btn success-btn green-btn"
-                                  onClick={() => {
-                                    Checkout(invoice.paymentId, invoice.priceAfterDiscount);
-                                  }}
-                                >
-                                  <img src={require(`@src/scss/images/icons/${color}-cash.svg`)} className="cash-icon" />
-                                  {checkoutLoading ? <Spinner /> : 'پرداخت '}
-                                </Button>
-
-                                {/* <UncontrolledDropdown>
-                                  <DropdownToggle caret>پرداخت</DropdownToggle>
-                                  <DropdownMenu>
-                                    <DropdownItem
-                                      onClick={() => {
-                                        Checkout(invoice.paymentId, invoice.priceAfterDiscount);
-                                      }}
-                                    >
-                                      {checkoutLoading ? <Spinner /> : 'نقدی'}
-                                    </DropdownItem>
-                                    <DropdownItem
-                                      onClick={() => {
-                                        CheckoutOnline(invoice.paymentId, invoice.priceAfterDiscount);
-                                      }}
-                                    >
-                                      {checkoutLoading ? <Spinner /> : 'آنلاین'}
-                                    </DropdownItem>
-                                  </DropdownMenu>
-                                </UncontrolledDropdown> */}
+                                {!invoiceItem.hasInvoice ? (
+                                  <Button
+                                    className="cash-btn success-btn green-btn"
+                                    onClick={() => {
+                                      Checkout(invoiceItem.paymentId, invoiceItem.priceAfterDiscount);
+                                    }}
+                                  >
+                                    <img src={require(`@src/scss/images/icons/${color}-cash.svg`)} className="cash-icon" />
+                                    {checkoutLoading ? <Spinner /> : 'پرداخت '}
+                                  </Button>
+                                ) : (
+                                  <div>{invoiceItem.status}</div>
+                                )}
                                 {/* <RWebShare
                                   data={{
                                     text: `لینک پرداخت هزینه بابت ${invoice.actionTitle} `,
@@ -1014,40 +999,40 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                               </>
                             )}
                             <div>
-                              {invoice.settlementStatus ? (
-                                ''
-                              ) : (
-                                <img
-                                  className="close"
-                                  src={require(`@src/scss/images/icons/${color}-close.svg`)}
-                                  onClick={() => {
-                                    setPaymentId(invoice.paymentId);
-                                    setConfirmRemoveModalVisible(true);
-                                  }}
-                                />
+                              {
+                                invoiceItem.settlementStatus
+                                  ? ''
+                                  : !invoiceItem.hasInvoice && (
+                                      <img
+                                        className="close"
+                                        src={require(`@src/scss/images/icons/${color}-close.svg`)}
+                                        onClick={() => {
+                                          setPaymentId(invoiceItem.paymentId);
+                                          setConfirmRemoveModalVisible(true);
+                                        }}
+                                      />
+                                    )
                                 // <div
                                 //   style={{ marginLeft: '10px', cursor: 'pointer', marginRight: '5px' }}
 
                                 //   className="fa fa-times color-red-dark"
                                 // />
-                              )}
+                              }
                             </div>
                           </div>
                         </div>
 
-                        <div style={{ textAlign: 'center' }} className={invoice.discount ? 'discount' : 'mr-l-auto'}>
-                          <div></div>
-                        </div>
-                        {invoice.discount ? (
-                          <div className="p-1">{UtilsHelper.threeDigitSeparator(invoice.priceAfterDiscount)}</div>
+                        <div style={{ textAlign: 'center' }} className={invoiceItem.discount ? 'discount' : 'mr-l-auto'} />
+                        {invoiceItem.discount ? (
+                          <div className="p-1">{UtilsHelper.threeDigitSeparator(invoiceItem.priceAfterDiscount)}</div>
                         ) : (
                           ''
                         )}
 
                         <div className="d-flex flex-wrap justify-content-start">
-                          {invoice.files &&
-                            invoice.files.length > 0 &&
-                            invoice.files.map((img: IFiles, index: number) => {
+                          {invoiceItem.files &&
+                            invoiceItem.files.length > 0 &&
+                            invoiceItem.files.map((img: IFiles, index: number) => {
                               return (
                                 <div
                                   className="pointer image-gallery"
@@ -1076,17 +1061,39 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                 )}
               </Button> */}
             </div>
-            <Button
-              onClick={() => {
-                handleShowModal();
-              }}
-              className="btn-info btn btn-secondary w-100 mt-3"
-            >
-              {checkoutLoading ? <LoadingComponent /> : 'صدور فاکتور'}
-            </Button>
+            {invoice?.invoiceList && invoice?.invoiceList.length > 0 ? (
+              btnIssuance ? (
+                <Button
+                  onClick={() => {
+                    handleShowModal();
+                  }}
+                  className="btn-info btn btn-secondary w-100 mt-3"
+                >
+                  {checkoutLoading ? (
+                    <LoadingComponent />
+                  ) : (
+                    `صدور فاکتور به مبلغ ${UtilsHelper.threeDigitSeparator(totalConsumerPayment)} ریال`
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => navigate(generatePath(URL_INVOICE, { id: `${invoice.requestLinkId}` }))}
+                  className="btn-info btn btn-secondary w-100 mt-3"
+                >
+                  مشاهده فاکتور
+                </Button>
+              )
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>
+      <UpdateNationalCodeModal
+        confirmModalVisible={showUpdateNationalCodeModal}
+        reject={handleShowUpdateModal}
+        requestDetailId={state.requestDetailId}
+      />
       <ConfirmModal confirmModalVisible={showConfirmModal} accept={() => InvoiceIssue()} reject={handleShowModal} />
       <ShowImageModal display={displayImage} src={imageSrc} handleDisplay={handleDisplay} />
       <RemoveConfirmModal

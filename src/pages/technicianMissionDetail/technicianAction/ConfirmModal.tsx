@@ -20,14 +20,14 @@ const ConfirmModal: FunctionComponent<RemoveConfirmModalProps> = ({ confirmModal
           <p className="boxed-text-l">آیا از صادر نمودن فاکتور اطمینان دارید؟</p>
           <div className="row me-3 ms-3 mb-0">
             <div className="col-6">
-              <a className="" onClick={accept}>
+              <button className="primary-btn green-btn" onClick={accept}>
                 بله
-              </a>
+              </button>
             </div>
             <div className="col-6">
-              <a onClick={reject} className="">
+              <button onClick={reject} className="red-btn">
                 خیر
-              </a>
+              </button>
             </div>
           </div>
         </div>
