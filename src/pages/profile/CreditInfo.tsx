@@ -86,7 +86,7 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
                 <Input
                   className="account-data-input"
                   type="text"
-                  placeholder={t('نام صاحب حساب')}
+                  placeholder="نام صاحب حساب"
                   autoComplete="off"
                   invalid={errors.accountHolderName && true}
                   {...field}
@@ -109,7 +109,7 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
                 <Input
                   className="account-data-input"
                   type="text"
-                  placeholder={t('نام بانک')}
+                  placeholder="نام بانک"
                   autoComplete="off"
                   invalid={errors.bankName && true}
                   {...field}
@@ -132,7 +132,7 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
                 <Input
                   className="account-data-input"
                   type="text"
-                  placeholder={t('شماره حساب')}
+                  placeholder="شماره حساب"
                   autoComplete="off"
                   invalid={errors.acountNumber && true}
                   {...field}
@@ -155,7 +155,7 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
                 <Input
                   className="account-data-input"
                   type="text"
-                  placeholder={t('شماره کارت')}
+                  placeholder="شماره کارت"
                   autoComplete="off"
                   invalid={errors.cardNumber && true}
                   {...field}
@@ -178,7 +178,7 @@ const CreditInfo: FunctionComponent<CreditInfoProps> = ({ closeModal }) => {
                 <Input
                   className="account-data-input"
                   type="text"
-                  placeholder={t('شماره شبا')}
+                  placeholder="شماره شبا"
                   autoComplete="off"
                   invalid={errors.shabaNumber && true}
                   {...field}

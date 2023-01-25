@@ -43,7 +43,7 @@ export const AddAddressModelSchema: yup.SchemaOf<IAddAddressModel> = yup.object(
   zipCode: yup.string().length(10, 'کد پستی میبایست 10 رقم باشد').required(t('ZipCodeRequired')),
   latitude: yup.number(),
   longitude: yup.number(),
-  title: yup.object({ label: yup.string(), value: yup.number().required(t('نوع آدرس الزامیست')) }),
+  title: yup.object({ label: yup.string(), value: yup.number().required('نوع آدرس الزامیست') }),
   homeTel: yup.string().required(t('HomeTelRequired')),
   address: yup.string().required(t('AddressRequired')),
   number: yup.number().required(t('NumberRequired')),

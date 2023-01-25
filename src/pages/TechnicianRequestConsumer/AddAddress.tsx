@@ -115,14 +115,12 @@ const AddAddress: FunctionComponent<AddAddressProps> = ({ userName, handleClickN
   };
   const GetRegionList = (citiesId: number) => {
     setLoading(true);
-    httpRequest
-      .getRequest<IOutputResult<IRegionResultModel[]>>(`${APIURL_GET_REGIONES}?ParentId=${citiesId}`)
-      .then((result) => {
-        result.data.data.length > 0 ? setRegion(result.data.data) : GetDistrictList(citiesId),
-          setRegionShow(true),
-          setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    httpRequest.getRequest<IOutputResult<IRegionResultModel[]>>(`${APIURL_GET_REGIONES}?ParentId=${citiesId}`).then((result) => {
+      result.data.data.length > 0
+        ? (setRegion(result.data.data), setRegionShow(false))
+        : (GetDistrictList(citiesId), setRegionShow(true)),
+        setLoading(false);
+    });
   };
   const GetDistrictList = (regionId: number) => {
     setLoading(true);

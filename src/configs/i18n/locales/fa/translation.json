@@ -110,5 +110,10 @@
   "IntroductionRequired": "نحوه آشنایی اجباریست",
   "IntroductionCode": "کد معرف",
   "EnterIntroductionCode": "کد معرف را وارد نمایید",
-  "SelectProblems": "انتخاب ایرادات"
+  "SelectProblems": "انتخاب ایرادات",
+  "BankNameRequired": "وارد کردن نام بانک اجباریست",
+  "AccountNumberRequired": "وارد کردن شماره حساب اجباریست",
+  "BankCardNumberRequired": "وارد کردن شماره کارت اجباریست",
+  "ShabaNumberRequired": "وارد کردن شماره شبا اجباریست",
+  "BankAccountNameRequired": "وارد کردن نام صاحب حساب اجباریست"
 }

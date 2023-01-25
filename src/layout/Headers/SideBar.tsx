@@ -26,7 +26,6 @@ interface SideBarProps {
 const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMenu }) => {
   const color = useSelector((state: RootStateType) => state.theme.color);
   const userData = useSelector((state: RootStateType) => state.authentication.userData);
-  const auth = useSelector((state: RootStateType) => state.authentication.isAuthenticate);
   const walletBalance = useSelector((state: RootStateType) => state.message.walletBalance);
   const navigate = useNavigate();
   const dispatch = useDispatch();

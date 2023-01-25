@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { useToast } from '@src/hooks/useToast';
 import SideBar from './SideBar';
 import { URL_BLOG, URL_CHAT } from './../../configs/urls';
-import { UtilsHelper } from '@src/utils/GeneralHelpers';
 
 const Header = () => {
   const color = useSelector((state: RootStateType) => state.theme.color);

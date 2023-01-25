@@ -22,8 +22,9 @@ import {
   URL_TECHNICIAN_REQUEST,
   URL_NOT_FOUND,
   URL_TECHNICIAN_REGISTER_REQUEST,
-  URL_BLOG as URL_BLOG,
+  URL_BLOG,
   URL_GUARANTEE,
+  URL_INVOICE_SHARE,
 } from './../urls';
 
 import IRoute from './IRoute';
@@ -55,6 +56,7 @@ import TechnicianRequestConsumer from '@src/pages/TechnicianRequestConsumer';
 import ArchiveBlog from '@src/pages/blog/ArchiveBlog';
 import Blog from '@src/pages/blog';
 import Guarantee from '@src/pages/guarantee';
+import InvoiceIssuanceShare from '@src/pages/invoice/InvoiceIssuanceShare';
 
 const routes: IRoute[] = [
   {
@@ -255,6 +257,14 @@ const routes: IRoute[] = [
     type: RouteType.all,
     props: {
       title: 'لیست گارانتی ها',
+    },
+  },
+  {
+    path: URL_INVOICE_SHARE,
+    component: InvoiceIssuanceShare,
+    type: RouteType.all,
+    props: {
+      title: 'پرداخت فاکتورهای صادر شده',
     },
   },
 ];

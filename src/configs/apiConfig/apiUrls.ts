@@ -89,6 +89,7 @@ export const APIURL_CHANGE_PASSWORD = '/UserManagement/ChangeUserPassword';
 
 //INVOICE
 export const APIURL_GET_INVOICE = '/Consumer/Invoice/InvoiceInformation';
+export const APIURL_GET_INVOICE_ISSUANCE = '/Consumer/Invoice/Pinv';
 
 //CALL BACK
 export const APIURL_GET_CALLBACK_DETAIL = '/Payment/GetPayment';

@@ -1,5 +1,6 @@
 export interface IInvoiceActionResultModel {
   requestLinkId?: string;
+  generalLinkId?: string;
   invoiceList: IInvoiceActionList[];
 }
 

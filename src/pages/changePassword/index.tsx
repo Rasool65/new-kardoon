@@ -74,7 +74,7 @@ const ChangePassword: FunctionComponent<IChangePasswordProps> = ({ displayChange
                           className="primary-input m-0"
                           autoFocus
                           type="password"
-                          placeholder={t('رمز عبور جاری را وارد نمایید')}
+                          placeholder="رمز عبور جاری را وارد نمایید"
                           autoComplete="off"
                           invalid={errors.oldPassword && true}
                           {...field}
@@ -93,7 +93,7 @@ const ChangePassword: FunctionComponent<IChangePasswordProps> = ({ displayChange
                         <Input
                           className="primary-input m-0"
                           type="password"
-                          placeholder={t('رمز عبور جدید را وارد نمایید')}
+                          placeholder="رمز عبور جدید را وارد نمایید"
                           autoComplete="off"
                           invalid={errors.newPassword && true}
                           {...field}
@@ -114,7 +114,7 @@ const ChangePassword: FunctionComponent<IChangePasswordProps> = ({ displayChange
                           className="primary-input m-0"
                           autoFocus
                           type="password"
-                          placeholder={t('تکرار رمز عبور جدید را وارد نمایید')}
+                          placeholder="تکرار رمز عبور جدید را وارد نمایید"
                           autoComplete="off"
                           invalid={errors.confirmPassword && true}
                           {...field}

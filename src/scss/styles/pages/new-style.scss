@@ -4715,3 +4715,18 @@ button{
  .user-profie .user-name{
   margin-top: 0 !important;
  }
+
+ .btn-technician-action{
+  width: calc(50% - 15px);
+ }
+ .total-price{
+  .total-number{
+    font-size: var(--fs-xl);
+  }
+  .total-text{
+    color: #848484;
+  }
+ }
+ .c-gray{
+  color: #a5a5a5;
+ }

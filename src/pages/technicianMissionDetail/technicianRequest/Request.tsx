@@ -65,6 +65,7 @@ const Request: FunctionComponent<RequestProps> = () => {
   const [categories, setCategories] = useState<any>();
   const [products, setProducts] = useState<any>();
   const [categoryId, setCategoryId] = useState<number>();
+  const [regionShow, setRegionShow] = useState<boolean>(false);
   const [isUrgent, setIsUrgent] = useState<boolean>();
   const userData = useSelector((state: RootStateType) => state.authentication.userData);
   const weekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
@@ -85,14 +86,17 @@ const Request: FunctionComponent<RequestProps> = () => {
       setLoading(false);
     });
   };
+
   const GetRegionList = (citiesId: number) => {
     setLoading(true);
     httpRequest.getRequest<IOutputResult<IRegionResultModel[]>>(`${APIURL_GET_REGIONES}?ParentId=${citiesId}`).then((result) => {
-      // اگر منطقه ای وجود نداشت والد رو صدا بزن و یک لول پرش کن
-      result.data.data.length > 0 ? setRegion(result.data.data) : GetRegionList(provinceId!);
-      setLoading(false);
+      result.data.data.length > 0
+        ? (setRegion(result.data.data), setRegionShow(false))
+        : (GetDistrictList(citiesId), setRegionShow(true)),
+        setLoading(false);
     });
   };
+
   const GetDistrictList = (regionId: number) => {
     setLoading(true);
     httpRequest
@@ -387,6 +391,7 @@ const Request: FunctionComponent<RequestProps> = () => {
                         <>
                           <Select
                             isClearable
+                            isDisabled={regionShow}
                             isLoading={loading}
                             noOptionsMessage={() => t('ListIsEmpty')}
                             placeholder={t('SelectRegion')}

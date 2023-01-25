@@ -94,7 +94,9 @@ const EditAddressModal: FunctionComponent<IEditAddressModal> = ({
 
   const GetRegionList = (citiesId: number) => {
     httpRequest.getRequest<IOutputResult<IRegionResultModel[]>>(`${APIURL_GET_REGIONES}?ParentId=${citiesId}`).then((result) => {
-      result.data.data.length > 0 ? setRegion(result.data.data) : GetDistrictList(citiesId), setRegionShow(true);
+      result.data.data.length > 0
+        ? (setRegion(result.data.data), setRegionShow(false))
+        : (GetDistrictList(citiesId), setRegionShow(true));
     });
   };
 
@@ -162,12 +164,12 @@ const EditAddressModal: FunctionComponent<IEditAddressModal> = ({
   return (
     <>
       <div className={`modal select-address-modal ${EditAddressModalVisible ? 'd-block' : ''}`}>
-          <div className="modal-header">
-            <h2 className="header pointer" onClick={reject}>
-              X
-            </h2>
-            <h1 className="header">ویرایش آدرس</h1>
-          </div>
+        <div className="modal-header">
+          <h2 className="header pointer" onClick={reject}>
+            X
+          </h2>
+          <h1 className="header">ویرایش آدرس</h1>
+        </div>
         <div className="modal-content">
           {CurrentAddress && (
             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -374,17 +376,21 @@ const EditAddressModal: FunctionComponent<IEditAddressModal> = ({
                 </Container>
 
                 <div className="toggle-center text-center">
-                <label className='ml-2' htmlFor="">برای خودم</label>
-                <Input
-                  defaultChecked={true}
-                  onChange={(e) => {
-                    e.currentTarget.checked ? changeForMe(true) : changeForMe(false);
-                  }}
-                  type="checkbox"
-                  className="toggle-checkbox"
-                />
-                <label className='mr-2' htmlFor="">برای دیگری</label>
-              </div>
+                  <label className="ml-2" htmlFor="">
+                    برای خودم
+                  </label>
+                  <Input
+                    defaultChecked={true}
+                    onChange={(e) => {
+                      e.currentTarget.checked ? changeForMe(true) : changeForMe(false);
+                    }}
+                    type="checkbox"
+                    className="toggle-checkbox"
+                  />
+                  <label className="mr-2" htmlFor="">
+                    برای دیگری
+                  </label>
+                </div>
 
                 {forMe ? null : (
                   <div>

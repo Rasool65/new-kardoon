@@ -43,7 +43,7 @@ import { resizeFile } from '@src/utils/ResizerImage';
 import InputIcon from 'react-multi-date-picker/components/input_icon';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import ConfirmModal from './ConfirmModal';
-import { URL_INVOICE } from '@src/configs/urls';
+import { URL_INVOICE, URL_INVOICE_SHARE } from '@src/configs/urls';
 import UpdateNationalCodeModal from './UpdateNationalCodeModal';
 
 const Action: FunctionComponent<IPageProps> = (props) => {
@@ -732,7 +732,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                     <div className="service-image-item column-item">
                       <div className="d-flex justify-content-between w-100">
                         <img src={require(`@src/scss/images/icons/${color}-location.svg`)} alt="" className="icon" />
-                        <p className="title ml-auto">تصاویر موقعیت مکانی دستگاه </p>
+                        <p className="title ml-auto">سایر تصاویر دستگاه (موقعیت مکانی ، زمینه های رنگی سفید و ...) </p>
                         <div className="imagebox" style={{ backgroundImage: "url('src/scss/images/4.jpg')" }}>
                           <label htmlFor="imgList" className="upload-btn">
                             <a className="upload-btn">
@@ -1076,12 +1076,20 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                   )}
                 </Button>
               ) : (
-                <Button
-                  onClick={() => navigate(generatePath(URL_INVOICE, { id: `${invoice.requestLinkId}` }))}
-                  className="btn-info btn btn-secondary w-100 mt-3"
-                >
-                  مشاهده فاکتور
-                </Button>
+                <div className="d-flex justify-content-between mb-4">
+                  <Button
+                    onClick={() => navigate(generatePath(URL_INVOICE, { id: `${invoice.requestLinkId}` }))}
+                    className="btn-info btn btn-secondary mt-3 btn-technician-action"
+                  >
+                    مشاهده فاکتور
+                  </Button>
+                  <Button
+                    onClick={() => navigate(`${URL_INVOICE_SHARE}?linkId=${invoice.generalLinkId}&invoiceId=${state.orderId}`)}
+                    className="btn-info btn btn-secondary mt-3 btn-technician-action"
+                  >
+                    اشتراک گذاری
+                  </Button>
+                </div>
               )
             ) : (
               ''

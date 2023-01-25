@@ -16,7 +16,7 @@ import Register from './Register';
 import PasswordMessage from './PasswordMessage';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import manifestJson from '../../../public/_manifest.json';
+import manifestJson from '@src/manifest.json';
 import { UtilsHelper } from '@src/utils/GeneralHelpers';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import { URL_PROVINCE } from './../../configs/urls';

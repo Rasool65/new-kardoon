@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 
 const cssLoaders = (extra) => {
   const loaders = [
@@ -93,10 +94,36 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
-        // { from: 'public/robots.txt', to: 'robots.txt' },
         { from: 'public/favicon.ico', to: 'favicon.ico' },
-        { from: 'public/_manifest.json', to: '_manifest.json' },
-        // { from: 'public/assets', to: 'assets' },
+        { from: 'public/serviceWorker.js', to: 'serviceWorker.js' },
+      ],
+    }),
+    new WebpackPwaManifest({
+      filename: 'manifest.json',
+      name: 'کار رو به کاردون بسپار!',
+      short_name: 'کاردون',
+      description: 'نرم افزار مدیریت درخواست های مشتریان و تکنسین ها',
+      background_color: '#000000',
+      display: 'standalone',
+      start_url: '.',
+      orientation: 'portrait',
+      crossorigin: 'use-credentials', //can be null, use-credentials or anonymous
+      ios: true,
+      inject: true,
+      icons: [
+        {
+          src: path.resolve('public/assets/logo.png'),
+          sizes: [96, 128, 192, 256, 384, 512], // multiple sizes
+        },
+        {
+          src: path.resolve('public/assets/solid-logo.png'),
+          size: '1024x1024', // you can also use the specifications pattern
+        },
+        {
+          src: path.resolve('public/assets/logo.png'),
+          size: '1024x1024',
+          purpose: 'maskable',
+        },
       ],
     }),
   ],

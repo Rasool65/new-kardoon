@@ -14,7 +14,7 @@ import { handleLogin } from '@src/redux/reducers/authenticationReducer';
 import { ILoginResultModel } from '@src/models/output/authentication/ILoginResultModel';
 import { URL_MAIN, URL_USER_PROFILE } from '@src/configs/urls';
 import { useTranslation } from 'react-i18next';
-import manifesJson from '../../../public/_manifest.json';
+import manifestJson from '@src/manifest.json';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 const EnterCode: FunctionComponent<IModalModel> = ({ mobileNumber, display, handleClose }) => {
   const toast = useToast();
@@ -41,8 +41,8 @@ const EnterCode: FunctionComponent<IModalModel> = ({ mobileNumber, display, hand
   const LoginWithSMS = (code: string) => {
     setPinLoading(true);
     const body = {
-      ClientId: manifesJson.clientId,
-      ClientSecret: manifesJson.clientSecret,
+      ClientId: manifestJson.clientId,
+      ClientSecret: manifestJson.clientSecret,
       UserName: mobileNumber,
       Password: code,
     };

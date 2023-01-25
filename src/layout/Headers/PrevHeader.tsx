@@ -22,7 +22,7 @@ const PrevHeader: FunctionComponent = () => {
         // state.missionStatus[6].count! // invoiceIssuance
         0
   );
-  const walletBalance = useSelector((state: RootStateType) => state.message.walletBalance);
+
   const navigate = useNavigate();
   const toast = useToast();
   const [displayMenu, setDisplayMenu] = useState<boolean>(false);

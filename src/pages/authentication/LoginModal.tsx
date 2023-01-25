@@ -19,7 +19,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 // import { Controller, useForm } from 'react-hook-form';
 // import { useTranslation } from 'react-i18next';
 // import EnterCode from './EnterCode';
-// import manifestJson from '../../../public/_manifest.json';
+
 // import { URL_TECHNICIAN_MISSION } from '@src/configs/urls';
 // import { UtilsHelper } from '@src/utils/GeneralHelpers';
 // import { ILoginModal } from './ModalModel';

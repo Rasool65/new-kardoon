@@ -46,11 +46,7 @@ const UserAccount: FunctionComponent<IPageProps> = (props) => {
   const GetOrder = () => {
     setLoading(true);
     httpRequest
-      .getRequest<IOutputResult<IOrderDetailListResultModel>>(
-        `${
-          APIURL_GET_ORDER_DETAILS // 'http://127.0.0.1:2500/test'
-        }?id=${requestDetailId}`
-      )
+      .getRequest<IOutputResult<IOrderDetailListResultModel>>(`${APIURL_GET_ORDER_DETAILS}?id=${requestDetailId}`)
       .then((result) => {
         setOrder(result.data.data);
         setLoading(false);

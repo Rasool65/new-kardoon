@@ -97,7 +97,9 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
   };
   const GetRegionList = (citiesId: number) => {
     httpRequest.getRequest<IOutputResult<IRegionResultModel[]>>(`${APIURL_GET_REGIONES}?ParentId=${citiesId}`).then((result) => {
-      result.data.data.length > 0 ? setRegion(result.data.data) : GetDistrictList(citiesId), setRegionShow(true);
+      result.data.data.length > 0
+        ? (setRegion(result.data.data), setRegionShow(false))
+        : (GetDistrictList(citiesId), setRegionShow(true));
     });
   };
   const GetDistrictList = (regionId: number) => {
@@ -152,12 +154,12 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
   }, []);
   return (
     <div className={`modal select-address-modal ${AddAddressModalVisible ? 'd-block' : ''}`}>
-        <div className="modal-header">
-          <h2 className="header pointer" onClick={reject}>
-            X
-          </h2>
-          <h1 className="header">افزودن آدرس جدید</h1>
-        </div>
+      <div className="modal-header">
+        <h2 className="header pointer" onClick={reject}>
+          X
+        </h2>
+        <h1 className="header">افزودن آدرس جدید</h1>
+      </div>
       <div className="modal-content">
         <Form onSubmit={handleSubmit(onSubmit)}>
           <div className="h-100-55" style={{ marginBottom: '0px' }}>
@@ -189,15 +191,16 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
                 render={({ field }: any) => (
                   <>
                     <Input
-                    id='zipcode'
+                      id="zipcode"
                       className="form-control"
                       type="number"
                       placeholder={t('EnterZipCode')}
                       autoComplete="off"
                       invalid={errors.zipCode && true}
-                      
                       // onInput ="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength)"
-                      onInput={(e)=>{e.currentTarget.value.length<10?e:5  }}
+                      onInput={(e) => {
+                        e.currentTarget.value.length < 10 ? e : 5;
+                      }}
                       {...field}
                     />
                     <FormFeedback>{errors.zipCode?.message}</FormFeedback>
@@ -412,7 +415,9 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
               </Container>
 
               <div className="toggle-center text-center">
-                <label className='ml-2' htmlFor="">برای خودم</label>
+                <label className="ml-2" htmlFor="">
+                  برای خودم
+                </label>
                 <Input
                   defaultChecked={true}
                   onChange={(e) => {
@@ -421,7 +426,9 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
                   type="checkbox"
                   className="toggle-checkbox"
                 />
-                <label className='mr-2' htmlFor="">برای دیگری</label>
+                <label className="mr-2" htmlFor="">
+                  برای دیگری
+                </label>
               </div>
 
               {forMe ? null : (
@@ -500,7 +507,6 @@ const AddAddressModal: FunctionComponent<IAddAddressModal> = ({ GetAddresses, Ad
                   />
                 </div>
               )}
-
             </div>
             <Button type="submit" className="add-address-btn">
               {loading ? <LoadingComponent /> : 'ذخیره آدرس'}
