@@ -68,7 +68,7 @@ const UpdateNationalCodeModal: FunctionComponent<RemoveConfirmModalProps> = ({
                   <Input
                     className="account-data-input"
                     type="number"
-                    placeholder={t('کد ملی مشتری را وارد نمایید')}
+                    placeholder={'کد ملی مشتری را وارد نمایید'}
                     autoComplete="off"
                     invalid={errors.consumerNationalCode && true}
                     {...field}

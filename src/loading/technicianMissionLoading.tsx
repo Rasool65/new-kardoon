@@ -12,7 +12,7 @@ const TechnicianMissionLoading: FunctionComponent<TechnicianMissionLoadingProps>
             <img src={require('@src/scss/images/icons/menu-toggle.svg')} className="menu-box-toggle" alt="" />
           </div> */}
           <div className="sk-filter-box skeleton"></div>
-          <div className="skfilter-btn skeleton"></div>
+          {/* <div className="skfilter-btn skeleton"></div> */}
           <div className="container">
             <div className="row">
               <div className="col-md-6">

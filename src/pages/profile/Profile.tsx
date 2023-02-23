@@ -334,7 +334,7 @@ const Profile: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
                             <Input
                               className="account-data-input"
                               type="number"
-                              placeholder={t('شماره تماس ضروری را وارد نمایید')}
+                              placeholder={'شماره تماس ضروری را وارد نمایید'}
                               autoComplete="off"
                               invalid={errors.phoneNumber && true}
                               {...field}
@@ -356,7 +356,7 @@ const Profile: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
                               className="account-data-input p-2"
                               style={{ height: '100px' }}
                               type="textarea"
-                              placeholder={t('آدرس محل سکونت خود را وارد نمایید')}
+                              placeholder={'آدرس محل سکونت خود را وارد نمایید'}
                               autoComplete="off"
                               invalid={errors.homeAddress && true}
                               {...field}
@@ -378,7 +378,7 @@ const Profile: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
                               className="account-data-input p-2"
                               type="textarea"
                               style={{ height: '100px' }}
-                              placeholder={t('آدرس محل کار خود را وارد نمایید')}
+                              placeholder={'آدرس محل کار خود را وارد نمایید'}
                               autoComplete="off"
                               invalid={errors.workAddress && true}
                               {...field}

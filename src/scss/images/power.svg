@@ -6,7 +6,7 @@
 	.st0{fill:#C75C5C;}
 	.st1{opacity:0.2;}
 	.st2{fill:#231F20;}
-	.st3{fill:none;stroke:#FFFFFF;stroke-width:4;stroke-linecap:round;stroke-miterlimit:10;}
+	.st3{fill:none;stroke:#FFFFFF;strokeWidth:4;stroke-linecap:round;stroke-miterlimit:10;}
 </style>
 <circle class="st0" cx="32" cy="32" r="32"/>
 <g class="st1">

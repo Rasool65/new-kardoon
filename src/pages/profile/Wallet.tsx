@@ -1,5 +1,6 @@
 import Footer from '@src/layout/Footer';
 import Header from '@src/layout/Headers/Header';
+import Num2persian from 'num2persian';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { IProfilePageProp } from './IProfilePageProp';
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,6 +36,7 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
   const [walletBalance, setWalletBalance] = useState<number>();
   const dispatch = useDispatch();
   const CheckOutPayment = (walletBalance: number) => {
+    if (walletBalance < 11000) return toast.showError('مبلغ نمی تولند کمتر از 1,100 تومان باشد');
     setCheckOutLoading(true);
     const body = {
       technicianId: userData?.userId,
@@ -183,13 +185,16 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
                     <button className="wallet-icon-btn">
                       <img
                         src={require(`@src/scss/images/icons/${color}-antdesignplusoutlined3441-ss1.svg`)}
+                        onClick={() => {
+                          setPayment(Number(payment + 100000));
+                        }}
                         alt="antdesignplusoutlined3441"
                         className="home-antdesignplusoutlined"
                       />
                     </button>
                     <Input
                       defaultValue={profile?.walletBalance && payment}
-                      className="primary-input form-control"
+                      className="primary-input form-control text-center"
                       onChange={(e: any) => setPayment(e.currentTarget.value)}
                       type="number"
                       value={payment}
@@ -197,6 +202,9 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
                     />
                     <button className="wallet-icon-btn">
                       <img
+                        onClick={() => {
+                          setPayment(Number(payment - 100000));
+                        }}
                         src={require(`@src/scss/images/icons/${color}-antdesignminusoutlined3441-1xkm.svg`)}
                         alt="antdesignminusoutlined3441"
                         className="home-antdesignminusoutlined"
@@ -205,6 +213,8 @@ const Wallet: FunctionComponent<IProfilePageProp> = ({ handleClickTab }) => {
                   </div>
                   <div className="row"></div>
                   <div className="walet-btn">
+                    <div className="w-100 mb-2">{Num2persian(Number(payment) / 10)} تومان</div>
+                    <br />
                     <button
                       onClick={() => {
                         CheckOutPayment(payment);

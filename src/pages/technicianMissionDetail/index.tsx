@@ -124,27 +124,29 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
     setDisplayCallModal(!displayCallModal);
   };
   const AddFollowUp = () => {
-    if (followUpDescription == '') return toast.showError('توضیحات نمی تواند خالی باشد'), setLoading(false);
-    const body = {
-      technicianId: userData?.userId,
-      requestDetailId: parseInt(id!),
-      description: followUpDescription,
-      nextTrackingDateTime: '2022-12-25T07:40:29.093Z',
-    };
-    setLoading(true);
-    httpRequest
-      .postRequest<IOutputResult<any>>(`${APIURL_POST_TRACKING}`, body)
-      .then((result) => {
-        toast.showSuccess(result.data.message);
-        setFollowUpModalVisible(false);
-        setSuspendReasonModalVisible(false);
-        setProgressReasonModalVisible(false);
-        setLoading(false);
-        GetFollowUp();
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    setTimeout(() => {
+      if (followUpDescription == '') return toast.showError('توضیحات نمی تواند خالی باشد'), setLoading(false);
+      const body = {
+        technicianId: userData?.userId,
+        requestDetailId: parseInt(id!),
+        description: followUpDescription,
+        nextTrackingDateTime: nextTrackingDateTime,
+      };
+      setLoading(true);
+      httpRequest
+        .postRequest<IOutputResult<any>>(`${APIURL_POST_TRACKING}`, body)
+        .then((result) => {
+          toast.showSuccess(result.data.message);
+          setFollowUpModalVisible(false);
+          setSuspendReasonModalVisible(false);
+          setProgressReasonModalVisible(false);
+          setLoading(false);
+          GetFollowUp();
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 500);
   };
 
   const submitTechnicianMedia = () => {

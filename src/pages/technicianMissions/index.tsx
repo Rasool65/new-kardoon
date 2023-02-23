@@ -62,14 +62,15 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
       technicianId: TechnicianId,
     };
     withoutFilter && delete body.consumerId && delete body.productIds && delete body.serviceTypeIds && delete body.status;
-    httpRequest
-      .postRequest<IPageListOutputResult<IMissionsResultModel>>(`${APIURL_GET_TECHNICIAN_MISSIONS}`, body)
-      .then((result) => {
-        setLoading(false);
-        result.data.data.technicianMissionList && result.data.data.technicianMissionList.length > 0
-          ? (setTechnicianMissionList(technicianMissionList?.concat(result.data.data.technicianMissionList)), setHasMore(true))
-          : setHasMore(false);
-      });
+    !loading &&
+      httpRequest
+        .postRequest<IPageListOutputResult<IMissionsResultModel>>(`${APIURL_GET_TECHNICIAN_MISSIONS}`, body)
+        .then((result) => {
+          setLoading(false);
+          result.data.data.technicianMissionList && result.data.data.technicianMissionList.length > 0
+            ? (setTechnicianMissionList(technicianMissionList?.concat(result.data.data.technicianMissionList)), setHasMore(true))
+            : setHasMore(false);
+        });
   };
 
   const onClickFilter = () => {
@@ -106,16 +107,17 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
   return (
     <>
       <Header />
-      {loading ? (
-        <TechnicianMissionLoading />
-      ) : (
-        <>
-          <Footer activePage={1} />
-          <div className="home-container technician-mission">
-            <div className="container">
-              <section>
-                <div className="container mt-md-4">
-                  <div>
+
+      <>
+        <Footer activePage={1} />
+        <div className="home-container technician-mission">
+          <div className="container">
+            <section>
+              <div className="container mt-md-4">
+                <div>
+                  {loading ? (
+                    <TechnicianMissionLoading />
+                  ) : (
                     <InfiniteScroll
                       className="row"
                       dataLength={technicianMissionList?.length ? technicianMissionList?.length : 1}
@@ -176,26 +178,26 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
                           );
                         })}
                     </InfiniteScroll>
-                    <Filter
-                      showModal={showFilter}
-                      handleClick={handleClickFilter}
-                      handleStatusChange={handleStatusChange}
-                      handleServiceTypeChange={handleServiceTypeChange}
-                      handleProductTypeChange={handleProductTypeChange}
-                      handleConsumerChange={handleConsumerChange}
-                      pageNumber={pageNumber}
-                      loading={loading}
-                      onClickFilter={onClickFilter}
-                      onClickNoFilter={onClickNoFilter}
-                      emptyList={() => setTechnicianMissionList([])}
-                    />
-                  </div>
+                  )}
+                  <Filter
+                    showModal={showFilter}
+                    handleClick={handleClickFilter}
+                    handleStatusChange={handleStatusChange}
+                    handleServiceTypeChange={handleServiceTypeChange}
+                    handleProductTypeChange={handleProductTypeChange}
+                    handleConsumerChange={handleConsumerChange}
+                    pageNumber={pageNumber}
+                    loading={loading}
+                    onClickFilter={onClickFilter}
+                    onClickNoFilter={onClickNoFilter}
+                    emptyList={() => setTechnicianMissionList([])}
+                  />
                 </div>
-              </section>
-            </div>
+              </div>
+            </section>
           </div>
-        </>
-      )}
+        </div>
+      </>
     </>
   );
 };

@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import Num2persian from 'num2persian';
 import { IPageProps } from '@src/configs/routerConfig/IPageProps';
 import { useNavigate, useLocation, generatePath } from 'react-router-dom';
-import { Button, Form, FormFeedback, Input, Spinner } from 'reactstrap';
+import { Button, Form, FormFeedback, Input, Spinner, Progress, UncontrolledTooltip } from 'reactstrap';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
@@ -11,7 +11,6 @@ import Select from 'react-select';
 import useHttpRequest, { RequestDataType } from '@src/hooks/useHttpRequest';
 import { IOutputResult } from '@src/models/output/IOutputResult';
 import { RWebShare } from 'react-web-share';
-import { UncontrolledTooltip } from 'reactstrap';
 import {
   APIURL_DELETE_ACTION,
   APIURL_GET_SERVICES_TITLE,
@@ -63,6 +62,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
   const [warrantyStartDate, setWarrantyStartDate] = useState<string>();
 
   const [btnIssuance, setBtnIssuance] = useState<boolean>(false);
+  const [addDisabled, setAddDisabled] = useState<boolean>(false);
 
   const [guarantee, setGuarantee] = useState<boolean>(false);
 
@@ -99,6 +99,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
   const [showUpdateNationalCodeModal, setShowUpdateNationalCodeModal] = useState<boolean>(false);
   const technicianId = useSelector((state: RootStateType) => state.authentication.userData?.userId);
   const color = useSelector((state: RootStateType) => state.theme.color);
+  const [progress, setProgress] = useState<number>();
 
   const RemoveAction = (id: number) => {
     const body = {
@@ -161,6 +162,10 @@ const Action: FunctionComponent<IPageProps> = (props) => {
               ? false // منتظر تایید
               : true;
           });
+          var disabledButton = result.data.data.invoiceList.some((e) => {
+            return e.hasInvoice; // اگر فاکتور صاده شده بود دکمه افزودن نمایش داد نشود
+          });
+          setAddDisabled(disabledButton);
           setBtnIssuance(showButton);
           setInvoice(result.data.data);
           setLoading(false);
@@ -257,12 +262,16 @@ const Action: FunctionComponent<IPageProps> = (props) => {
     setTotalPrice(0);
     reset({
       action: { label: '', value: 0 },
-      sourceCost: { label: '', value: 0 },
+      // sourceCost: { label: '', value: 0 },
+      price: '',
       count: '0',
       serviceTypeId: { label: '', value: 0 },
       description: '',
     });
     setPrice(undefined);
+  };
+  const config = {
+    onUploadProgress: (progressEvent: any) => setProgress(Math.round((100 * progressEvent.loaded) / progressEvent.total)),
   };
   const onSubmit = (data: ITechnicianActionModel) => {
     if (guarantee) {
@@ -290,10 +299,9 @@ const Action: FunctionComponent<IPageProps> = (props) => {
       });
       if (purchaseInvoiceFile) formData.append('purchaseInvoice', purchaseInvoiceFile);
       if (lableWarrantyFile) formData.append('lableWarranty', lableWarrantyFile);
-
       !loading &&
         httpRequestForm
-          .postRequest<IOutputResult<any>>(`${APIURL_POST_REQUEST_DETAIL_ACTION_FORMDATA}`, formData)
+          .postRequest<IOutputResult<any>>(`${APIURL_POST_REQUEST_DETAIL_ACTION_FORMDATA}`, formData, () => {}, config)
           .then((result) => {
             result.data.isSuccess
               ? (toast.showSuccess(result.data.message), resetForm(), resetFiles(), GetInvoiceAction())
@@ -911,10 +919,16 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                       </label>
                     </div> */}
                   </div>
-                  <Button type="submit" className="add-action-btn">
+                  <Button disabled={addDisabled} type="submit" className="add-action-btn">
                     {loading ? <Spinner /> : '+ افزودن'}
                   </Button>
                 </div>
+                {progress && (
+                  <>
+                    <div className="text-center">{`${progress}%`}</div>
+                    <Progress value={progress} />
+                  </>
+                )}
               </div>
             </div>
           </Form>
@@ -1077,18 +1091,29 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                 </Button>
               ) : (
                 <div className="d-flex justify-content-between mb-4">
-                  <Button
+                  {/* <Button
                     onClick={() => navigate(generatePath(URL_INVOICE, { id: `${invoice.requestLinkId}` }))}
                     className="btn-info btn btn-secondary mt-3 btn-technician-action"
                   >
                     مشاهده فاکتور
-                  </Button>
+                  </Button> */}
+
                   <Button
                     onClick={() => navigate(`${URL_INVOICE_SHARE}?linkId=${invoice.generalLinkId}&invoiceId=${state.orderId}`)}
                     className="btn-info btn btn-secondary mt-3 btn-technician-action"
                   >
-                    اشتراک گذاری
+                    مشاهده فاکتور
                   </Button>
+                  <RWebShare
+                    data={{
+                      text: `لینک پرداخت فاکتور صادر شده `,
+                      url: `${URL_INVOICE_SHARE}?linkId=${invoice.generalLinkId}&invoiceId=${state.orderId}`,
+                      title: 'کاردون',
+                    }}
+                  >
+                    {/* <img src={require(`@src/scss/images/icons/${color}-share.svg`)} className="share-btn" /> */}
+                    <Button className="btn-info btn btn-secondary mt-3 btn-technician-action">اشتراک گذاری</Button>
+                  </RWebShare>
                 </div>
               )
             ) : (

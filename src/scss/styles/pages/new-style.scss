@@ -1201,7 +1201,8 @@ a {
       }
       &.show{
         ul{
-          height: 245px !important;
+          // height: 245px !important;
+           height: auto !important;
         }
       }
     }
@@ -4730,3 +4731,9 @@ button{
  .c-gray{
   color: #a5a5a5;
  }
+ .progress {
+  margin-bottom: 15px;
+}
+.progress-bar {
+  background-color: var(--master-color);
+}

@@ -46,7 +46,8 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
           reject(res);
         }
       } catch (error: any) {
-        toast.showError(error.message);
+        toast.showError('خطای داخلی سرور');
+        // toast.showError(error.message);
         reject(error);
       }
     });
@@ -69,7 +70,8 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
         });
         if (res.status >= 200 && res.status <= 204) resolve(res);
         else if (res.status == 401 && delayBetweenErrors > 500) {
-          toast.showError('لطفا مجدد وارد حساب کاربری خود شوید');
+          toast.showError(res.data.message);
+          reject(res);
           authToken.deleteLogoutToken();
           navigate(URL_LOGIN);
         } else {
@@ -78,7 +80,8 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
           reject(res);
         }
       } catch (error: any) {
-        toast.showError(error.message);
+        // toast.showError(error.message);
+        toast.showError('خطای داخلی سرور');
         reject(error);
       }
     });
@@ -106,6 +109,7 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
         }
       } catch (error: any) {
         toast.showError(error.message);
+        toast.showError('خطای داخلی سرور');
         reject(error);
       }
     });
@@ -131,7 +135,8 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
           reject(res);
         }
       } catch (error: any) {
-        toast.showError(error.message);
+        // toast.showError(error.message);
+        toast.showError('خطای داخلی سرور');
         reject(error);
       }
     });

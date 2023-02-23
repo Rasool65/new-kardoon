@@ -17,10 +17,10 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: filename('css'),
     }),
-    new WorkboxPlugin.GenerateSW({
-      clientsClaim: true,
-      skipWaiting: true,
-    }),
+    // new WorkboxPlugin.GenerateSW({
+    //   clientsClaim: true,
+    //   skipWaiting: true,
+    // }),
   ],
   optimization: {
     minimizer: [

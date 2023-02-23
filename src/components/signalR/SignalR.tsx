@@ -31,8 +31,15 @@ export const SignalR = () => {
         .then((result) => {
           console.log('SignalR Connected!');
           connection.on('receiveChat', (data: IMessage) => {
-            show && navigator.vibrate(500) && toast.showNotify(data.message);
+            var options = {
+              body: data.message,
+              icon: 'favicon.ico',
+              image: '/assets/images/profile-defult-img.png',
+              vibrate: [100, 50, 200],
+            };
+            show && toast.showNotify(data.message);
             dispatch(handleNewMessage(data));
+            new Notification(`${data.fromFirstName} ${data.fromLastName}`, options);
           });
         })
         .catch((e) => console.log('Connection failed: ', e));

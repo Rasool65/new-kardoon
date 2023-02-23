@@ -528,9 +528,9 @@ const Chat: FunctionComponent<IPageProps> = () => {
                         <path
                           d="M12 4L12 20M12 4L18 10M12 4L6 10"
                           stroke="#ffffff"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
                     )}

@@ -1,5 +1,5 @@
 import { RootStateType } from '@src/redux/Store';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { IDetailInvoiceList, IInvoices, IRequestDetailInfo } from '@src/models/output/orderDetail/IOrderDetailListResultModel';
 import { UtilsHelper } from '@src/utils/GeneralHelpers';
@@ -27,6 +27,7 @@ const Invoices: FunctionComponent<OrderDetailProps> = ({ invoices, requestDetail
   const [payTypeModalVisible, setPayTypeModalVisible] = useState<boolean>(false);
   const [invoiceId, setInvoiceId] = useState<number[]>([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const inputRef = useRef<any>(null);
   const toast = useToast();
 
   const handleShowModal = () => {
@@ -88,6 +89,10 @@ const Invoices: FunctionComponent<OrderDetailProps> = ({ invoices, requestDetail
     amount <= 0 ? ReduceFromWallet() : ReduceFromBank(amount);
   };
 
+  useLayoutEffect(() => {
+    inputRef?.current?.props.onClick();
+  }, []);
+
   return (
     <>
       <div className="container mb-5">
@@ -143,6 +148,8 @@ const Invoices: FunctionComponent<OrderDetailProps> = ({ invoices, requestDetail
                         <td className="total-price-td" colSpan={4}>
                           <div className="total-prices select-time">
                             <Input
+                              defaultChecked
+                              ref={inputRef}
                               type="checkbox"
                               className="table-chacked form-check-input ml-2"
                               onClick={() => {

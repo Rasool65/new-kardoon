@@ -21,12 +21,12 @@ const UserAccount: FunctionComponent<IPageProps> = (props) => {
   const OrderTabs: IOrderTabs[] = [
     {
       id: 0,
-      title: 'جزییات رسید',
+      title: 'جزییات درخواست',
       Component: RequestDetailInfo,
     },
     {
       id: 1,
-      title: 'جزییات سفارش',
+      title: 'جزییات صورتحساب',
       Component: Invoices,
     },
   ];
@@ -74,7 +74,7 @@ const UserAccount: FunctionComponent<IPageProps> = (props) => {
                 handleClickTab(0);
               }}
             >
-              جزئیات رسید
+              جزئیات درخواست
             </button>
             <button
               className={`primary-btn m-3 w-50 float-end ${activeTab == 1 ? 'active' : ''}`}
@@ -82,7 +82,7 @@ const UserAccount: FunctionComponent<IPageProps> = (props) => {
                 handleClickTab(1);
               }}
             >
-              جزییات سفارش
+              جزییات صورتحساب
             </button>
           </div>
         </div>
