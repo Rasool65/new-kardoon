@@ -21,6 +21,7 @@ import { UtilsHelper } from '@src/utils/GeneralHelpers';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import { URL_PROVINCE } from './../../configs/urls';
 import { RootStateType } from '@src/redux/Store';
+import WebAuthnLoginForm from './WebAuthnLoginForm';
 
 const Login: FunctionComponent<IPageProps> = ({ title }) => {
   const color = useSelector((state: RootStateType) => state.theme.color);
@@ -139,6 +140,7 @@ const Login: FunctionComponent<IPageProps> = ({ title }) => {
               </a>
             </div>
           </Form>
+          <WebAuthnLoginForm />
         </div>
         <PasswordMessage handleClose={handleClose} display={displayPasswordMessage} />
         <Register display={displayRegister} handleClose={handleClose} />
