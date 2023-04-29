@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import IPageProps from '../../configs/routerConfig/IPageProps';
 import FooterCard from '@src/layout/FooterCard';
 import Footer from '@src/layout/Footer';
-import Header from '../../layout/Headers/Header';
+import Header from '@src/layout/Headers/Header';
 import useHttpRequest from '@src/hooks/useHttpRequest';
 import { IOutputResult } from '@src/models/output/IOutputResult';
 import { IServicesResultModel } from '@src/models/output/services/IServicesResultModel';
@@ -76,6 +76,7 @@ const Main: FunctionComponent<IPageProps> = (props) => {
   }, []);
 
   useEffect(() => {
+    Notification.requestPermission();
     auth && GetGuarantee();
   }, []);
 

@@ -1,4 +1,4 @@
-export const coerceToArrayBuffer = function (thing, name) {
+﻿export const coerceToArrayBuffer = function (thing, name) {
   if (typeof thing === 'string') {
     // base64url to base64
     thing = thing.replace(/-/g, '+').replace(/_/g, '/');
@@ -62,7 +62,7 @@ export const coerceToBase64Url = function (thing) {
   return thing;
 };
 
-export function detectFIDOSupport() {
+function detectFIDOSupport() {
   if (window.PublicKeyCredential === undefined || typeof window.PublicKeyCredential !== 'function') {
     document.getElementById('registerForm').disabled = true;
     alert('FIDO not supported on this device');
@@ -74,7 +74,7 @@ export function detectFIDOSupport() {
  * Get a form value
  * @param {any} selector
  */
-export function value(selector) {
+function value(selector) {
   var el = document.querySelector(selector);
   if (el.type === 'checkbox') {
     return el.checked;

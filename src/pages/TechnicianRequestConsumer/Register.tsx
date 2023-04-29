@@ -33,7 +33,7 @@ const Register: FunctionComponent<RegisterProps> = ({ handleClickNext }) => {
   const { t }: any = useTranslation();
   const toast = useToast();
   const [loading, setLoading] = useState<boolean>(false);
-  const [introMethodId, setIntroMethodId] = useState<any>();
+  const [introMethodId, setIntroMethodId] = useState<any>(undefined);
   const [introductions, setIntroductions] = useState<any>();
   const [gender, setGender] = useState<number>(1);
   const httpRequest = useHttpRequest();
@@ -61,6 +61,10 @@ const Register: FunctionComponent<RegisterProps> = ({ handleClickNext }) => {
   } = useForm<IRegisterTechnicianModel>({ mode: 'onChange', resolver: yupResolver(RegisterTechnicianModelSchema) });
 
   const onSubmit = (data: IRegisterTechnicianModel) => {
+    if (!introMethodId) {
+      toast.showError('نحوه آشنایی را انتخاب نمایید');
+      return;
+    }
     setLoading(true);
     const body = {
       firstName: data.firstName,
@@ -70,7 +74,7 @@ const Register: FunctionComponent<RegisterProps> = ({ handleClickNext }) => {
       nationalCode: data.nationalCode,
       introductionInfo: {
         refkey: data.introductionInfo?.refkey,
-        introMethodId: data.introductionInfo?.introMethodId,
+        introMethodId: introMethodId,
         introductionCode: data.introductionInfo?.introductionCode,
       },
     };

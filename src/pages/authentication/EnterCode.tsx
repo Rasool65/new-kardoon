@@ -16,6 +16,7 @@ import { URL_MAIN, URL_USER_PROFILE } from '@src/configs/urls';
 import { useTranslation } from 'react-i18next';
 import manifestJson from '@src/manifest.json';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
+
 const EnterCode: FunctionComponent<IModalModel> = ({ mobileNumber, display, handleClose }) => {
   const toast = useToast();
   const { t }: any = useTranslation();
@@ -73,6 +74,23 @@ const EnterCode: FunctionComponent<IModalModel> = ({ mobileNumber, display, hand
       setTimer(false);
     }
   });
+  const controller = new AbortController();
+  navigator.credentials
+    .get({
+      //@ts-ignore
+      otp: { transport: ['sms'] },
+      signal: controller.signal,
+    })
+    .then((otp: any) => {
+      LoginWithSMS(otp.code);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  //! ex SMS:
+  // code : 123456
+  // @tech.kardoon.ir #123456
 
   return (
     <>

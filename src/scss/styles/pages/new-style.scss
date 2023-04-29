@@ -602,7 +602,8 @@ a {
 }
 // ================= ModalPage
 .login-page{
-  height: 100vh;
+  // height: 100vh;
+  height: calc(100vh - 70px);
   overflow: hidden;
   position: relative;
   text-align: center;
@@ -660,6 +661,7 @@ a {
   }
 }
 .login-page:before {
+  z-index: 9;
   content: "";
   background-color: var(--master-color);
   width: 100%;
@@ -679,7 +681,7 @@ a {
 }
 .login-page-logo {
   width: 200px;
-  margin-top: 100px;
+  margin-top: -120px;
 }
 .gender-icon{
   width: 70px;
@@ -2186,6 +2188,15 @@ body::-webkit-scrollbar-thumb {
   margin: 0 auto;
 }
 .login-page{
+ .modal-page{
+    margin-top: 70px;
+    text-align: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    h4{
+      text-align: right;
+    }
+ }
   input{
     padding-right: 30px !important;
   }
@@ -2665,6 +2676,13 @@ body::-webkit-scrollbar-thumb {
 .toggle-center .form-check-input:checked {
   border-color: #e91e63;
 }
+.toggle-center .disable-toggle:checked {
+  border-color: #838383;
+}
+.disable-toggle:checked[type=checkbox] {
+  background: #d2d2d2;
+}
+
 .social-media img:hover {
   background-color: var(--master-dark-color);
 }
@@ -4736,4 +4754,32 @@ button{
 }
 .progress-bar {
   background-color: var(--master-color);
+}
+
+// fingerprint
+.fingerprint-box{
+  width: 100%;
+  text-align: center;
+  margin-top: -20px;
+}
+.disable-fingerprint{
+  pointer-events: none;
+  img{
+    opacity: 0.2;
+  }
+}
+.fingerprint-btn{
+  margin: 0px;
+  border-radius: 50% !important;
+  width: 65px;
+  height: 80px;
+  padding: 0 !important;
+  background-color: #d2d2d2 !important;
+  border-color: transparent !important;
+  &:hover{
+    background-color: #ffc107 !important;
+  }
+  .fingerprint-icon{
+    width: calc(100% - 10px);
+  }
 }

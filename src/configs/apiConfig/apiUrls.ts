@@ -117,3 +117,9 @@ export const APIURL_GET_STATUS_MISSION = '/Order/GetStatusCount';
 //SIDE BAR
 export const APIURL_GET_GUARANTEE = '/UserManagement/GetUserUniqueGuid';
 export const APIURL_GET_GUARANTEE_INFO = '/Guarantee/GetGuarantee';
+
+//REGISTER AND LOGIN FINGER PRINT BIOMETRIC
+export const APIURL_GET_REGISTER_OPTIONS = '/UserManagement/RegisterOptions';
+export const APIURL_POST_REGISTER = '/UserManagement/RegisterFingerPrint';
+export const APIURL_POST_LOGIN_OPTIONS = '/Account/LogInOptions';
+export const APIURL_POST_LOGIN = '/Account/FingerPrintLogin';

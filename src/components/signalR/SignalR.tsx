@@ -34,12 +34,19 @@ export const SignalR = () => {
             var options = {
               body: data.message,
               icon: 'favicon.ico',
-              image: '/assets/images/profile-defult-img.png',
+              // image: '/assets/images/profile-defult-img.png',
               vibrate: [100, 50, 200],
             };
             show && toast.showNotify(data.message);
             dispatch(handleNewMessage(data));
-            new Notification(`${data.fromFirstName} ${data.fromLastName}`, options);
+
+            navigator.serviceWorker.ready.then((result) => {
+              if ('showNotification' in result) {
+                show && result.showNotification(`${data.fromFirstName} ${data.fromLastName}:${data.message}`, options);
+              } else {
+                show && new Notification(`${data.fromFirstName} ${data.fromLastName}:${data.message}`, options);
+              }
+            });
           });
         })
         .catch((e) => console.log('Connection failed: ', e));

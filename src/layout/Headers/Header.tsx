@@ -68,10 +68,10 @@ const Header = () => {
             }}
           />
           <div className="call-box">
-            <p className="menu-item">0214700</p>
+            <p className="menu-item">02147100</p>
             <img
               className="pointer"
-              onClick={() => window.open(`tel:0214700`)}
+              onClick={() => window.open(`tel:02147100`)}
               src={require(`@src/scss/images/icons/${color}-vectori344-6d8t.svg`)}
               alt="VectorI344"
             />

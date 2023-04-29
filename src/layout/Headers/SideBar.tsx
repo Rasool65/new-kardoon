@@ -11,12 +11,19 @@ import {
   URL_TECHNICIAN_REGISTER_REQUEST,
 } from '@src/configs/urls';
 import { handleLogout } from '@src/redux/reducers/authenticationReducer';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { RootStateType } from '@src/redux/Store';
 import ChangePassword from '@src/pages/changePassword';
 import { UtilsHelper } from '@src/utils/GeneralHelpers';
+import useHttpRequest from '@src/hooks/useHttpRequest';
+import { APIURL_GET_REGISTER_OPTIONS, APIURL_POST_REGISTER } from '@src/configs/apiConfig/apiUrls';
+import { IOutputResult } from '@src/models/output/IOutputResult';
+import { IRegisterOptionResultModel } from '@src/models/output/authentication/IRegisterOptionResultModel';
+import { useToast } from '@src/hooks/useToast';
+import { BASE_URL } from '@src/configs/apiConfig/baseUrl';
+import { coerceToArrayBuffer, coerceToBase64Url } from '@src/utils/site';
 
 interface SideBarProps {
   displayMenu: boolean;
@@ -27,11 +34,14 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
   const color = useSelector((state: RootStateType) => state.theme.color);
   const userData = useSelector((state: RootStateType) => state.authentication.userData);
   const walletBalance = useSelector((state: RootStateType) => state.message.walletBalance);
+  const httpRequest = useHttpRequest();
+  const toast = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showSubMenu, setShowSubMenu] = useState<boolean>(false);
   const [displayChangePassword, setDisplayChangePassword] = useState<boolean>(false);
-
+  const [publicKey, setPublicKey] = useState<IRegisterOptionResultModel>();
+  const checkboxRef = useRef<any>(null);
   function checkRole(normalizedName: string) {
     return userData?.roles?.some((roleName) => roleName.normalizedName === normalizedName);
   }
@@ -44,6 +54,67 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
     setShowSubMenu(!showSubMenu);
   };
 
+  const HandleClickBiometric = () => {
+    if (!window.navigator.credentials) return toast.showError('مرورگر شما این قابلیت را پشتیبانی نمی کند');
+    httpRequest.postRequest<IOutputResult<any>>(`${APIURL_GET_REGISTER_OPTIONS}`, {}).then((result) => {
+      let key = JSON.parse(result.data.data);
+      setPublicKey(key);
+    });
+  };
+
+  const handleActivateBiometric = (checked: boolean) => {
+    checked
+      ? (HandleClickBiometric(), localStorage.setItem('userName', userData?.userName!))
+      : localStorage.removeItem('userName');
+  };
+
+  useEffect(() => {
+    let options: any;
+    publicKey &&
+      ((options = {
+        rp: {
+          id: publicKey.rp?.id,
+          name: publicKey?.rp?.name,
+        },
+        user: {
+          name: publicKey?.user?.name,
+          id: coerceToArrayBuffer(publicKey?.user?.id),
+          displayName: publicKey?.user?.displayName,
+        },
+        challenge: coerceToArrayBuffer(publicKey?.challenge),
+        pubKeyCredParams: publicKey?.pubKeyCredParams,
+        timeout: publicKey?.timeout,
+        attestation: publicKey?.attestation,
+        authenticatorSelection: {
+          // requireResidentKey: publicKey?.authenticatorSelection?.requireResidentKey,
+          //! for direct finger print use 'platform'
+          authenticatorAttachment: 'platform',
+          userVerification: publicKey?.authenticatorSelection?.userVerification,
+        },
+        excludeCredentials: publicKey?.excludeCredentials,
+        status: publicKey?.status,
+        errorMessage: publicKey?.errorMessage,
+      }),
+      navigator.credentials.create({ publicKey: options }).then((result: any) => {
+        const body = {
+          authenticatorAttachment: result.authenticatorAttachment,
+          id: result.id,
+          rawId: coerceToBase64Url(result.rawId),
+          response: {
+            attestationObject: coerceToBase64Url(result.response.attestationObject),
+            clientDataJson: coerceToBase64Url(result.response.clientDataJSON),
+          },
+          type: 'public-key',
+        };
+        httpRequest.postRequest<IOutputResult<any>>(`${APIURL_POST_REGISTER}`, body).then((result) => {
+          toast.showSuccess(result.data.message);
+        });
+      }));
+  }, [publicKey]);
+
+  useEffect(() => {
+    localStorage.getItem('userName') ? (checkboxRef.current!.checked = false) : (checkboxRef.current!.checked = true);
+  }, []);
   return (
     <>
       <div className={`footage ${displayMenu ? 'active' : ''}`} onClick={handleDisplayMenu}></div>
@@ -84,6 +155,25 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
               <img src={require(`@src/scss/images/icons/${color}-chat.svg`)} alt="" />
               پیام های پشتیبانی
             </a>
+          </li>
+          <li>
+            <div className="d-flex align-items-center">
+              <a className="">
+                <img src={require(`@src/scss/images/icons/${color}-fingerprint.svg`)} alt="" />
+                فعال سازی ورود با اثر انگشت
+              </a>
+
+              <div className="toggle-center mr-auto ml-2">
+                <input
+                  defaultChecked
+                  onChange={(e) => handleActivateBiometric(!e.currentTarget.checked)}
+                  ref={checkboxRef}
+                  name="fingerprint"
+                  type="checkbox"
+                  className="toggle-checkbox form-check-input disable-toggle"
+                />
+              </div>
+            </div>
           </li>
           {checkRole('TECHNICIAN') && (
             <li>
@@ -164,7 +254,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
           <li>
             <a
               onClick={() => {
-                dispatch(handleLogout()), navigate(URL_MAIN);
+                dispatch(handleLogout()), navigate(URL_LOGIN);
               }}
             >
               <img src={require(`@src/scss/images/icons/${color}-menu-exit.svg`)} alt="" />

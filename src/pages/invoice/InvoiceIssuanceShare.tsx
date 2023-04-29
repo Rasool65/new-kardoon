@@ -13,9 +13,7 @@ import { UtilsHelper } from '@src/utils/GeneralHelpers';
 import { LoadingComponent } from './../../components/spinner/LoadingComponent';
 
 const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
-  const search = useLocation().search;
-  const linkId = new URLSearchParams(search).get('linkId');
-  const invoiceId = new URLSearchParams(search).get('invoiceId');
+  const { link, invoice } = useParams();
   const toast = useToast();
   const httpRequest = useHttpRequest();
   const [loading, setLoading] = useState<boolean>(false);
@@ -23,10 +21,11 @@ const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
   let totalPrice: number = 0;
 
   const GetInvoiceIssuance = () => {
+    debugger;
     setLoading(true);
     httpRequest
       .getRequest<IOutputResult<IInvoiceIssuanceResultModel>>(
-        `${APIURL_GET_INVOICE_ISSUANCE}?LinkId=${linkId}&InvoiceId=${invoiceId}`
+        `${APIURL_GET_INVOICE_ISSUANCE}?LinkId=${link}&InvoiceId=${invoice}`
       )
       .then((result) => {
         setInvoiceIssuance(result.data.data);
@@ -39,7 +38,7 @@ const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
   const Checkout = () => {
     setLoading(true);
     const body = {
-      invoiceIds: [Number(invoiceId)],
+      invoiceIds: [Number(invoice)],
       amount: totalPrice,
       callBackUrl: BASE_URL + URL_CALLBACK,
       destinationUrl: BASE_URL,

@@ -44,6 +44,7 @@ import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import ConfirmModal from './ConfirmModal';
 import { URL_INVOICE, URL_INVOICE_SHARE } from '@src/configs/urls';
 import UpdateNationalCodeModal from './UpdateNationalCodeModal';
+import { BASE_URL } from '@src/configs/apiConfig/baseUrl';
 
 const Action: FunctionComponent<IPageProps> = (props) => {
   const [totalConsumerPayment, setTotalConsumerPayment] = useState<number>(0);
@@ -200,6 +201,7 @@ const Action: FunctionComponent<IPageProps> = (props) => {
   const InvoiceIssue = () => {
     const body = {
       invoiceId: Number(state.orderId),
+      basePaymentLink: `${BASE_URL}/invoice-share/invoice/${state.orderId}/link/`,
       consumerPaymentAmount: totalConsumerPayment,
     };
     setCheckoutLoading(true);
@@ -1091,15 +1093,13 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                 </Button>
               ) : (
                 <div className="d-flex justify-content-between mb-4">
-                  {/* <Button
-                    onClick={() => navigate(generatePath(URL_INVOICE, { id: `${invoice.requestLinkId}` }))}
-                    className="btn-info btn btn-secondary mt-3 btn-technician-action"
-                  >
-                    مشاهده فاکتور
-                  </Button> */}
-
                   <Button
-                    onClick={() => navigate(`${URL_INVOICE_SHARE}?linkId=${invoice.generalLinkId}&invoiceId=${state.orderId}`)}
+                    // onClick={() => navigate(`${URL_INVOICE_SHARE}?linkId=${invoice.generalLinkId}&invoiceId=${state.orderId}`)}
+                    onClick={() => {
+                      navigate(
+                        generatePath(URL_INVOICE_SHARE, { invoice: `${state.orderId}`, link: `${invoice.generalLinkId}` })
+                      );
+                    }}
                     className="btn-info btn btn-secondary mt-3 btn-technician-action"
                   >
                     مشاهده فاکتور
@@ -1107,11 +1107,10 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                   <RWebShare
                     data={{
                       text: `لینک پرداخت فاکتور صادر شده `,
-                      url: `${URL_INVOICE_SHARE}?linkId=${invoice.generalLinkId}&invoiceId=${state.orderId}`,
+                      url: `${BASE_URL}/invoice-share/invoice/${state.orderId}/link/${invoice.generalLinkId}`,
                       title: 'کاردون',
                     }}
                   >
-                    {/* <img src={require(`@src/scss/images/icons/${color}-share.svg`)} className="share-btn" /> */}
                     <Button className="btn-info btn btn-secondary mt-3 btn-technician-action">اشتراک گذاری</Button>
                   </RWebShare>
                 </div>

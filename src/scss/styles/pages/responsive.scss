@@ -67,3 +67,20 @@
         height: 350px !important;
     }
 }
+
+@media (max-width:380px){
+    .login-page{
+        .modal-items{
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+    .fingerprint-box{
+        margin-top: 0 !important;
+    }
+    .login-page .modal-items{
+        .d-flex.align-items-center.justify-content-between {
+            flex-direction: column;
+        }
+    }
+}
