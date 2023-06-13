@@ -12,7 +12,7 @@ import { IAdvertiseResultModel } from '@src/models/output/advertise/IAdvertiseRe
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '@src/redux/Store';
-import { URL_CATEGORIES, URL_PROVINCE } from '@src/configs/urls';
+import { URL_CATEGORIES, URL_PROVINCE, URL_USER_PROFILE } from '@src/configs/urls';
 import WhyKardoon from './WhyKardoon';
 import SelectCity from '../province/SelectCity';
 import Slider from './Slider';
@@ -22,9 +22,12 @@ import MainLoading from '@src/loading/mainLoading';
 import { useNotification } from '@src/hooks/useNotification';
 import { IUserGuidResultModel } from '@src/models/output/guarantee/IUserGuidResultModel';
 import { updateUserData } from '@src/redux/reducers/authenticationReducer';
+import { UtilsHelper } from '@src/utils/GeneralHelpers';
+import { Button } from 'reactstrap';
 
 const Main: FunctionComponent<IPageProps> = (props) => {
   const color = useSelector((state: RootStateType) => state.theme.color);
+  const walletBalance = useSelector((state: RootStateType) => state.message.walletBalance);
   const httpRequest = useHttpRequest();
   const { t }: any = useTranslation();
   const navigate = useNavigate();
@@ -33,8 +36,10 @@ const Main: FunctionComponent<IPageProps> = (props) => {
   const fetchCount = useNotification();
   const [services, setServices] = useState<IServicesResultModel[]>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(true);
   const [advertise, setAdvertise] = useState<any>([]);
   const dispatch = useDispatch();
+
   const cityId = auth
     ? useSelector((state: RootStateType) => state.authentication.userData?.profile.residenceCityId)
     : localStorage.getItem('city')
@@ -51,6 +56,7 @@ const Main: FunctionComponent<IPageProps> = (props) => {
       dispatch(updateUserData(temp));
     });
   };
+
   const GetServices = (cityId: number) => {
     setLoading(true);
     httpRequest.getRequest<IOutputResult<IServicesResultModel[]>>(`${APIURL_GET_SERVICES}?CityId=${cityId}`).then((result) => {
@@ -58,10 +64,12 @@ const Main: FunctionComponent<IPageProps> = (props) => {
       setLoading(false);
     });
   };
+
   const handleSearch = (value: string) => {
     let findData = services?.filter((el: IServicesResultModel) => el.title?.match(value));
     value ? setServices(findData) : GetServices(cityId ? cityId : 0);
   };
+
   const GetAdvertise = () => {
     httpRequest.getRequest<IOutputResult<IAdvertiseResultModel[]>>(APIURL_GET_ADVERTISE).then((result) => {
       setAdvertise(result.data.data);
@@ -74,9 +82,27 @@ const Main: FunctionComponent<IPageProps> = (props) => {
     fetchCount.getStatusMissionCount();
     fetchCount.getWalletBalance();
   }, []);
-
+  const requestNotificationPermission = () => {
+    //@ts-ignore
+    if (window.safari && window.safari.pushNotification) {
+      //@ts-ignore
+      const permissionData = window.safari.pushNotification.permission('your.website.push.notification.id');
+      window.alert(permissionData);
+      if (permissionData.permission === 'default') {
+        window.alert('Please enable notifications for this website.');
+      } else if (permissionData.permission === 'denied') {
+        window.alert('You have denied permission for notifications.');
+      } else if (permissionData.permission === 'granted') {
+        window.alert('You have granted permission for notifications.');
+      }
+    } else {
+      // Safari Push Notifications not supported
+      window.alert('Safari Push Notifications are not supported on this device.');
+    }
+  };
   useEffect(() => {
-    Notification.requestPermission();
+    const userAgent = navigator.userAgent.toLowerCase();
+    /android/.test(userAgent) || /windows/.test(userAgent) ? Notification.requestPermission() : requestNotificationPermission();
     auth && GetGuarantee();
   }, []);
 
@@ -164,10 +190,6 @@ const Main: FunctionComponent<IPageProps> = (props) => {
             <FooterCard />
           </div>
 
-          <div className="modal">
-            <div className="modal-content">salam</div>
-          </div>
-
           {/* اگر کاربر لاگین بود ، رول تکنسین داشت ، نام بانکی در حساب اش ثبت نشده بود مودال رو نشون بده */}
           {
             <div
@@ -191,6 +213,34 @@ const Main: FunctionComponent<IPageProps> = (props) => {
                   //  closeModal={()=>setShowAccountModal(false)}
                   />
                 )}
+              </div>
+            </div>
+          }
+          {
+            <div className={` modal technician-alert ${auth && checkRole('TECHNICIAN') && walletBalance! < 0 && 'd-flex'}`}>
+              <div className="modal-content bank-data">
+                <div className='alert-header'>
+                    <img
+                    src={require(`@src/scss/images/icons/${color}-info.svg`)}
+                    alt="" />
+                  <h5>
+                    تکنسین گرامی
+                  </h5>
+                    <h4>لطفأ بدهی حساب خود را تسویه نمایید</h4>
+                </div>
+                  <div className="wallet-info">
+                    <h5 className="item-label">مبلغ بدهی</h5>
+                    <p className="wallet-amount debtor-text">
+                      {'(' + UtilsHelper.threeDigitSeparator(Math.abs(walletBalance!)) + ')'} ریال
+                    </p>
+                  </div>
+                <button
+                  onClick={() => {
+                    navigate(URL_USER_PROFILE, { state: { tabPage: 1 } });
+                  }}
+                >
+                  باشه
+                </button>
               </div>
             </div>
           }

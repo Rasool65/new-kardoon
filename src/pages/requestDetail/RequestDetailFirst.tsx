@@ -15,7 +15,7 @@ import { IOutputResult } from '@src/models/output/IOutputResult';
 import { IProductProblemsResultModel } from '@src/models/output/requestDetail/IProductProblemsResultModel';
 import { APIURL_GET_PROBLEM_LIST } from '@src/configs/apiConfig/apiUrls';
 import PrevHeader from '@src/layout/Headers/PrevHeader';
-import { resizeFile } from '@src/utils/ResizerImage';
+import { resizeFile } from '@src/utils/ImageHelpers';
 
 const RequestDetailFirst: FunctionComponent<IRequestDetailPageProp> = ({ handleClickNextToSecond, handleClickMore }) => {
   let { audioData, audioURL, isRecording, startRecording, stopRecording } = useRecorder();

@@ -99,8 +99,9 @@ const RequestDetail: FunctionComponent<IPageProps> = (props) => {
         formData.append(`requestDetail[${i}].audioMessage`, request[i].requestDetail?.audioMessage);
 
       if (request[i].requestDetail?.imageMessage != undefined && request[i].requestDetail?.imageMessage?.length! > 0)
-        request[i].requestDetail?.imageMessage?.forEach((imageFile: any) => {
-          formData.append(`requestDetail[${i}].imageMessage`, imageFile);
+        request[i].requestDetail?.imageMessage?.forEach((imageFile: any, index: number) => {
+          formData.append(`requestDetail[${i}].imageMessage[${index}].image`, imageFile);
+          formData.append(`requestDetail[${i}].imageMessage[${index}].imagedescription`, '');
         });
 
       if (request[i].requestDetail?.problemList != undefined && request[i].requestDetail?.problemList?.length! > 0)

@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { Spinner } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { IEServiceTypeId, IEStatusId, IEStatusMissionId } from '@src/models/output/order/IOrderListResultModel';
-import { URL_TECHNICIAN_MISSION_DETAIL } from '@src/configs/urls';
+import { URL_HOME_WARRANTY, URL_TECHNICIAN_MISSION_DETAIL } from '@src/configs/urls';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { IPageListOutputResult } from '@src/models/output/IPageListOutputResult';
 import Header from '@src/layout/Headers/Header';
@@ -34,6 +34,13 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [status, setStatus] = useState<any>([1, 5]);
   const navigate = useNavigate();
+
+  const getCurrentTimeMinusOneHour = (dateTime: string) => {
+    const currentDate = new Date();
+    const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
+    let missionDateTime = new Date(dateTime);
+    return missionDateTime < oneHourAgo ? true : false;
+  };
 
   const handleClickFilter = () => {
     setShowFilter(!showFilter);
@@ -135,12 +142,17 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
                             <>
                               <div className="col-md-6">
                                 <div
-                                  className={`mission-card pointer ${IEServiceTypeId[mission.serviceTypeId!]} ${
-                                    IEStatusMissionId[mission.statusId!]
-                                  }`}
-                                  onClick={() => navigate(`${URL_TECHNICIAN_MISSION_DETAIL}?id=${mission.requestDetailId}`)}
+                                  className={`mission-card pointer ${
+                                    getCurrentTimeMinusOneHour(mission?.presenceDateTime!) && mission.statusId === 1 && 'too-late'
+                                  } ${IEServiceTypeId[mission.serviceTypeId!]} ${IEStatusMissionId[mission.statusId!]}`}
+                                  // اگر از نوع هوم وارانتی بود وارد اکشن نشو
+                                  onClick={() =>
+                                    mission.serviceTypeId == 12
+                                      ? navigate(URL_HOME_WARRANTY)
+                                      : navigate(`${URL_TECHNICIAN_MISSION_DETAIL}?id=${mission.requestDetailId}`)
+                                  }
                                 >
-                                  <div className="mission-item ">
+                                  <div className="mission-item">
                                     <p className="mission-title">
                                       {mission.serviceTypeTitle}-{mission.productTitle}
                                     </p>
@@ -161,10 +173,21 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
                                         {mission.consumerFirstName} {mission.consumerLastName}
                                       </span>
                                     </p>
+                                    {/*//! for Recording style */}
                                     <div className="mission-status-box">
-                                      {/* <p className="mission-amount">وضعیت:</p> */}
+                                      {getCurrentTimeMinusOneHour(mission?.presenceDateTime!) && mission.statusId === 1 && (
+                                        <div className="recording-box">
+                                          <div className="d-flex">
+                                            <div className="recording" />
+                                          </div>
+                                        </div>
+                                      )}
+
                                       <span className={IEStatusId[mission.statusId!]}>{mission.statusTitle}</span>
                                     </div>
+                                    {/* <div className={`mission-status-box`}>
+                                      <span className={IEStatusId[mission.statusId!]}>{mission.statusTitle}</span>
+                                    </div> */}
                                     <p className="mission-amount">{mission.address}</p>
                                   </div>
                                   <div className="d-flex justify-content-between">

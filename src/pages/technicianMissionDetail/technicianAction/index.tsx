@@ -38,14 +38,13 @@ import RemoveConfirmModal from './RemoveConfirmModal';
 import PrevHeader from '@src/layout/Headers/PrevHeader';
 import { IFiles, IInvoiceActionList } from './../../../models/output/missionDetail/IInvoiceActionResultModel';
 import ShowImageModal from './ShowImageModal';
-import { resizeFile } from '@src/utils/ResizerImage';
+import { resizeFile } from '@src/utils/ImageHelpers';
 import InputIcon from 'react-multi-date-picker/components/input_icon';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import ConfirmModal from './ConfirmModal';
 import { URL_INVOICE, URL_INVOICE_SHARE } from '@src/configs/urls';
 import UpdateNationalCodeModal from './UpdateNationalCodeModal';
 import { BASE_URL } from '@src/configs/apiConfig/baseUrl';
-
 const Action: FunctionComponent<IPageProps> = (props) => {
   const [totalConsumerPayment, setTotalConsumerPayment] = useState<number>(0);
   const toast = useToast();
@@ -101,7 +100,6 @@ const Action: FunctionComponent<IPageProps> = (props) => {
   const technicianId = useSelector((state: RootStateType) => state.authentication.userData?.userId);
   const color = useSelector((state: RootStateType) => state.theme.color);
   const [progress, setProgress] = useState<number>();
-
   const RemoveAction = (id: number) => {
     const body = {
       technicianId: technicianId,
@@ -296,8 +294,9 @@ const Action: FunctionComponent<IPageProps> = (props) => {
       if (frontLeftFile) formData.append('frontLeft', frontLeftFile);
       if (behindFile) formData.append('behind', behindFile);
       if (identityCardFile) formData.append('identityCard', identityCardFile);
-      imageFile?.forEach((image) => {
-        formData.append(`locationImages`, image);
+      imageFile?.forEach((image, index: number) => {
+        formData.append(`locationImages[${index}].image`, image);
+        formData.append(`locationImages[${index}].description`, '');
       });
       if (purchaseInvoiceFile) formData.append('purchaseInvoice', purchaseInvoiceFile);
       if (lableWarrantyFile) formData.append('lableWarranty', lableWarrantyFile);
@@ -309,8 +308,8 @@ const Action: FunctionComponent<IPageProps> = (props) => {
               ? (toast.showSuccess(result.data.message), resetForm(), resetFiles(), GetInvoiceAction())
               : toast.showError(result.data.message),
               setLoading(false);
-            // result.data.statusCode == 'Success' && result.data.isSuccess == false && handleShowUpdateModal(); // show national code modal
-            result.data.statusCode == 'Success' && !result.data.isSuccess && handleShowUpdateModal(); // show national code modal
+            !result.data.data.nationalCode && handleShowUpdateModal();
+            !result.data.data.formGen && navigate(-1);
           })
           .finally(() => {
             setLoading(false);
@@ -339,23 +338,14 @@ const Action: FunctionComponent<IPageProps> = (props) => {
               ? (toast.showSuccess(result.data.message), resetForm(), GetInvoiceAction())
               : toast.showError(result.data.message),
               setLoading(false);
-            // (result.data.statusCode=="Success") && handleShowUpdateModal(); // show national code modal
+            !result.data.data.nationalCode && handleShowUpdateModal();
+            !result.data.data.formGen && navigate(-1);
           })
           .finally(() => {
             setLoading(false);
           });
     }
   };
-
-  useEffect(() => {
-    GetInvoiceAction();
-    GetSourceCost();
-    GetServiceType();
-  }, []);
-
-  useEffect(() => {
-    document.title = props.title;
-  }, [props.title]);
 
   const ResizeAndSave = async (e: any, side: string) => {
     const file = e.target.files[0];
@@ -387,6 +377,16 @@ const Action: FunctionComponent<IPageProps> = (props) => {
       }
     });
   };
+
+  useEffect(() => {
+    GetInvoiceAction();
+    GetSourceCost();
+    GetServiceType();
+  }, []);
+
+  useEffect(() => {
+    document.title = props.title;
+  }, [props.title]);
 
   return (
     <>
@@ -799,7 +799,13 @@ const Action: FunctionComponent<IPageProps> = (props) => {
                 </div>
               </div>
             </div>
-
+            {/* <div className="" style={{ display: `${guarantee === 2 ? 'flex-inline' : 'none'}` }}>
+              <Warranty
+                handleChangeWarrantyData={(data: any, orderInfo: IGetHomeWarrantyOrderInfo[]) =>
+                  handleHomeWarrantyData(data, orderInfo)
+                }
+              />
+            </div> */}
             <div className="row">
               <div className="col-12 col-md-4">
                 <div className="label-over-box">

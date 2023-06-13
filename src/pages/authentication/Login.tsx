@@ -179,7 +179,6 @@ const Login: FunctionComponent<IPageProps> = ({ title }) => {
             <div className="modal-items">
               <h4>ورود</h4>
               <div>
-                {/* <input className="primary-input" type="number" placeholder="لطفا شماره همراه خود را وارد کنید" /> */}
                 <Controller
                   name="username"
                   control={control}
@@ -202,7 +201,6 @@ const Login: FunctionComponent<IPageProps> = ({ title }) => {
                     </>
                   )}
                 />
-                {/* <input className="primary-input" type="password" placeholder="لطفا رمز عبور را وارد کنید" /> */}
                 <Controller
                   name="password"
                   control={control}

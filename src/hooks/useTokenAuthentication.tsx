@@ -8,10 +8,10 @@ export const useTokenAuthentication = () => {
   const storage = useLocalStorage();
   const jwtConfig: IJwtConfig = { ...jwtDefaultConfig };
 
-  const saveLoginToken = (token: string, refreshToken: string) => {
+  const saveLoginToken = (token: string, refreshToken: string, currentTokenGuid: string) => {
     storage.set(jwtConfig.storageTokenKeyName, token);
     storage.set(jwtConfig.storageRefreshTokenKeyName, refreshToken);
-    storage.set(jwtConfig.storageUUIDKeyName, uuid.v4());
+    storage.set(jwtConfig.storageUUIDKeyName, currentTokenGuid);
   };
 
   const deleteLogoutToken = () => {

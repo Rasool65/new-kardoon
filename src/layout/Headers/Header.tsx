@@ -7,14 +7,20 @@ import { useState, useEffect } from 'react';
 import { useToast } from '@src/hooks/useToast';
 import SideBar from './SideBar';
 import { URL_BLOG, URL_CHAT } from './../../configs/urls';
+import useHttpRequest from '@src/hooks/useHttpRequest';
+import { APIURL_DELETE_TOKENS } from '@src/configs/apiConfig/apiUrls';
+import { IOutputResult } from '@src/models/output/IOutputResult';
+import LoadingComponent from '@src/components/spinner/LoadingComponent';
 
 const Header = () => {
   const color = useSelector((state: RootStateType) => state.theme.color);
+  const currentTokenGuid = useSelector((state: RootStateType) => state.authentication.currentTokenGuid);
   const userData = useSelector((state: RootStateType) => state.authentication.userData);
   const messageCount = useSelector((state: RootStateType) => state.message.newMessageCount);
   const messageBlogCount = useSelector((state: RootStateType) => state.message.newMessageBlogCount);
+  const httpRequest = useHttpRequest();
   const auth = useSelector((state: RootStateType) => state.authentication.isAuthenticate);
-  const walletBalance = useSelector((state: RootStateType) => state.message.walletBalance);
+  const [loading, setLoading] = useState<boolean>(false);
   const assignedMissionCount = useSelector((state: RootStateType) =>
     state.message.statusMission && state.message.statusMission.length > 0
       ? state.message.statusMission[1].count! // assigned
@@ -28,6 +34,18 @@ const Header = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const handleDeleteToken = () => {
+    //! موقت پارامتر guid پر میشود
+    setLoading(true);
+    httpRequest
+      .deleteRequest<IOutputResult<any>>(APIURL_DELETE_TOKENS, [
+        currentTokenGuid ? currentTokenGuid : '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+      ])
+      .then((result) => {
+        setLoading(false);
+        result.data.isSuccess ? (dispatch(handleLogout()), navigate(URL_LOGIN)) : toast.showError(result.data.message);
+      });
+  };
   const [displayMenu, setDisplayMenu] = useState<boolean>(false);
   const handleDisplayMenu = () => {
     auth ? setDisplayMenu(!displayMenu) : toast.showError('لطفأ وارد شوید');
@@ -121,7 +139,7 @@ const Header = () => {
               alt="exit"
               className="login-icon"
               onClick={() => {
-                dispatch(handleLogout()), navigate(URL_LOGIN);
+                !loading && handleDeleteToken();
               }}
             />
           ) : (
@@ -168,10 +186,10 @@ const Header = () => {
                   <li>
                     <a
                       onClick={() => {
-                        dispatch(handleLogout()), navigate(URL_LOGIN);
+                        handleDeleteToken();
                       }}
                     >
-                      خروج از حساب کاربری
+                      {loading ? <LoadingComponent /> : 'خروج از حساب کاربری'}
                     </a>
                   </li>
                 </ul>

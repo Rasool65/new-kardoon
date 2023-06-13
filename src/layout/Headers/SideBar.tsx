@@ -9,6 +9,7 @@ import {
   URL_USER_PROFILE,
   URL_GUARANTEE,
   URL_TECHNICIAN_REGISTER_REQUEST,
+  URL_USER_ACTIVE_SESSION,
 } from '@src/configs/urls';
 import { handleLogout } from '@src/redux/reducers/authenticationReducer';
 import { FunctionComponent, useState, useEffect, useRef } from 'react';
@@ -18,12 +19,13 @@ import { RootStateType } from '@src/redux/Store';
 import ChangePassword from '@src/pages/changePassword';
 import { UtilsHelper } from '@src/utils/GeneralHelpers';
 import useHttpRequest from '@src/hooks/useHttpRequest';
-import { APIURL_GET_REGISTER_OPTIONS, APIURL_POST_REGISTER } from '@src/configs/apiConfig/apiUrls';
+import { APIURL_DELETE_TOKENS, APIURL_GET_REGISTER_OPTIONS, APIURL_POST_REGISTER } from '@src/configs/apiConfig/apiUrls';
 import { IOutputResult } from '@src/models/output/IOutputResult';
 import { IRegisterOptionResultModel } from '@src/models/output/authentication/IRegisterOptionResultModel';
 import { useToast } from '@src/hooks/useToast';
 import { BASE_URL } from '@src/configs/apiConfig/baseUrl';
 import { coerceToArrayBuffer, coerceToBase64Url } from '@src/utils/site';
+import LoadingComponent from '@src/components/spinner/LoadingComponent';
 
 interface SideBarProps {
   displayMenu: boolean;
@@ -33,6 +35,7 @@ interface SideBarProps {
 const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMenu }) => {
   const color = useSelector((state: RootStateType) => state.theme.color);
   const userData = useSelector((state: RootStateType) => state.authentication.userData);
+  const currentTokenGuid = useSelector((state: RootStateType) => state.authentication.currentTokenGuid);
   const walletBalance = useSelector((state: RootStateType) => state.message.walletBalance);
   const httpRequest = useHttpRequest();
   const toast = useToast();
@@ -40,12 +43,24 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
   const dispatch = useDispatch();
   const [showSubMenu, setShowSubMenu] = useState<boolean>(false);
   const [displayChangePassword, setDisplayChangePassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [publicKey, setPublicKey] = useState<IRegisterOptionResultModel>();
   const checkboxRef = useRef<any>(null);
   function checkRole(normalizedName: string) {
     return userData?.roles?.some((roleName) => roleName.normalizedName === normalizedName);
   }
-
+  const handleDeleteToken = () => {
+    //! موقت پارامتر guid پر میشود
+    setLoading(true);
+    httpRequest
+      .deleteRequest<IOutputResult<any>>(APIURL_DELETE_TOKENS, [
+        currentTokenGuid ? currentTokenGuid : '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+      ])
+      .then((result) => {
+        setLoading(false);
+        result.data.isSuccess ? (dispatch(handleLogout()), navigate(URL_LOGIN)) : toast.showError(result.data.message);
+      });
+  };
   const handleCloseModal = () => {
     setDisplayChangePassword(!displayChangePassword);
     handleDisplayMenu();
@@ -244,6 +259,13 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
                 </a>
               </li>
               <li>
+                {/* <a onClick={handleCloseModal}> */}
+                <a onClick={() => navigate(URL_USER_ACTIVE_SESSION)}>
+                  <img src={require(`@src/scss/images/icons/${color}-devices.svg`)} alt="" />
+                  دستگاه های فعال{' '}
+                </a>
+              </li>
+              <li>
                 <a onClick={() => navigate(generatePath(URL_GUARANTEE, { id: userData?.guId }))}>
                   <img src={require(`@src/scss/images/icons/${color}-vector3449-uo2i.svg`)} alt="" />
                   گارانتی های من
@@ -254,11 +276,11 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
           <li>
             <a
               onClick={() => {
-                dispatch(handleLogout()), navigate(URL_LOGIN);
+                !loading && handleDeleteToken();
               }}
             >
               <img src={require(`@src/scss/images/icons/${color}-menu-exit.svg`)} alt="" />
-              خروج از حساب کاربری
+              {loading ? <LoadingComponent /> : 'خروج از حساب کاربری'}
             </a>
           </li>
         </ul>
@@ -293,7 +315,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
             <div className="col-2 text-center">
               <a
                 onClick={() => {
-                  dispatch(handleLogout()), navigate(URL_MAIN);
+                  handleDeleteToken();
                 }}
               >
                 <img src={require(`@src/scss/images/power.svg`)} alt="" />

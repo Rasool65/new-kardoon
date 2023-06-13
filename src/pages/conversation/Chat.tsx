@@ -17,7 +17,7 @@ import { Input, Spinner } from 'reactstrap';
 import { handleNewMessageCount, handleShowMessage } from '@src/redux/reducers/messageReducer';
 import { useRecorder } from '@src/hooks/useRecorder';
 import PrevHeader from '@src/layout/Headers/PrevHeader';
-import { resizeFile } from '@src/utils/ResizerImage';
+import { resizeFile } from '@src/utils/ImageHelpers';
 import ShowImageModal from '@src/components/showImageModal/ShowImageModal';
 
 const Chat: FunctionComponent<IPageProps> = () => {

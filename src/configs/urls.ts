@@ -1,6 +1,7 @@
 export const URL_MAIN = '/';
 export const URL_LOGIN = '/login';
 export const URL_USER_PROFILE = '/userProfile';
+export const URL_USER_ACTIVE_SESSION = '/userProfile/active-session';
 export const URL_MY_ORDERS = '/myOrders';
 export const URL_CATEGORIES = '/categories';
 export const URL_PRODUCTS = '/products';
@@ -25,3 +26,4 @@ export const URL_CHAT = '/conversation/chat/:id';
 export const URL_TECHNICIAN_REQUEST = '/technician-request';
 export const URL_NOT_FOUND = '/not-found';
 export const URL_GUARANTEE = '/guarantee/:id';
+export const URL_HOME_WARRANTY = '/home-warranty';

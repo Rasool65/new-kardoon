@@ -65,9 +65,7 @@ export const useAxios = (dataType: RequestDataType = RequestDataType.json) => {
           isAlreadyFetchingAccessToken = true;
           refreshToken().then((r) => {
             isAlreadyFetchingAccessToken = false;
-
-            authToken.saveLoginToken(r.data.accessToken, r.data.refreshToken);
-
+            authToken.saveLoginToken(r.data.accessToken, r.data.refreshToken, 'currentTokenGuid');
             subscribers = subscribers.filter((callback) => callback(r.data.accessToken));
           });
         } else {

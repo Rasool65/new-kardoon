@@ -5,7 +5,7 @@ export const LoadingComponent: any = () => {
   return (
     <>
       <div className="text-center w-100">
-        <Spinner />
+        <Spinner style={{ zIndex: 999 }} />
       </div>
     </>
   );

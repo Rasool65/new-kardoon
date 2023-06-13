@@ -25,7 +25,9 @@ import {
   URL_BLOG,
   URL_GUARANTEE,
   URL_INVOICE_SHARE,
-} from './../urls';
+  URL_USER_ACTIVE_SESSION,
+  URL_HOME_WARRANTY,
+} from '@src/configs/urls';
 
 import IRoute from './IRoute';
 import RouteType from './RouteType';
@@ -57,6 +59,9 @@ import ArchiveBlog from '@src/pages/blog/ArchiveBlog';
 import Blog from '@src/pages/blog';
 import Guarantee from '@src/pages/guarantee';
 import InvoiceIssuanceShare from '@src/pages/invoice/InvoiceIssuanceShare';
+import Warranty from '@src/pages/warranty';
+import WarrantyV2 from '@src/pages/warranty/warrantyV2';
+import ActiveSession from '@src/pages/profile/ActiveSession';
 
 const routes: IRoute[] = [
   {
@@ -265,6 +270,22 @@ const routes: IRoute[] = [
     type: RouteType.all,
     props: {
       title: 'پرداخت فاکتورهای صادر شده',
+    },
+  },
+  {
+    path: URL_USER_ACTIVE_SESSION,
+    component: ActiveSession,
+    type: RouteType.private,
+    props: {
+      title: 'دستگاه های فعال',
+    },
+  },
+  {
+    path: URL_HOME_WARRANTY,
+    component: Warranty,
+    type: RouteType.private,
+    props: {
+      title: 'هوم وارانتی',
     },
   },
 ];

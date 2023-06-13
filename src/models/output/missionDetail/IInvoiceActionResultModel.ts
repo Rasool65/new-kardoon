@@ -27,6 +27,7 @@ export interface IInvoiceActionList {
   hasInvoice: boolean;
 }
 export interface IFiles {
+  description?: string;
   fileType?: string;
   tag?: string;
   fileTypeTitle?: string;

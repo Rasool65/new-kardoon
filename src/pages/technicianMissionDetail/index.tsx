@@ -37,6 +37,8 @@ import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import { IFiles } from '@src/models/output/missionDetail/IInvoiceActionResultModel';
 import ShowImageModal from '../../components/showImageModal/ShowImageModal';
 import CallModal from './CallModal';
+import { addTextToImage } from '@src/utils/ImageHelpers';
+import ImageLabelModal from './ImageLabelModal';
 
 const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
   let { audioData, audioURL, isRecording, startRecording, stopRecording } = useRecorder();
@@ -63,8 +65,11 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
   const [showButton, setShowButton] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>();
   const [imageSrc, setImageSrc] = useState<string>();
+  const [imageDescription, setImageDescription] = useState<string>();
+  const [imageLabel, setImageLabel] = useState<string[]>([]);
   const [displayImage, setDisplayImage] = useState<boolean>(false);
   const [statusValue, setStatusValue] = useState<number>();
+  const [displayLabelImage, setDisplayLabelImage] = useState<boolean>(false);
   const [followUpDescription, setFollowUpDescription] = useState<string>();
   const [nextTrackingDateTime, setNextTrackingDateTime] = useState<string>();
   const [followUpList, setFollowUpList] = useState<IFollowUpList[]>();
@@ -157,8 +162,9 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
     audioFile ? data.append('audioMessage', audioFile) : data.append('audioMessage', '');
     videoFile ? data.append('videoMessage', videoFile) : data.append('videoMessage', '');
     imageFile
-      ? imageFile.forEach((imageFile: any) => {
-          data.append('imageMessage', imageFile);
+      ? imageFile.forEach((imageFile: any, index: number) => {
+          data.append(`imageMessage[${index}].image`, imageFile);
+          data.append(`imageMessage[${index}].imagedescription`, imageLabel[index]);
         })
       : data.append('imageMessage', '');
     httpRequestMedia
@@ -185,6 +191,8 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
     setAudioDisplay('none');
     setImgSrcList([]);
     setImageFile([]);
+    setImageLabel([]);
+    setImageDescription(undefined);
     setImageDisplay('none');
     setVideoFile(null);
     setVideoDisplay('none');
@@ -236,16 +244,19 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
     setAudioFile(audioData);
   }, [audioData]);
 
-  const onImageFileChange = (e: any) => {
-    const files = e.target.files;
-    files.length > 1 ? setImageFile(files) : setImageFile([...imageFile, files[0]]);
-
+  const onImageFileChange = (files: any) => {
+    // const newFile: any = await addTextToImage(files[0], 'Rasool Aghajani');
+    setImageFile([...imageFile, files]);
     const reader = new FileReader();
     reader.onload = function () {
       setImgSrcList([...imgSrcList, reader.result]);
     };
-    reader.readAsDataURL(files[0]);
+    reader.readAsDataURL(files);
     setImageDisplay('initial');
+  };
+
+  const handleImageLabelModal = () => {
+    setDisplayLabelImage(!displayLabelImage);
   };
 
   const onVideoFileChange = (e: any) => {
@@ -255,6 +266,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
     document.querySelector('video')!.src = blobURL;
     setVideoDisplay('flex');
   };
+
   useEffect(() => {
     document.title = props.title;
   }, [props.title]);
@@ -341,13 +353,17 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
                       <>
                         {media.fileType == 'Audio' && <audio src={media.fileUrl} controls className="audio-item" />}
                         {media.fileType == 'Image' && (
-                          <div
-                            className="image-item pointer"
-                            onClick={() => {
-                              setImageSrc(media.fileUrl), setDisplayImage(true);
-                            }}
-                            style={{ backgroundImage: `url(${media.fileUrl})` }}
-                          />
+                          <>
+                            <div
+                              className="image-item pointer"
+                              onClick={() => {
+                                setImageSrc(media.fileUrl), setDisplayImage(true), setImageDescription(media.description);
+                              }}
+                              style={{ backgroundImage: `url(${media.fileUrl})` }}
+                            >
+                              {media.description}
+                            </div>
+                          </>
                         )}
                         {media.fileType == 'Video' && (
                           <video
@@ -504,10 +520,10 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
               </span>
               {/* Images */}
               <span className="upload-icons">
-                <label htmlFor="img" style={{ cursor: 'pointer' }}>
+                <label onClick={handleImageLabelModal} htmlFor="img" style={{ cursor: 'pointer' }}>
                   <img className="pointer" src={require(`@src/scss/images/icons/${color}-camera2.svg`)} />
                 </label>
-                <Input onChange={onImageFileChange} style={{ display: 'none' }} id="img" type="file" accept="image/*" />
+                {/* <Input onChange={onImageFileChange} style={{ display: 'none' }} id="img" type="file" accept="image/*" /> */}
               </span>
               {/* Video */}
               <span className="upload-icons">
@@ -621,6 +637,8 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
                     onClick={() => {
                       setImgSrcList([]);
                       setImageFile([]);
+                      setImageLabel([]);
+                      setImageDescription(undefined);
                       setImageDisplay('none');
                     }}
                     width="46"
@@ -685,7 +703,7 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
             })}
         </div>
       </div>
-      <ShowImageModal display={displayImage} src={imageSrc} handleDisplay={handleDisplay} />
+      <ShowImageModal display={displayImage} src={imageSrc} handleDisplay={handleDisplay} description={imageDescription} />
       <FollowUpModal
         closeModal={closeModal}
         followUpModalVisible={followUpModalVisible}
@@ -741,6 +759,15 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
         callModalVisible={displayCallModal}
         closeModal={handleCallModal}
         phoneNumbers={[missionDetail?.consumerPhoneNumber, missionDetail?.userName]}
+      />
+      <ImageLabelModal
+        labelModalVisible={displayLabelImage}
+        closeModal={() => setDisplayLabelImage(!displayLabelImage)}
+        submit={(imgData: any) => {
+          onImageFileChange(imgData[0]); //file
+          setDisplayLabelImage(!displayLabelImage);
+          setImageLabel([...imageLabel, imgData[1]]); //label
+        }}
       />
     </>
   );
