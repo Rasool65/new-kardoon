@@ -125,10 +125,11 @@ export const APIURL_POST_LOGIN_OPTIONS = '/Account/LogInOptions';
 export const APIURL_POST_LOGIN = '/Account/FingerPrintLogin';
 
 // HOME WARRANTY
-export const APIURL_GET_HOME_WARRANTY = '/HomeWarranty/GetHomeWarrantyProducts';
+export const APIURL_GET_HOME_WARRANTY = '/v1/HomeWarranty/GetHomeWarrantyProducts';
 
 //ACTIVE SESSION
 export const APIURL_GET_TOKENS = '/UserManagement/GetTokenList';
 export const APIURL_DELETE_TOKENS = '/UserManagement/RemoveToken';
 export const APIURL_POST_CALC_WARRANTY_ORDER_INFO = '/v1/HomeWarranty/GetHomeWarrantyOrderInfo';
 export const APIURL_POST_ADD_HOME_WARRANTY = '/v1/HomeWarranty/AddHomeWarranty';
+export const APIURL_POST_ADD_HOME_WARRANTY_ACTION_LIST = '/Order/AddHomwWarrantyActionList';

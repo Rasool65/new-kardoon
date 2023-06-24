@@ -23,7 +23,8 @@ import { useNotification } from '@src/hooks/useNotification';
 import { IUserGuidResultModel } from '@src/models/output/guarantee/IUserGuidResultModel';
 import { updateUserData } from '@src/redux/reducers/authenticationReducer';
 import { UtilsHelper } from '@src/utils/GeneralHelpers';
-import { Button } from 'reactstrap';
+import { useQuery } from 'react-query';
+import { services } from '@src/configs/apiConfig/cachNames';
 
 const Main: FunctionComponent<IPageProps> = (props) => {
   const color = useSelector((state: RootStateType) => state.theme.color);
@@ -34,9 +35,8 @@ const Main: FunctionComponent<IPageProps> = (props) => {
   const auth = useSelector((state: RootStateType) => state.authentication.isAuthenticate);
   const userData = useSelector((state: RootStateType) => state.authentication.userData);
   const fetchCount = useNotification();
-  const [services, setServices] = useState<IServicesResultModel[]>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(true);
+  // const [services, setServices] = useState<IServicesResultModel[]>();
+  // const [loading, setLoading] = useState<boolean>(false);
   const [advertise, setAdvertise] = useState<any>([]);
   const dispatch = useDispatch();
 
@@ -57,17 +57,22 @@ const Main: FunctionComponent<IPageProps> = (props) => {
     });
   };
 
-  const GetServices = (cityId: number) => {
-    setLoading(true);
-    httpRequest.getRequest<IOutputResult<IServicesResultModel[]>>(`${APIURL_GET_SERVICES}?CityId=${cityId}`).then((result) => {
-      setServices(result.data.data);
-      setLoading(false);
-    });
+  const GetServices = async (cityId: number) => {
+    // setLoading(true);
+    const response = await httpRequest.getRequest<IOutputResult<IServicesResultModel[]>>(
+      `${APIURL_GET_SERVICES}?CityId=${cityId}`
+    );
+    //  .then((result) => {
+    //     setServices(result.data.data);
+    //     setLoading(false);
+    //   });
+    return response.data.data;
   };
 
   const handleSearch = (value: string) => {
-    let findData = services?.filter((el: IServicesResultModel) => el.title?.match(value));
-    value ? setServices(findData) : GetServices(cityId ? cityId : 0);
+    let findData = getServicesQuery.data?.filter((el: IServicesResultModel) => el.title?.match(value));
+    // value ? setServices(findData) : GetServices(cityId ? cityId : 0);
+    value ? getServicesQuery.data(findData) : GetServices(cityId ? cityId : 0);
   };
 
   const GetAdvertise = () => {
@@ -107,14 +112,15 @@ const Main: FunctionComponent<IPageProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    GetServices(cityId ? cityId : 0);
     GetAdvertise();
     document.title = props.title;
   }, [props.title]);
 
+  const getServicesQuery: any = useQuery(services, () => GetServices(cityId ? cityId : 0));
+
   return (
     <>
-      {loading ? (
+      {getServicesQuery.isLoading ? (
         <MainLoading />
       ) : (
         <>
@@ -163,9 +169,9 @@ const Main: FunctionComponent<IPageProps> = (props) => {
                 <div className="srvice-card">
                   <h4 className="srvice-title">خدمات کاردون</h4>
                   <div className="service-item-box">
-                    {services &&
-                      services.length > 0 &&
-                      services.map((item: IServicesResultModel, index: number) => {
+                    {getServicesQuery.data &&
+                      getServicesQuery.data.length > 0 &&
+                      getServicesQuery.data.map((item: IServicesResultModel, index: number) => {
                         return (
                           <div
                             className="service-item pointer"
@@ -217,23 +223,19 @@ const Main: FunctionComponent<IPageProps> = (props) => {
             </div>
           }
           {
-            <div className={` modal technician-alert ${auth && checkRole('TECHNICIAN') && walletBalance! < 0 && 'd-flex'}`}>
+            <div className={` modal technician-alert ${auth && checkRole('TECHNICIAN') && walletBalance! > 0 && 'd-flex'}`}>
               <div className="modal-content bank-data">
-                <div className='alert-header'>
-                    <img
-                    src={require(`@src/scss/images/icons/${color}-info.svg`)}
-                    alt="" />
-                  <h5>
-                    تکنسین گرامی
-                  </h5>
-                    <h4>لطفأ بدهی حساب خود را تسویه نمایید</h4>
+                <div className="alert-header">
+                  <img src={require(`@src/scss/images/icons/${color}-info.svg`)} alt="" />
+                  <h5>تکنسین گرامی</h5>
+                  <h4>لطفأ بدهی حساب خود را تسویه نمایید</h4>
                 </div>
-                  <div className="wallet-info">
-                    <h5 className="item-label">مبلغ بدهی</h5>
-                    <p className="wallet-amount debtor-text">
-                      {'(' + UtilsHelper.threeDigitSeparator(Math.abs(walletBalance!)) + ')'} ریال
-                    </p>
-                  </div>
+                <div className="wallet-info">
+                  <h5 className="item-label">مبلغ بدهی</h5>
+                  <p className="wallet-amount debtor-text">
+                    {'(' + UtilsHelper.threeDigitSeparator(Math.abs(walletBalance!)) + ')'} ریال
+                  </p>
+                </div>
                 <button
                   onClick={() => {
                     navigate(URL_USER_PROFILE, { state: { tabPage: 1 } });

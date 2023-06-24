@@ -1,5 +1,5 @@
 export interface IGetHomeWarrantyOrderInfoResultModel {
-  homeWarrantyOrders: IHomeWarrantyOrdersModelResult[];
+  products: IHomeWarrantyOrdersModelResult[];
   calculations: ICalculationsHomeWarrantyOrderPrice;
 }
 export interface IHomeWarrantyOrdersModelResult {
@@ -29,8 +29,18 @@ export interface ICalculationsHomeWarrantyOrderPrice {
 }
 
 export interface IGetHomeWarrantyOrderInfo {
+  uuid: string;
+  actionId: number;
   productId: number;
+  priceAfterReduction_Addition: number;
   activeWarranty: boolean;
   estimatedValue: number;
   count: number;
+  images?: IImagesHomeWarranty[];
+}
+
+export interface IImagesHomeWarranty {
+  tag: 0;
+  imageFile: any;
+  description: string;
 }

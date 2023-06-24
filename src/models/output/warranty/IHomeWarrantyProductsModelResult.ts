@@ -1,6 +1,8 @@
 export interface IHomeWarrantyProductsModelResult {
   id: number;
+  uuid?: string;
   title: string;
+  actionId: number;
   baseValue: number;
   insuranceRisksPercent: number;
   insuranceRisksValue: number;
@@ -8,7 +10,12 @@ export interface IHomeWarrantyProductsModelResult {
   warrantyRisksValue: number;
   comprehensiveCoveragePercent: number;
   comprehensiveCoverageValue: number;
-  isRequired: boolean;
+  required: boolean;
   inDiscount: boolean;
   estimatedValues: [{ value: number; label: string }];
+  productTagList: IProductTagList[];
+}
+export interface IProductTagList {
+  value: number;
+  label: string;
 }

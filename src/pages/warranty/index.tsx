@@ -2,19 +2,22 @@ import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { IPageProps } from '@src/configs/routerConfig/IPageProps';
 import Select from 'react-select';
 import { UtilsHelper } from '@src/utils/GeneralHelpers';
-import { IHomeWarrantyProductsModelResult } from '@src/models/output/warranty/IHomeWarrantyProductsModelResult';
-import useHttpRequest from '@src/hooks/useHttpRequest';
+import { IHomeWarrantyProductsModelResult, IProductTagList } from '@src/models/output/warranty/IHomeWarrantyProductsModelResult';
+import useHttpRequest, { RequestDataType } from '@src/hooks/useHttpRequest';
 import { useToast } from '@src/hooks/useToast';
 import { IOutputResult } from '@src/models/output/IOutputResult';
+import * as uuid from 'uuid';
 import {
   APIURL_GET_HOME_WARRANTY,
   APIURL_POST_ADD_HOME_WARRANTY,
+  APIURL_POST_ADD_HOME_WARRANTY_ACTION_LIST,
   APIURL_POST_CALC_WARRANTY_ORDER_INFO,
 } from '@src/configs/apiConfig/apiUrls';
 import {
   IGetHomeWarrantyOrderInfo,
   IGetHomeWarrantyOrderInfoResultModel,
   IHomeWarrantyOrdersModelResult,
+  IImagesHomeWarranty,
 } from '@src/models/output/warranty/IHomeWarrantyOrdersModelResult';
 import LoadingComponent from '@src/components/spinner/LoadingComponent';
 import { useSelector } from 'react-redux';
@@ -23,66 +26,126 @@ import { ICalculationsHomeWarrantyOrderPrice } from './../../models/output/warra
 import PrevHeader from '@src/layout/Headers/PrevHeader';
 import { Button, Input, Spinner } from 'reactstrap';
 import { resizeFile } from '@src/utils/ImageHelpers';
+import { useLocation } from 'react-router-dom';
 
 const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
   const userData = useSelector((state: RootStateType) => state.authentication.userData);
+  const { state }: any = useLocation();
   const httpRequest = useHttpRequest();
+  const httpRequestFormData = useHttpRequest(RequestDataType.formData);
   const toast = useToast();
   const [homeWarrantyProducts, setHomeWarrantyProducts] = useState<IHomeWarrantyProductsModelResult[]>([]);
   const [OrderInfo, setOrderInfo] = useState<IGetHomeWarrantyOrderInfo[]>([]);
   const [calcResult, setCalcResult] = useState<ICalculationsHomeWarrantyOrderPrice>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
   const selectRef = useRef<any>([]);
+  const [btnDisabled, setBtnDisabled] = useState<boolean>(true);
+  const [imgFiles, setImgFiles] = useState<any[][]>([]);
+  const [imgSrc, setImgSrc] = useState<string[][]>([]);
+  const [imgTags, setImgTags] = useState<number[][]>([]);
+  const [imgDescription, setImgDescription] = useState<string[][]>([]);
+  const [progress, setProgress] = useState<number>();
 
-  const [imgSrcList, setImgSrcList] = useState<string[][]>([
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-  ]);
-  // const [imageFile, setImageFile] = useState<any[][]>([[]]);
-
-  const onImageFileChange = (e: any, row: number, col: number) => {
-    debugger;
-    const showfiles = e.target.files;
-    ResizeAndSave(e, row);
-    const reader = new FileReader();
-    reader.onload = function () {
-      debugger;
-      let serviceTypeImg = [...imgSrcList[row], reader.result];
-      // setImgSrcList([...imageSrc, imgSrcList]);
-      setImgSrcList([imgSrcList[row], serviceTypeImg[serviceTypeImg.length + 1]]);
-    };
-    reader.readAsDataURL(showfiles[0]);
-    // setImageDisplay('flex');
+  const updateImgFiles = (rowIndex: number, colIndex: number, newValue: string) => {
+    setImgFiles((prevList) => {
+      const newList = [...prevList];
+      newList[rowIndex][colIndex] = newValue;
+      return newList;
+    });
   };
-  const ResizeAndSave = async (e: any, index: number) => {
+
+  const updateImgTags = (rowIndex: number, colIndex: number, newValue: number, newLabel: string) => {
+    setImgTags((prevList) => {
+      const newList = [...prevList];
+      newList[rowIndex][colIndex] = newValue;
+      return newList;
+    });
+    setImgDescription((prevList) => {
+      const newList = [...prevList];
+      newList[rowIndex][colIndex] = newLabel;
+      return newList;
+    });
+  };
+
+  const deleteImgFiles = (rowIndex: number, colIndex: number) => {
+    setImgFiles((prevList) => {
+      const newList = [...prevList];
+      newList[rowIndex].splice(colIndex, 1, '');
+      return newList;
+    });
+    setImgSrc((prevList) => {
+      const newList = [...prevList];
+      newList[rowIndex].splice(colIndex, 1, '');
+      return newList;
+    });
+  };
+
+  const ResizeAndSave = async (e: any, row: number, col: number) => {
     const file = e.target.files[0];
     await resizeFile(file).then((result: any) => {
-      // setImageFile([...[...imageFile[index], result], imageFile[index]]);
+      updateImgFiles(row, col, file);
     });
+  };
+  const config = {
+    onUploadProgress: (progressEvent: any) => setProgress(Math.round((100 * progressEvent.loaded) / progressEvent.total)),
   };
   const GetWarrantyInfo = () => {
     setLoading(true);
-    httpRequest.getRequest<IOutputResult<IHomeWarrantyProductsModelResult[]>>(APIURL_GET_HOME_WARRANTY).then((result) => {
-      setHomeWarrantyProducts(result.data.data);
-      setLoading(false);
-    });
+    httpRequest
+      .getRequest<IOutputResult<IHomeWarrantyProductsModelResult[]>>(
+        // 'http://127.0.0.1:2500/getData'
+        `${APIURL_GET_HOME_WARRANTY}?requestDetailId=${state.requestDetailId}`
+      )
+      .then((result) => {
+        result.data.data.forEach((element) => {
+          imgSrc.push(Array(element.productTagList.length).fill(''));
+          imgFiles.push(Array(element.productTagList.length).fill(''));
+          imgTags.push(Array(element.productTagList.length).fill(''));
+          imgDescription.push(Array(element.productTagList.length).fill(''));
+          result.data.data.forEach((items: IHomeWarrantyProductsModelResult, rowIndex: number) => {
+            items.productTagList.forEach((item: IProductTagList, colIndex: number) => {
+              updateImgTags(rowIndex, colIndex, item.value, item.label);
+            });
+          });
+        });
+        //! add uuid !!
+        var newResult = result.data.data;
+        newResult.forEach((element) => {
+          element.uuid = uuid.v4();
+        });
+        debugger;
+        setHomeWarrantyProducts(newResult);
+        //! if required fill up array
+        result.data.data &&
+          result.data.data.length > 0 &&
+          result.data.data.map((items: IHomeWarrantyProductsModelResult, index: number) => {
+            items.required &&
+              OrderInfo.push({
+                uuid: items.uuid!,
+                actionId: items.actionId,
+                productId: items.id,
+                activeWarranty: false,
+                estimatedValue: 0,
+                count: 1,
+                priceAfterReduction_Addition: 0,
+              });
+          });
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
     GetWarrantyInfo();
   }, []);
 
-  const handleRemove = (id: number) => {
-    const updatedData = OrderInfo.filter((item) => item.productId !== id);
+  const handleRemove = (uuid: string) => {
+    const updatedData = OrderInfo.filter((item) => item.uuid !== uuid);
     setOrderInfo(updatedData);
   };
 
-  const handleUpdateEstimated = (productId: number, value: number) => {
-    const index = OrderInfo.findIndex((i) => i.productId === productId);
+  const handleUpdateEstimated = (uuid: string, value: number) => {
+    const index = OrderInfo.findIndex((i) => i.uuid === uuid);
     if (index === -1) {
       // const inputSelectBox = document.getElementById(`estimated#${productId.toString()}`);
       toast.showError('ابتدا مورد تحت پوشش را انتخاب نمایید');
@@ -93,10 +156,10 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
     }
   };
 
-  const handleUpdateActiveWarranty = (productId: number, value: boolean) => {
-    const index = OrderInfo.findIndex((item) => item.productId === productId);
+  const handleUpdateActiveWarranty = (uuid: string, value: boolean) => {
+    const index = OrderInfo.findIndex((item) => item.uuid === uuid);
     if (index === -1) {
-      const inputCheckBox = document.getElementById(`gaurantee#${productId.toString()}`);
+      const inputCheckBox = document.getElementById(`gaurantee#${uuid.toString()}`);
       //@ts-ignore
       inputCheckBox!.checked = false;
       toast.showError('ابتدا مورد تحت پوشش را انتخاب نمایید');
@@ -111,22 +174,50 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
       .postRequest<IOutputResult<IGetHomeWarrantyOrderInfoResultModel>>(APIURL_POST_CALC_WARRANTY_ORDER_INFO, OrderInfo)
       .then((result) => {
         setLoading(false);
+        if (!result.data.isSuccess) return toast.showError(result.data.message);
+        result.data.data.products.forEach((element, index: number) => {
+          OrderInfo[index].priceAfterReduction_Addition = element.priceAfterReduction_Addition;
+        });
         setCalcResult(result.data.data.calculations);
       });
   };
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
   const AddHomeWarranty = () => {
     if (OrderInfo.length < 3) return toast.showWarning('انتخاب حداقل 3 مورد اجباریست');
-    setLoading(true);
-    const body = {
-      mobileNumber: userData?.userName,
-      productList: OrderInfo,
-    };
-    httpRequest
-      .postRequest<IOutputResult<IHomeWarrantyOrdersModelResult[]>>(APIURL_POST_ADD_HOME_WARRANTY, body)
+    setBtnLoading(true);
+    const formData = new FormData();
+    formData.append(`id`, state.requestDetailId);
+    OrderInfo.forEach((orderInfo: IGetHomeWarrantyOrderInfo, index: number) => {
+      // formData.append(`activeWarranty[${index}]`, orderInfo.activeWarranty.toString());
+      // formData.append(`productId[${index}]`, orderInfo.productId.toString());
+      formData.append(`action[${index}]`, orderInfo.actionId.toString());
+      formData.append(`price[${index}]`, orderInfo.priceAfterReduction_Addition.toString());
+      formData.append(`count[${index}]`, orderInfo.count.toString());
+      formData.append(`estimatedValue[${index}]`, orderInfo.estimatedValue.toString());
+      formData.append(`discountAmount[${index}]`, '0');
+      formData.append(`sourceCost[${index}]`, '0'); //! consumer
+      for (var col = 0; col < imgFiles[index].length; col++) {
+        formData.append(`files[${index}].images[${col}].file`, imgFiles[index][col]);
+        formData.append(`files[${index}].images[${col}].fileType`, 'image');
+        formData.append(`files[${index}].tag[${col}]`, imgTags[index][col].toString());
+        formData.append(`files[${index}].description[${col}]`, imgDescription[index][col]);
+      }
+    });
+    httpRequestFormData
+      .postRequest<IOutputResult<IHomeWarrantyOrdersModelResult[]>>(
+        APIURL_POST_ADD_HOME_WARRANTY_ACTION_LIST,
+        formData,
+        () => {},
+        config
+      )
       .then((result) => {
-        debugger;
-        setLoading(false);
+        setBtnLoading(false);
         if (!result.data.isSuccess) return toast.showError(result.data.message);
+      })
+      .catch(() => {
+        setBtnLoading(false);
       });
   };
   useEffect(() => {
@@ -139,23 +230,6 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
       {loading && <LoadingComponent />}
       <div className="home-warranty-selector">
         <div className="row">
-          {/* <div className="col-12 col-lg-6">
-            <div className="label-over-box">
-              <Select isDisabled className="w-100 p-3" placeholder={'نوع خدمت'} />
-              <label htmlFor="form1a" className="ml-2 space-nowrap">
-                نوع خدمات
-              </label>
-            </div>
-          </div>
-
-          <div className="col-12 col-lg-6">
-            <div className="label-over-box">
-              <Select isDisabled className="w-100 p-3" placeholder={'گروه خدمات'} />
-              <label htmlFor="form1a" className="ml-2 space-nowrap">
-                گروه خدمات
-              </label>
-            </div>
-          </div> */}
           <div className="col-12 col-lg-6">
             <div className="section-title">
               <span>موارد تحت پوشش</span>
@@ -164,7 +238,7 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
               homeWarrantyProducts.length > 0 &&
               homeWarrantyProducts.map((item: IHomeWarrantyProductsModelResult, index: number) => {
                 return (
-                  <div id={`accordion${index}`} className={`warranty-selector-card close-box`}>
+                  <div id={`accordion${index}`} className={`warranty-selector-card ${!item.required && 'close-box'}`}>
                     <div className="warranty-selector-header">
                       <div className="card-title">
                         <div>{item.title}</div>
@@ -174,25 +248,31 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
                         <input
                           onChange={(e) => {
                             e.currentTarget.checked
-                              ? (handleRemove(item.id),
+                              ? (handleRemove(item.uuid!),
                                 //@ts-ignore
-                                (document.getElementById(`gaurantee#${item.id.toString()}`)!.checked = false),
+                                (document.getElementById(`gaurantee#${item.uuid.toString()}`)!.checked = false),
                                 document.getElementById(`accordion${index}`)?.classList.add('close-box'),
+                                imgFiles[index].map((item, col) => {
+                                  deleteImgFiles(index, col);
+                                }),
                                 selectRef.current[index].clearValue())
                               : //remove
                                 (document.getElementById(`accordion${index}`)?.classList.remove('close-box'),
                                 setOrderInfo([
                                   ...OrderInfo,
                                   {
+                                    uuid: item.uuid!,
+                                    actionId: item.actionId,
                                     productId: item.id,
                                     activeWarranty: false,
                                     estimatedValue: 0,
                                     count: 1,
+                                    priceAfterReduction_Addition: 0,
                                   },
                                 ])); // add
                           }}
-                          id={item.id?.toString()}
-                          defaultChecked={true}
+                          id={item.uuid?.toString()}
+                          defaultChecked={!item.required}
                           // disabled={item.isRequired}
                           type="checkbox"
                           className="toggle-checkbox form-check-input disable-toggle"
@@ -223,9 +303,9 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
                           <div>
                             <Select
                               ref={(e) => (selectRef.current[index] = e)}
-                              id={`estimated#${item.id}`}
+                              id={`estimated#${item.uuid}`}
                               onChange={(e) => {
-                                e ? handleUpdateEstimated(item.id, e.value) : handleUpdateEstimated(item.id, 0);
+                                e ? handleUpdateEstimated(item.uuid!, e.value) : handleUpdateEstimated(item.uuid!, 0);
                                 OrderInfo.length > 0 && GetCalcData();
                               }}
                               defaultValue={item.estimatedValues[0]}
@@ -238,59 +318,61 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
                           <span>گارانتی فعال</span>
                           <div>
                             <input
-                              id={`gaurantee#${item.id}`}
+                              id={`gaurantee#${item.uuid}`}
                               defaultChecked={false}
                               type="checkbox"
                               onChange={(e) => {
-                                handleUpdateActiveWarranty(item.id, e.currentTarget.checked);
+                                handleUpdateActiveWarranty(item.uuid!, e.currentTarget.checked);
                                 OrderInfo.length > 0 && GetCalcData();
                               }}
                             />
                           </div>
                         </li>
-
-                        <div className="col-12 col-md-6 col-lg-4 upload-service-images">
-                          <div className="service-image-item column-item">
-                            <div className="d-flex justify-content-between w-100">
-                              <img src={require(`@src/scss/images/icons/blue-camera-icon.svg`)} alt="" className="icon" />
-                              <p className="title ml-auto"> تصاویر دستگاه </p>
-                              <div className="imagebox" style={{ backgroundImage: "url('src/scss/images/4.jpg')" }}>
-                                <label htmlFor={`"imgList"${index}`} className="upload-btn">
-                                  <a className="upload-btn">
-                                    <img src={require(`@src/scss/images/icons/upload.svg`)} />
-                                  </a>
-                                </label>
-                                <Input
-                                  onChange={(e) => {
-                                    debugger;
-                                    onImageFileChange(e, index);
-                                  }}
-                                  style={{ display: 'none' }}
-                                  id={`"imgList"${index}`}
-                                  type="file"
-                                  accept="image/*"
-                                />
-                              </div>
-                            </div>
-                            <div className="image-gallery">
-                              {imgSrcList[index] &&
-                                imgSrcList[index].length > 0 &&
-                                imgSrcList[index].map((item: string, index: number) => {
+                        <li className="upload-images active">
+                          <span>آپلود تصاویر محصول</span>
+                          <div className="upload-service-images">
+                            <div className="service-image-item">
+                              {item.productTagList &&
+                                item.productTagList.length > 0 &&
+                                item.productTagList.map((imageTag: IProductTagList, col: number) => {
                                   return (
                                     <>
-                                      <div className="imagebox" style={{ backgroundImage: `url(${item})` }}>
-                                        <label htmlFor="" className="upload-btn">
-                                          <a className="upload-btn"></a>
+                                      <div className="imagebox" style={{ backgroundImage: `url(${imgSrc[index][col]})` }}>
+                                        <label htmlFor={`"imageTag"${index}${col}`} className="upload-btn">
+                                          <a className="upload-btn">{!imgSrc[index][col] && imageTag.label}</a>
                                         </label>
+                                        <Input
+                                          onChange={(e) => {
+                                            ResizeAndSave(e, index, col);
+                                            const reader = new FileReader();
+                                            reader.onload = function () {
+                                              setImgSrc((prevSrc: any) => {
+                                                const updatedSrc = [...prevSrc];
+                                                updatedSrc[index][col] = reader.result;
+                                                return updatedSrc;
+                                              });
+                                            };
+                                            reader.readAsDataURL(e.target.files![0]);
+                                          }}
+                                          style={{ display: 'none' }}
+                                          id={`"imageTag"${index}${col}`}
+                                          type="file"
+                                          accept="image/*"
+                                        />
                                         <a>
-                                          {/* remove from array */}
-                                          <img
-                                            src={require(`@src/scss/images/icons/delete.svg`)}
-                                            onClick={(e) => {
-                                              setImgSrcList([...imgSrcList.slice(0, index), ...imgSrcList.slice(index + 1)]);
-                                              // setImageFile([...imageFile.slice(0, index), ...imageFile.slice(index + 1)]);
-                                            }}
-                                          />
+                                          {imgSrc[index][col] && (
+                                            <img
+                                              src={require(`@src/scss/images/icons/delete.svg`)}
+                                              onClick={() => {
+                                                setImgSrc((prevSrc: any) => {
+                                                  const updatedSrc = [...prevSrc];
+                                                  updatedSrc[index][col] = undefined;
+                                                  return updatedSrc;
+                                                });
+                                                deleteImgFiles(index, col);
+                                              }}
+                                            />
+                                          )}
                                         </a>
                                       </div>
                                     </>
@@ -298,46 +380,7 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
                                 })}
                             </div>
                           </div>
-                        </div>
-
-                        {/* <li className="upload-images active">
-                          <span>آپلود تصاویر محصول</span>
-                          <div className="upload-service-images">
-                            <div className="service-image-item">
-                              map
-                              <div className="imagebox" style={{ backgroundImage: `url(${behindSrc})` }}>
-                                <label htmlFor="behindd" className="upload-btn">
-                                  <a className="upload-btn">{!behindSrc && 'رو'}</a>
-                                </label>
-                                <Input
-                                  onChange={(e) => {
-                                    // setBehindFiles(e.target.files);
-                                    // ResizeAndSave(e, 'behind');
-                                    const reader = new FileReader();
-                                    reader.onload = function () {
-                                      setBehindSrc(reader.result);
-                                    };
-                                    reader.readAsDataURL(e.target.files![0]);
-                                  }}
-                                  style={{ display: 'none' }}
-                                  id="behindd"
-                                  type="file"
-                                  accept="image/*"
-                                />
-                                <a>
-                                  {behindSrc && (
-                                    <img
-                                      src={require(`@src/scss/images/icons/delete.svg`)}
-                                      onClick={() => {
-                                        // setBehindSrc(undefined), setBehindFiles(undefined);
-                                      }}
-                                    />
-                                  )}
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </li> */}
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -379,7 +422,12 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
               مبلغ : <span>{UtilsHelper.threeDigitSeparator(calcResult?.calculatePrice)}</span> تومان
             </div>
             <div className="select-time mb-4">
-              <div className="form-check ">
+              <div
+                className="form-check "
+                onClick={() => {
+                  setBtnDisabled(!btnDisabled);
+                }}
+              >
                 <input className="form-check-input" type="checkbox" value="" id="check2" />
                 <label className="form-check-label" htmlFor="check2">
                   به اطلاع مشتری رسیده و مورد تایید است
@@ -387,12 +435,14 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
               </div>
             </div>
             <Button
-              // disabled={addDisabled}
-              className="add-action-btn green-btn w-100"
+              disabled={btnDisabled}
+              className={`add-action-btn green-btn w-100 progressbar ${btnLoading && 'active'}`}
               onClick={() => {
                 AddHomeWarranty();
               }}
             >
+              <span className="line" style={{ width: `${progress}%` }}></span>
+              <span className="count-number">{progress}%</span>
               {loading ? <Spinner /> : 'تسویه حساب'}
             </Button>
           </div>

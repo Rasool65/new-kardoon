@@ -5168,3 +5168,56 @@ button {
     border-top: 1px solid #ff7f1b;
   }
 }
+.home-warranty-selector{
+  .service-image-item{
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    .imagebox{
+      width: 60px;
+      height: 60px;
+      margin: 10px;
+      &:last-child{
+        margin-left: auto;
+      }
+      label{
+        text-align: center;
+        a{
+          font-size: var(--fs-sm);
+        }
+      }
+    }
+  }
+}
+
+.progressbar{
+  span{
+    display: none;
+  }
+  &.active{
+    overflow: hidden;
+    position: relative;
+    border-color: var(--master-color) !important;
+    background-color: var(--master-light-color) !important;
+    color: var(--master-light-color) !important;
+    span.line{
+      display: block;
+      position: absolute;
+      content: '';
+      background-color: var(--master-color);
+      height: 100%;
+      left: 0;
+      top: 0;
+      transition: 0.3s;
+    }
+    .count-number{
+      display: block;
+      content: "15%";
+      color: rgb(255, 255, 255);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50% , -50%);
+      text-shadow: 0px 1px 4px var(--master-dark-color);
+    }
+  }
+}

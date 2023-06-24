@@ -25,7 +25,7 @@ import { URL_MY_ORDERS, URL_TECHNICIAN_MISSION_DETAIL_ACTION, URL_TECHNICIAN_REQ
 import { IMissionDetailResultModel, IStatusMission } from '@src/models/output/missionDetail/IMissionDetailListResultModel';
 import Select from 'react-select';
 import { IAttributesResultModel } from '@src/models/output/missionDetail/IAttributesResultModel';
-import { useToast } from './../../hooks/useToast';
+import { useToast } from '@src/hooks/useToast';
 import { IFollowUpList } from '@src/models/output/missionDetail/IFollowUpList';
 import { useRecorder } from '@src/hooks/useRecorder';
 import FollowUpModal from './FollowUpModal';

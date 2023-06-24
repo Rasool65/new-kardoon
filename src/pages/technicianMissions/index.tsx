@@ -15,8 +15,9 @@ import { IPageListOutputResult } from '@src/models/output/IPageListOutputResult'
 import Header from '@src/layout/Headers/Header';
 import Filter from './Filter';
 import Footer from '@src/layout/Footer';
-import TechnicianMissionLoading from './../../loading/technicianMissionLoading';
 import { useNotification } from '@src/hooks/useNotification';
+import TechnicianMissionLoading from '@src/loading/technicianMissionLoading';
+import { useQuery } from 'react-query';
 
 const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
   const TechnicianId = useSelector((state: RootStateType) => state.authentication.userData?.userId);
@@ -58,7 +59,7 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
     e ? setConsumer(e.value) : setConsumer(undefined);
   };
 
-  const handleSubmit = (withoutFilter: boolean, pageNumber: number) => {
+  const handleSubmit = async (withoutFilter: boolean, pageNumber: number) => {
     const body = {
       pageNumber: pageNumber,
       recordsPerPage: 10,
@@ -69,16 +70,25 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
       technicianId: TechnicianId,
     };
     withoutFilter && delete body.consumerId && delete body.productIds && delete body.serviceTypeIds && delete body.status;
-    !loading &&
-      httpRequest
-        .postRequest<IPageListOutputResult<IMissionsResultModel>>(`${APIURL_GET_TECHNICIAN_MISSIONS}`, body)
-        .then((result) => {
-          setLoading(false);
-          result.data.data.technicianMissionList && result.data.data.technicianMissionList.length > 0
-            ? (setTechnicianMissionList(technicianMissionList?.concat(result.data.data.technicianMissionList)), setHasMore(true))
-            : setHasMore(false);
-        });
+    // if (!loading) {
+    const response = await httpRequest.postRequest<IPageListOutputResult<IMissionsResultModel>>(
+      `${APIURL_GET_TECHNICIAN_MISSIONS}`,
+      body
+    );
+    // .then((result) => {
+    //   setLoading(false);
+    //   result.data.data.technicianMissionList && result.data.data.technicianMissionList.length > 0
+    //     ? (setTechnicianMissionList(technicianMissionList?.concat(result.data.data.technicianMissionList)), setHasMore(true))
+    //     : setHasMore(false);
+    // });
+    setLoading(false);
+    response.data.data.technicianMissionList && response.data.data.technicianMissionList.length > 0
+      ? (setTechnicianMissionList(technicianMissionList?.concat(response.data.data.technicianMissionList)), setHasMore(true))
+      : setHasMore(false);
+    return response.data.data.technicianMissionList;
+    // }
   };
+  const { data, error, isError, isLoading } = useQuery('getMissions', () => handleSubmit(false, pageNumber));
 
   const onClickFilter = () => {
     setLoading(true);
@@ -102,10 +112,14 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
     setPageNumber(1);
     setHasMore(true);
     setWithout(false);
-    handleSubmit(false, 1);
+    // handleSubmit(false, 1);
     getStatusMissionCount();
     getWalletBalance();
   }, []);
+
+  useEffect(() => {
+    data && data?.length > 0 && setTechnicianMissionList(data);
+  }, [data]);
 
   useEffect(() => {
     document.title = props.title;
@@ -114,7 +128,6 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
   return (
     <>
       <Header />
-
       <>
         <Footer activePage={1} />
         <div className="home-container technician-mission">
@@ -122,7 +135,7 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
             <section>
               <div className="container mt-md-4">
                 <div>
-                  {loading ? (
+                  {isLoading ? (
                     <TechnicianMissionLoading />
                   ) : (
                     <InfiniteScroll
@@ -148,7 +161,7 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
                                   // اگر از نوع هوم وارانتی بود وارد اکشن نشو
                                   onClick={() =>
                                     mission.serviceTypeId == 12
-                                      ? navigate(URL_HOME_WARRANTY)
+                                      ? navigate(URL_HOME_WARRANTY, { state: { requestDetailId: mission.requestDetailId } })
                                       : navigate(`${URL_TECHNICIAN_MISSION_DETAIL}?id=${mission.requestDetailId}`)
                                   }
                                 >
