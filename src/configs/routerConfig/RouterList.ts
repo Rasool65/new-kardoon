@@ -60,8 +60,9 @@ import Blog from '@src/pages/blog';
 import Guarantee from '@src/pages/guarantee';
 import InvoiceIssuanceShare from '@src/pages/invoice/InvoiceIssuanceShare';
 import Warranty from '@src/pages/warranty';
-import WarrantyV2 from '@src/pages/warranty/warrantyV2';
+
 import ActiveSession from '@src/pages/profile/ActiveSession';
+import Warranty2 from '@src/pages/warranty/index2';
 
 const routes: IRoute[] = [
   {
@@ -280,9 +281,17 @@ const routes: IRoute[] = [
       title: 'دستگاه های فعال',
     },
   },
+  // {
+  //   path: URL_HOME_WARRANTY,
+  //   component: Warranty,
+  //   type: RouteType.private,
+  //   props: {
+  //     title: 'هوم وارانتی',
+  //   },
+  // },
   {
     path: URL_HOME_WARRANTY,
-    component: Warranty,
+    component: Warranty2,
     type: RouteType.private,
     props: {
       title: 'هوم وارانتی',

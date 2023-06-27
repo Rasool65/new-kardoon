@@ -114,7 +114,6 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
         newResult.forEach((element) => {
           element.uuid = uuid.v4();
         });
-        debugger;
         setHomeWarrantyProducts(newResult);
         //! if required fill up array
         result.data.data &&
@@ -181,25 +180,26 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
         setCalcResult(result.data.data.calculations);
       });
   };
+
   useEffect(() => {
     document.title = title;
   }, [title]);
+
   const AddHomeWarranty = () => {
     if (OrderInfo.length < 3) return toast.showWarning('انتخاب حداقل 3 مورد اجباریست');
+    const updateImgFiles = imgFiles.filter((row) => row.some((e) => e !== ''));
     setBtnLoading(true);
     const formData = new FormData();
     formData.append(`id`, state.requestDetailId);
     OrderInfo.forEach((orderInfo: IGetHomeWarrantyOrderInfo, index: number) => {
-      // formData.append(`activeWarranty[${index}]`, orderInfo.activeWarranty.toString());
-      // formData.append(`productId[${index}]`, orderInfo.productId.toString());
       formData.append(`action[${index}]`, orderInfo.actionId.toString());
       formData.append(`price[${index}]`, orderInfo.priceAfterReduction_Addition.toString());
       formData.append(`count[${index}]`, orderInfo.count.toString());
       formData.append(`estimatedValue[${index}]`, orderInfo.estimatedValue.toString());
       formData.append(`discountAmount[${index}]`, '0');
       formData.append(`sourceCost[${index}]`, '0'); //! consumer
-      for (var col = 0; col < imgFiles[index].length; col++) {
-        formData.append(`files[${index}].images[${col}].file`, imgFiles[index][col]);
+      for (var col = 0; col < updateImgFiles[index].length; col++) {
+        formData.append(`files[${index}].images[${col}].file`, updateImgFiles[index][col]);
         formData.append(`files[${index}].images[${col}].fileType`, 'image');
         formData.append(`files[${index}].tag[${col}]`, imgTags[index][col].toString());
         formData.append(`files[${index}].description[${col}]`, imgDescription[index][col]);
@@ -215,6 +215,7 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
       .then((result) => {
         setBtnLoading(false);
         if (!result.data.isSuccess) return toast.showError(result.data.message);
+        result.data.isSuccess && toast.showSuccess(result.data.message);
       })
       .catch(() => {
         setBtnLoading(false);
