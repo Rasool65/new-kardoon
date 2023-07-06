@@ -60,9 +60,8 @@ import Blog from '@src/pages/blog';
 import Guarantee from '@src/pages/guarantee';
 import InvoiceIssuanceShare from '@src/pages/invoice/InvoiceIssuanceShare';
 import Warranty from '@src/pages/warranty';
-
 import ActiveSession from '@src/pages/profile/ActiveSession';
-import Warranty2 from '@src/pages/warranty/index2';
+import WarrantyDesign from './../../pages/warranty/warrantyDesign';
 
 const routes: IRoute[] = [
   {
@@ -291,8 +290,8 @@ const routes: IRoute[] = [
   // },
   {
     path: URL_HOME_WARRANTY,
-    component: Warranty2,
-    type: RouteType.private,
+    component: WarrantyDesign,
+    type: RouteType.public,
     props: {
       title: 'هوم وارانتی',
     },

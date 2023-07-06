@@ -254,41 +254,6 @@ const Warranty: FunctionComponent<IPageProps> = ({ title }) => {
                             <img src={require(`@src/scss/images/icons/${color}-tv.svg`)} />
                             <div>{item.title}</div>
                           </div>
-
-                          <div className="toggle-center mr-auto ml-2">
-                            <input
-                              onChange={(e) => {
-                                e.currentTarget.checked
-                                  ? (handleRemove(item.uuid!),
-                                    //@ts-ignore
-                                    (document.getElementById(`gaurantee#${item.uuid.toString()}`)!.checked = false),
-                                    document.getElementById(`accordion${index}`)?.classList.add('close-box'),
-                                    imgFiles[index].map((item, col) => {
-                                      deleteImgFiles(index, col);
-                                    }),
-                                    selectRef.current[index].clearValue())
-                                  : //remove
-                                    (document.getElementById(`accordion${index}`)?.classList.remove('close-box'),
-                                    setOrderInfo([
-                                      ...OrderInfo,
-                                      {
-                                        uuid: item.uuid!,
-                                        actionId: item.actionId,
-                                        productId: item.id,
-                                        activeWarranty: false,
-                                        estimatedValue: 0,
-                                        count: 1,
-                                        priceAfterReduction_Addition: 0,
-                                      },
-                                    ])); // add
-                              }}
-                              id={item.uuid?.toString()}
-                              defaultChecked={!item.required}
-                              // disabled={item.isRequired}
-                              type="checkbox"
-                              className="toggle-checkbox form-check-input disable-toggle"
-                            />
-                          </div>
                         </div>
 
                         <div className="warranty-selector-details">

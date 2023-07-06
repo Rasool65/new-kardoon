@@ -132,4 +132,6 @@ export const APIURL_GET_TOKENS = '/UserManagement/GetTokenList';
 export const APIURL_DELETE_TOKENS = '/UserManagement/RemoveToken';
 export const APIURL_POST_CALC_WARRANTY_ORDER_INFO = '/v1/HomeWarranty/GetHomeWarrantyOrderInfo';
 export const APIURL_POST_ADD_HOME_WARRANTY = '/v1/HomeWarranty/AddHomeWarranty';
+export const APIURL_GET_HOMEWARRANTY_PRODUCT = '/v1/HomeWarranty/GetHomeWarrantyProducts_1';
 export const APIURL_POST_ADD_HOME_WARRANTY_ACTION_LIST = '/Order/AddHomwWarrantyActionList';
+export const APIURL_POST_ADD_CONTROL_HOME_WARRANTY = '/api/v1/HomeWarranty/AddControl';

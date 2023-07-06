@@ -1,15 +1,15 @@
-@import "./foundation/all";
-@import "./pages/home/home.scss";
-@import "./pages/orderDetails/orderDetails.scss";
-@import "./pages/receiptDetails/receiptDetails.scss";
-@import "./pages/wallet/wallet.scss";
-@import "./pages/userAccount/userAccount.scss";
-@import "./pages/technicalReceipt/technicalReceipt.scss";
-@import "./pages/missionList/missionList.scss";
-@import "./pages/responsive.scss";
-@import "./pages/new-style.scss";
-@import "./pages/skeletonLoading/skeleton.scss";
-@import "./pages/guarantee/guarantee.scss";
+@import './foundation/all';
+@import './pages/home/home.scss';
+@import './pages/orderDetails/orderDetails.scss';
+@import './pages/receiptDetails/receiptDetails.scss';
+@import './pages/wallet/wallet.scss';
+@import './pages/userAccount/userAccount.scss';
+@import './pages/technicalReceipt/technicalReceipt.scss';
+@import './pages/missionList/missionList.scss';
+@import './pages/responsive.scss';
+@import './pages/new-style.scss';
+@import './pages/skeletonLoading/skeleton.scss';
+@import './pages/guarantee/guarantee.scss';
 
 /*=============================================
 =                   FONT FAMILIES            =
@@ -21,32 +21,32 @@
 // }
 @font-face {
   font-family: iranSans;
-  src: url("../fonts/IRANSansMobile_Black.ttf");
-  src: url("../fonts/IRANSansMobile_Black.ttf") format("truetype");
+  src: url('../fonts/IRANSansMobile_Black.ttf');
+  src: url('../fonts/IRANSansMobile_Black.ttf') format('truetype');
   font-weight: bolder;
 }
 @font-face {
   font-family: iranSans;
-  src: url("../fonts/IRANSansMobile_Bold.ttf");
-  src: url("../fonts/IRANSansMobile_Bold.ttf") format("truetype");
+  src: url('../fonts/IRANSansMobile_Bold.ttf');
+  src: url('../fonts/IRANSansMobile_Bold.ttf') format('truetype');
   font-weight: bold;
 }
 @font-face {
   font-family: iranSans;
-  src: url("../fonts/IRANSansMobile_Light.ttf");
-  src: url("../fonts/IRANSansMobile_Light.ttf") format("truetype");
+  src: url('../fonts/IRANSansMobile_Light.ttf');
+  src: url('../fonts/IRANSansMobile_Light.ttf') format('truetype');
   font-weight: light;
 }
 @font-face {
   font-family: iranSans;
-  src: url("../fonts/IRANSansMobile_Medium.ttf");
-  src: url("../fonts/IRANSansMobile_Medium.ttf") format("truetype");
+  src: url('../fonts/IRANSansMobile_Medium.ttf');
+  src: url('../fonts/IRANSansMobile_Medium.ttf') format('truetype');
   font-weight: normal;
 }
 @font-face {
   font-family: ClarendonBlkBTBlack;
-  src: url("../fonts/ClarendonBlkBTBlack.ttf");
-  src: url("../fonts/ClarendonBlkBTBlack.ttf") format("truetype");
+  src: url('../fonts/ClarendonBlkBTBlack.ttf');
+  src: url('../fonts/ClarendonBlkBTBlack.ttf') format('truetype');
   font-weight: normal;
 }
 /*=====        End of FONT FAMILIES      ======*/
@@ -168,7 +168,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -201,4 +201,7 @@ input[type=number] {
 swd-pin-field[completed] .pin-field {
   border-color: rgb(40, 167, 69);
   background-color: rgba(40, 167, 69, 0.25);
+}
+
+.generate-form {
 }

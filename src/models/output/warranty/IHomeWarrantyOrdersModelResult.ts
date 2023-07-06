@@ -1,3 +1,4 @@
+import { IAppearanceReviewValues, ITechnicalValues } from './IHomeWarrantyProductsModelResult';
 export interface IGetHomeWarrantyOrderInfoResultModel {
   products: IHomeWarrantyOrdersModelResult[];
   calculations: ICalculationsHomeWarrantyOrderPrice;
@@ -35,8 +36,14 @@ export interface IGetHomeWarrantyOrderInfo {
   priceAfterReduction_Addition: number;
   activeWarranty: boolean;
   estimatedValue: number;
+  brandValue: number;
   count: number;
   images?: IImagesHomeWarranty[];
+  model: string;
+  serial: string;
+  technicalDescription: string;
+  appearanceReviewValues: IAppearanceReviewValues[];
+  technicalValues: ITechnicalValues[];
 }
 
 export interface IImagesHomeWarranty {

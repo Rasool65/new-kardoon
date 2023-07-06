@@ -12,10 +12,36 @@ export interface IHomeWarrantyProductsModelResult {
   comprehensiveCoverageValue: number;
   required: boolean;
   inDiscount: boolean;
-  estimatedValues: [{ value: number; label: string }];
+  estimatedValues: IEstimateValues[];
   productTagList: IProductTagList[];
+  brandValues: IBrandValues[];
+  technicalReviewValues: ITechnicalValues[];
+  appearanceReviewValues: IAppearanceReviewValues[];
 }
+
 export interface IProductTagList {
+  value: number;
+  label: string;
+}
+
+export interface IAppearanceReviewValues {
+  value: number;
+  label: string;
+  result: boolean;
+}
+
+export interface IBrandValues {
+  value: number;
+  label: string;
+}
+
+export interface ITechnicalValues {
+  value: number;
+  label: string;
+  result: boolean;
+}
+
+export interface IEstimateValues {
   value: number;
   label: string;
 }

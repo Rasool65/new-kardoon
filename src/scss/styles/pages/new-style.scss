@@ -4874,19 +4874,18 @@ button {
 .home-warranty-selector {
   background-color: white;
   padding: 25px;
-  .upload-images{
+  .upload-images {
     display: none;
-    &.active{
+    &.active {
       display: block;
     }
-    .upload-service-images{
+    .upload-service-images {
       width: 100% !important;
     }
-    .service-image-item{
+    .service-image-item {
       background-color: transparent;
-      
     }
-    a.upload-btn{
+    a.upload-btn {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -4898,21 +4897,21 @@ button {
     font-weight: 600;
     margin-bottom: 20px;
   }
-  .section-title{
+  .section-title {
     color: var(--master-color);
     border-bottom: 1px solid rgb(206, 206, 206);
     padding-bottom: 15px;
   }
-  .payment-price{
+  .payment-price {
     text-align: center;
     padding: 10px;
     font-size: var(--fs-base);
-    span{
+    span {
       font-size: var(--fs-xl);
       color: var(--master-color);
     }
   }
-  .dashed{
+  .dashed {
     border-top: 1px dashed #cecece;
     margin-top: 15px;
     padding-top: 15px;
@@ -4924,33 +4923,33 @@ button {
     border-radius: 15px;
     overflow: hidden;
     border: 1px solid #efefef;
-    &.total-price{
+    &.total-price , &.insurance-products-details{
       border-radius: 0;
       border-color: #e6f7e8;
       .warranty-selector-header {
         background-color: #e6f7e8;
         border-color: #efefef;
       }
-      .warranty-selector-details{
+      .warranty-selector-details {
         margin-top: 0;
       }
     }
-    &.warranty-selector-parent{
+    &.warranty-selector-parent {
       border-radius: 0 !important;
       border-color: var(--master-color);
-      > .warranty-selector-header{
+      > .warranty-selector-header {
         padding-right: 35px;
         color: var(--master-color);
         background-color: var(--master-superlight-color);
         cursor: pointer;
         position: relative;
-        &:before{
+        &:before {
           content: url("data:image/svg+xml,%3Csvg width='20px' height='20px' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill='none'%3E%3Cpath fill='%23000000' fill-rule='evenodd' d='M18 10a1 1 0 01-1 1H3a1 1 0 110-2h14a1 1 0 011 1z'/%3E%3C/svg%3E");
           position: absolute;
           right: 5px;
           top: 10px;
         }
-        &:after{
+        &:after {
           content: url("data:image/svg+xml,%3Csvg width='20px' height='20px' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill='none'%3E%3Cpath fill='%23000000' fill-rule='evenodd' d='M18 10a1 1 0 01-1 1H3a1 1 0 110-2h14a1 1 0 011 1z'/%3E%3C/svg%3E");
           position: absolute;
           right: 5px;
@@ -4959,17 +4958,16 @@ button {
           transform: rotate(0) translateY(0) translateX(0);
         }
       }
-      .warranty-selector-details{
+      .warranty-selector-details {
         padding: 0 15px;
       }
-      &.close-box{
-        > .warranty-selector-header{
-          &:after{
+      &.close-box {
+        > .warranty-selector-header {
+          &:after {
             transform: rotate(90deg) translateY(3px) translateX(-3px);
           }
         }
       }
-
     }
   }
   .warranty-selector-header {
@@ -4989,10 +4987,10 @@ button {
       div {
         margin-top: 5px;
       }
-      &.warranty-has-icon{
+      &.warranty-has-icon {
         display: flex;
         align-items: center;
-        img{
+        img {
           margin-left: 15px;
         }
       }
@@ -5022,15 +5020,15 @@ button {
         width: 50%;
       }
     }
-    .optional{
-      li{
-      flex-direction: row-reverse;
-        span{
-         width: calc(100% - 25px);
-       }
-       div{
-        width: 25px;
-       }
+    .optional {
+      li {
+        flex-direction: row-reverse;
+        span {
+          width: calc(100% - 25px);
+        }
+        div {
+          width: 25px;
+        }
       }
     }
     ul {
@@ -5068,17 +5066,17 @@ button {
           // width: 130px;
           padding-right: 0px !important;
         }
-        .input-warranty{
-         width: 100%;
-         min-height: 20px !important;
-         height: 30px !important;
-         border: 1px solid #aaa !important;
-         border-radius: 10px;
-         padding-right: 10px;
+        .input-warranty {
+          width: 100%;
+          min-height: 20px !important;
+          height: 30px !important;
+          border: 1px solid #aaa !important;
+          border-radius: 10px;
+          padding-right: 10px;
         }
-        textarea.input-warranty{
-         min-height: 60px !important;
-         height: 60px !important;
+        textarea.input-warranty {
+          min-height: 60px !important;
+          height: 60px !important;
         }
         .css-319lph-ValueContainer {
           margin-top: -8px;
@@ -5233,20 +5231,20 @@ button {
     border-top: 1px solid #ff7f1b;
   }
 }
-.home-warranty-selector{
-  .service-image-item{
+.home-warranty-selector {
+  .service-image-item {
     flex-wrap: wrap;
     justify-content: flex-start;
-    .imagebox{
+    .imagebox {
       width: 60px;
       height: 60px;
       margin: 10px;
-      &:last-child{
+      &:last-child {
         margin-left: auto;
       }
-      label{
+      label {
         text-align: center;
-        a{
+        a {
           font-size: var(--fs-sm);
         }
       }
@@ -5254,17 +5252,17 @@ button {
   }
 }
 
-.progressbar{
-  span{
+.progressbar {
+  span {
     display: none;
   }
-  &.active{
+  &.active {
     overflow: hidden;
     position: relative;
     border-color: var(--master-color) !important;
     background-color: var(--master-light-color) !important;
     color: var(--master-light-color) !important;
-    span.line{
+    span.line {
       display: block;
       position: absolute;
       content: '';
@@ -5274,31 +5272,84 @@ button {
       top: 0;
       transition: 0.3s;
     }
-    .count-number{
+    .count-number {
       display: block;
-      content: "15%";
+      content: '15%';
       color: rgb(255, 255, 255);
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50% , -50%);
+      transform: translate(-50%, -50%);
       text-shadow: 0px 1px 4px var(--master-dark-color);
     }
   }
 }
-.range-input{
+.range-input {
   direction: ltr;
   width: calc(100% - 160px);
 }
-.range-number{
-    width: 30px !important;
-    height: 30px;
-    margin-right: 10px;
-    margin-left: 10px;
-    padding: 5px 0px !important;
-    text-align: center;
-    background-color: #0075ff;
-    color: white !important;
-    font-size: 13px !important;
-    border-radius: 50%;
+.range-number {
+  width: 30px !important;
+  height: 30px;
+  margin-right: 10px;
+  margin-left: 10px;
+  padding: 5px 0px !important;
+  text-align: center;
+  background-color: #0075ff;
+  color: white !important;
+  font-size: 13px !important;
+  border-radius: 50%;
+}
+
+
+
+.insurance-tabs{
+  flex-wrap: wrap;
+}
+.insurance-forms{
+margin-top: 15px;
+}
+.insurance-form{
+  background-color: #f4f4f48e;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #e7e7e7;
+  display: none;
+  &.active{
+    display: block;
+  }
+}
+.insurance-products-details{
+  .warranty-selector-header{
+    background-color: #e4e4e4 !important;
+  }
+  .card-title{
+    display: flex;
+    div{
+      width: 160px;
+    }
+  }
+  .warranty-selector-details{
+    li span{
+      width: 160px !important;
+    }
+    li > div {
+      width: calc(100% - 160px) !important;
+    }
+    li{
+      padding: 15px 15px 15px 40px !important;
+      // padding-left: 40px !important;
+      position: relative;
+    }
+    .linked-device-removable{
+      width: 25px;
+      height: auto;
+      cursor: pointer;
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
 }
