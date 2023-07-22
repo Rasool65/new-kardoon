@@ -61,7 +61,6 @@ import Guarantee from '@src/pages/guarantee';
 import InvoiceIssuanceShare from '@src/pages/invoice/InvoiceIssuanceShare';
 import Warranty from '@src/pages/warranty';
 import ActiveSession from '@src/pages/profile/ActiveSession';
-import WarrantyDesign from './../../pages/warranty/warrantyDesign';
 
 const routes: IRoute[] = [
   {
@@ -280,18 +279,10 @@ const routes: IRoute[] = [
       title: 'دستگاه های فعال',
     },
   },
-  // {
-  //   path: URL_HOME_WARRANTY,
-  //   component: Warranty,
-  //   type: RouteType.private,
-  //   props: {
-  //     title: 'هوم وارانتی',
-  //   },
-  // },
   {
     path: URL_HOME_WARRANTY,
-    component: WarrantyDesign,
-    type: RouteType.public,
+    component: Warranty,
+    type: RouteType.private,
     props: {
       title: 'هوم وارانتی',
     },

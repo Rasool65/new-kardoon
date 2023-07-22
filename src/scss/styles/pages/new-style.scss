@@ -4923,7 +4923,8 @@ button {
     border-radius: 15px;
     overflow: hidden;
     border: 1px solid #efefef;
-    &.total-price , &.insurance-products-details{
+    &.total-price,
+    &.insurance-products-details {
       border-radius: 0;
       border-color: #e6f7e8;
       .warranty-selector-header {
@@ -5301,48 +5302,46 @@ button {
   border-radius: 50%;
 }
 
-
-
-.insurance-tabs{
+.insurance-tabs {
   flex-wrap: wrap;
 }
-.insurance-forms{
-margin-top: 15px;
+.insurance-forms {
+  margin-top: 15px;
 }
-.insurance-form{
+.insurance-form {
   background-color: #f4f4f48e;
   padding: 25px;
   border-radius: 15px;
   margin-bottom: 15px;
   border: 1px solid #e7e7e7;
   display: none;
-  &.active{
+  &.active {
     display: block;
   }
 }
-.insurance-products-details{
-  .warranty-selector-header{
+.insurance-products-details {
+  .warranty-selector-header {
     background-color: #e4e4e4 !important;
   }
-  .card-title{
+  .card-title {
     display: flex;
-    div{
+    div {
       width: 160px;
     }
   }
-  .warranty-selector-details{
-    li span{
+  .warranty-selector-details {
+    li span {
       width: 160px !important;
     }
     li > div {
       width: calc(100% - 160px) !important;
     }
-    li{
+    li {
       padding: 15px 15px 15px 40px !important;
       // padding-left: 40px !important;
       position: relative;
     }
-    .linked-device-removable{
+    .linked-device-removable {
       width: 25px;
       height: auto;
       cursor: pointer;
@@ -5350,6 +5349,118 @@ margin-top: 15px;
       left: 5px;
       top: 50%;
       transform: translateY(-50%);
+    }
+  }
+}
+
+// ============= insurance-form Design
+
+.insurance-form {
+  select,
+  input {
+    margin: 10px 0 20px 0 !important;
+    border: 1px solid #aaa !important;
+    border-radius: 10px !important;
+    outline: none;
+    box-shadow: none !important;
+    padding: 13px;
+    height: 45px !important;
+  }
+
+  .checkbox {
+    margin-bottom: 10px;
+    label {
+      display: flex;
+      align-items: center;
+    }
+    input {
+      margin: 0 0 0 10px !important;
+      width: 20px !important;
+      height: 20px !important;
+      border: 1px solid #aeaeb2 !important;
+      border-radius: 4px !important;
+      box-shadow: none !important;
+    }
+  }
+  .field-number {
+    margin-top: 25px;
+    padding-top: 5px;
+    position: relative;
+    label {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    .field-range-wrapper {
+      position: relative;
+    }
+    input {
+      appearance: revert !important;
+    }
+    .range-view {
+      position: absolute;
+      top: -25px;
+      left: 0;
+      font-size: var(--fs-base) !important;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: var(--master-color);
+      color: white;
+      padding: 6px 0;
+      text-align: center;
+    }
+  }
+  .field-string {
+    position: relative;
+    input[type='file'] {
+      /* Style the color of the message that says 'No file chosen' */
+      color: #878787;
+      border: none !important;
+      height: auto !important;
+      width: 100%;
+    }
+
+    label:has(+ div) {
+      position: absolute;
+      color: white;
+      top: 34px;
+      right: 50%;
+      transform: translateX(50%);
+    }
+
+    input[type='file']::-webkit-file-upload-button {
+      background: var(--master-color);
+      border: 2px solid var(--master-color);
+      border-radius: 4px;
+      color: var(--master-color);
+      cursor: pointer;
+      font-size: 12px;
+      outline: none;
+      padding: 10px 25px;
+      text-transform: uppercase;
+      transition: all 1s ease;
+      width: calc(100% + 10px);
+    }
+    .file-info {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      margin-top: -25px;
+      text-align: center;
+    }
+
+    input[type='file']::-webkit-file-upload-button:hover {
+      background: #fff;
+      // border: 2px solid #535353;
+      color: rgb(255, 255, 255);
+    }
+  }
+  .btn-info {
+    background-color: #4caf50 !important;
+    border-color: #009688 !important;
+    &:hover {
+      background-color: #009688 !important;
     }
   }
 }

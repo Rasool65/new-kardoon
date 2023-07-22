@@ -160,7 +160,7 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
                                   } ${IEServiceTypeId[mission.serviceTypeId!]} ${IEStatusMissionId[mission.statusId!]}`}
                                   // اگر از نوع هوم وارانتی بود وارد اکشن نشو
                                   onClick={() =>
-                                    mission.serviceTypeId == 12
+                                    mission.serviceTypeId == 14
                                       ? navigate(URL_HOME_WARRANTY, { state: { requestDetailId: mission.requestDetailId } })
                                       : navigate(`${URL_TECHNICIAN_MISSION_DETAIL}?id=${mission.requestDetailId}`)
                                   }

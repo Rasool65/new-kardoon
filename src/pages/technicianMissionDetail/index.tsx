@@ -109,7 +109,6 @@ const technicianMissionDetail: FunctionComponent<IPageProps> = (props) => {
     });
   };
   const onSubmit = (data: ISubmitEvent<unknown>) => {
-    console.log(JSON.stringify(data.formData));
     const body = {
       requestDetailId: parseInt(id!),
       technicianId: userData?.userId,

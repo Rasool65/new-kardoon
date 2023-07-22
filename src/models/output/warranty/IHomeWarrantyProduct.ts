@@ -3,9 +3,10 @@ import { ISubmitEvent } from '@rjsf/core';
 export interface IHomeWarrantyProduct {
   id: string;
   productId: number;
+  productCode: string;
   title: string;
   actionId: number;
-  formGen: ISubmitEvent<unknown>;
+  formGen: string;
   discountAmount: number;
   costSource: number;
   count: number;
