@@ -20,6 +20,7 @@ export const URL_TECHNICIAN_MISSION_DETAIL_ACTION = '/mission-detail/action';
 export const URL_CHANGE_PASSWORD = '/change-password';
 export const URL_INVOICE = '/invoice/:id';
 export const URL_INVOICE_SHARE = '/invoice-share/invoice/:invoice/link/:link';
+export const URL_HOME_WARRANTY_INVOICE_SHARE = '/home-warranty-share/:InvliceId';
 export const URL_CALLBACK = '/callback';
 export const URL_CONVERSATION = '/conversation';
 export const URL_CHAT = '/conversation/chat/:id';

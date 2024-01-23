@@ -70,25 +70,18 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
       technicianId: TechnicianId,
     };
     withoutFilter && delete body.consumerId && delete body.productIds && delete body.serviceTypeIds && delete body.status;
-    // if (!loading) {
-    const response = await httpRequest.postRequest<IPageListOutputResult<IMissionsResultModel>>(
-      `${APIURL_GET_TECHNICIAN_MISSIONS}`,
-      body
-    );
-    // .then((result) => {
-    //   setLoading(false);
-    //   result.data.data.technicianMissionList && result.data.data.technicianMissionList.length > 0
-    //     ? (setTechnicianMissionList(technicianMissionList?.concat(result.data.data.technicianMissionList)), setHasMore(true))
-    //     : setHasMore(false);
-    // });
-    setLoading(false);
-    response.data.data.technicianMissionList && response.data.data.technicianMissionList.length > 0
-      ? (setTechnicianMissionList(technicianMissionList?.concat(response.data.data.technicianMissionList)), setHasMore(true))
-      : setHasMore(false);
-    return response.data.data.technicianMissionList;
-    // }
+    if (!loading) {
+      httpRequest
+        .postRequest<IPageListOutputResult<IMissionsResultModel>>(`${APIURL_GET_TECHNICIAN_MISSIONS}`, body)
+        .then((result) => {
+          setLoading(false);
+          result.data.data.technicianMissionList && result.data.data.technicianMissionList.length > 0
+            ? (setTechnicianMissionList(technicianMissionList?.concat(result.data.data.technicianMissionList)), setHasMore(true))
+            : setHasMore(false);
+        });
+    }
   };
-  const { data, error, isError, isLoading } = useQuery('getMissions', () => handleSubmit(false, pageNumber));
+  // const { data, error, isError, isLoading } = useQuery('getMissions', () => handleSubmit(false, pageNumber));
 
   const onClickFilter = () => {
     setLoading(true);
@@ -112,14 +105,14 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
     setPageNumber(1);
     setHasMore(true);
     setWithout(false);
-    // handleSubmit(false, 1);
+    handleSubmit(false, 1);
     getStatusMissionCount();
     getWalletBalance();
   }, []);
 
-  useEffect(() => {
-    data && data?.length > 0 && setTechnicianMissionList(data);
-  }, [data]);
+  // useEffect(() => {
+  // technicianMissionList && technicianMissionList?.length > 0 && setTechnicianMissionList(data);
+  // }, [technicianMissionList]);
 
   useEffect(() => {
     document.title = props.title;
@@ -135,7 +128,7 @@ const TechnicianMission: FunctionComponent<IPageProps> = (props) => {
             <section>
               <div className="container mt-md-4">
                 <div>
-                  {isLoading ? (
+                  {loading ? (
                     <TechnicianMissionLoading />
                   ) : (
                     <InfiniteScroll

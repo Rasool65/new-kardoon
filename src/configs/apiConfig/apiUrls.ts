@@ -1,10 +1,10 @@
-// Authentication
+// AUTHENTICATION
 export const APIURL_LOGIN = '/account/login';
 // export const APIURL_GET_COUNTRY_DIVISION = '/CountryDivision/GetCountryDivision';
 export const APIURL_REGISTER = '/Account/RegisterUser';
 export const APIURL_SEND_PASSWORD = '/Account/SendPassword';
 
-//profile
+//PROFILE
 export const APIURL_UPDATE_PROFILE = '/UserManagement/UpdateUserProfile';
 export const APIURL_UPDATE_PROFILE_FORMDATA = '/v1/UserManagement/UpdateUserProfile';
 export const APIURL_GET_INTRODUCTIONS = '/Introduction/GetIntroductionMethodList';
@@ -136,3 +136,4 @@ export const APIURL_POST_ADD_HOME_WARRANTY = '/v1/HomeWarranty/AddHomeWarranty';
 export const APIURL_GET_HOMEWARRANTY_PRODUCT = '/v1/HomeWarranty/GetHomeWarrantyProducts_1';
 export const APIURL_POST_ADD_HOME_WARRANTY_ACTION_LIST = '/Order/AddHomwWarrantyActionList';
 export const APIURL_POST_ADD_CONTROL_HOME_WARRANTY = '/v1/HomeWarranty/AddControl';
+export const APIURL_POST_VALIDATION_CARD_CODE = '/v1/HomeWarranty/ValidatingCardCode';

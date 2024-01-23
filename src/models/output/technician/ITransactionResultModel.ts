@@ -4,4 +4,7 @@ export interface ITransactionResultModel {
   debtorAmount: number;
   creditorAmount: number;
   transactionDateTime: string;
+  consumerFirstName?: string;
+  consumerLastName?: string;
+  requestNumber: string;
 }

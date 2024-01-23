@@ -1,6 +1,7 @@
 export interface IInvoiceActionResultModel {
   requestLinkId?: string;
   generalLinkId?: string;
+  prePaymentAmount?: number;
   invoiceList: IInvoiceActionList[];
 }
 

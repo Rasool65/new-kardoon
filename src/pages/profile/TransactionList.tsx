@@ -12,6 +12,7 @@ import InputIcon from 'react-multi-date-picker/components/input_icon';
 import { useSelector } from 'react-redux';
 import { IOutputResult } from '@src/models/output/IOutputResult';
 import { APIURL_GET_TRANSACTION } from '@src/configs/apiConfig/apiUrls';
+import { Input } from 'reactstrap';
 
 interface TransactionListProps {}
 
@@ -44,6 +45,23 @@ const TransactionList: FunctionComponent<TransactionListProps> = () => {
       new Date().toISOString()
     );
   }, []);
+  const handleSearch = (searchData: string) => {
+    const filteredData = transaction?.filter((item) => {
+      return (
+        item.requestNumber?.match(searchData) ||
+        item.consumerFirstName?.match(searchData) ||
+        item.consumerLastName?.match(searchData)
+      );
+    });
+
+    searchData
+      ? setTransaction(filteredData)
+      : GetTransactionList(
+          new Date(new Date().getFullYear(), new Date().getMonth() - 1, new Date().getMonth()).toISOString(),
+          new Date().toISOString()
+        );
+  };
+
   return (
     <>
       <h4 className="m-3">لیست تراکنش ها</h4>
@@ -90,6 +108,16 @@ const TransactionList: FunctionComponent<TransactionListProps> = () => {
         </div>
       ) : (
         <div className="row">
+          <div>
+            <Input
+              className=""
+              type="text"
+              placeholder="شماره درخواست ، نام یا نام خانوادگی مشتری"
+              onChange={(e) => {
+                handleSearch(e.currentTarget.value);
+              }}
+            />
+          </div>
           {transaction &&
             transaction.length > 0 &&
             transaction.map((item: ITransactionResultModel, index: number) => {
@@ -100,16 +128,19 @@ const TransactionList: FunctionComponent<TransactionListProps> = () => {
                       className="transaction-card"
                       style={{ backgroundColor: `${item.isDebtor ? 'rgb(255 173 181 / 65%)' : 'rgb(125 227 142 / 45%)'}` }}
                     >
-                      <p className="justify-content-center" style={{ color: 'black', display: 'flex', marginBottom: '0px' }}>
+                      <p className="d-flex justify-content-center" style={{ color: 'black', marginBottom: '0px' }}>
                         {item.description}
                       </p>
                       <div className="d-flex justify-content-around m-3 p-2 transaction-list">
                         <div>
+                          <div>شماره درخواست :</div>
                           <div>تاریخ :</div>
                           <div>مبلغ :</div>
                           <div>وضعیت :</div>
+                          <div>مشتری :</div>
                         </div>
                         <div>
+                          <div>{item.requestNumber}</div>
                           <div>
                             {DateHelper.isoDateTopersian(item.transactionDateTime)}-
                             {DateHelper.splitTime(item.transactionDateTime)}
@@ -125,6 +156,7 @@ const TransactionList: FunctionComponent<TransactionListProps> = () => {
                               <div>بستانکار</div>
                             </>
                           )}
+                          <div>{item.consumerFirstName + ' ' + item.consumerLastName}</div>
                         </div>
                       </div>
                     </div>

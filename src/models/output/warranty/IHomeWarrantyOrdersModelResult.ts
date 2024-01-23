@@ -2,6 +2,7 @@ import { IAppearanceReviewValues, ITechnicalValues } from './IHomeWarrantyProduc
 export interface IGetHomeWarrantyOrderInfoResultModel {
   products: IHomeWarrantyOrdersModelResult[];
   calculations: ICalculationsHomeWarrantyOrderPrice;
+  prePaymentAmount: number;
 }
 export interface IHomeWarrantyOrdersModelResult {
   productId: number;
@@ -20,13 +21,16 @@ export interface IHomeWarrantyOrdersModelResult {
   price: number;
   priceAfterReduction_Addition: number;
   tax: number;
+  paymentableAmount: number;
 }
 
 export interface ICalculationsHomeWarrantyOrderPrice {
-  calculatePrice?: number;
-  totalPrice?: number;
-  totalReductionValue?: number;
-  totalTax?: number;
+  calculatePrice: number;
+  totalPrice: number;
+  totalReductionValue: number;
+  totalTax: number;
+  totalPaymentableAmount: number;
+  prePaymentAmount: number;
 }
 
 export interface IGetHomeWarrantyOrderInfo {

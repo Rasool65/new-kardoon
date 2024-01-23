@@ -11,4 +11,6 @@ export interface IHomeWarrantyProduct {
   costSource: number;
   count: number;
   price: number;
+  priceAfterReduction_Addition: number;
+  estimatedValue: string;
 }

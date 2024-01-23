@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import IPageProps from '../../configs/routerConfig/IPageProps';
+import IPageProps from '@src/configs/routerConfig/IPageProps';
 import FooterCard from '@src/layout/FooterCard';
 import Footer from '@src/layout/Footer';
 import Header from '@src/layout/Headers/Header';
@@ -173,19 +173,21 @@ const Main: FunctionComponent<IPageProps> = (props) => {
                       getServicesQuery.data.length > 0 &&
                       getServicesQuery.data.map((item: IServicesResultModel, index: number) => {
                         return (
-                          <div
-                            className="service-item pointer"
-                            onClick={(e) =>
-                              navigate(URL_CATEGORIES, {
-                                state: {
-                                  ServiceTypeId: item.id,
-                                },
-                              })
-                            }
-                          >
-                            <img className="home-vector30" style={{ maxWidth: '50px' }} src={item.icon} />
-                            <p>{item.title}</p>
-                          </div>
+                          getServicesQuery.data[index].id !== 14 && ( // حذف هوم وارانتی
+                            <div
+                              className="service-item pointer"
+                              onClick={(e) =>
+                                navigate(URL_CATEGORIES, {
+                                  state: {
+                                    ServiceTypeId: item.id,
+                                  },
+                                })
+                              }
+                            >
+                              <img className="home-vector30" style={{ maxWidth: '50px' }} src={item.icon} />
+                              <p>{item.title}</p>
+                            </div>
+                          )
                         );
                       })}
                   </div>

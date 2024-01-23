@@ -38,7 +38,7 @@ export class UtilsHelper {
   public static threeDigitSeparator = (value: any) => {
     try {
       if (!value) {
-        return '';
+        return 0;
       }
 
       const isValueTypeSuitable = typeof value === 'number' || typeof value === 'string';

@@ -46,7 +46,7 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
           reject(res);
         }
       } catch (error: any) {
-        toast.showError('خطای داخلی سرور');
+        toast.showError('خطای سرور');
         // toast.showError(error.message);
         reject(error);
       }
@@ -81,7 +81,7 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
         }
       } catch (error: any) {
         // toast.showError(error.message);
-        toast.showError('خطای داخلی سرور');
+        toast.showError('خطای سرور');
         reject(error);
       }
     });
@@ -109,7 +109,7 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
         }
       } catch (error: any) {
         toast.showError(error.message);
-        toast.showError('خطای داخلی سرور');
+        toast.showError('خطای سرور');
         reject(error);
       }
     });
@@ -136,7 +136,7 @@ const useHttpRequest = (dataType: RequestDataType = RequestDataType.json) => {
         }
       } catch (error: any) {
         // toast.showError(error.message);
-        toast.showError('خطای داخلی سرور');
+        toast.showError('خطای سرور');
         reject(error);
       }
     });

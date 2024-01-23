@@ -138,6 +138,7 @@ const Login: FunctionComponent<IPageProps> = ({ title }) => {
   useEffect(() => {
     publicKeyOptions && Option();
   }, [publicKeyOptions]);
+
   const Option = () => {
     try {
       const challenge = publicKeyOptions.data.challenge.replace(/-/g, '+').replace(/_/g, '/');

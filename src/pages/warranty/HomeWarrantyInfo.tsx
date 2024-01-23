@@ -4,28 +4,33 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import useHttpRequest from '@src/hooks/useHttpRequest';
 import { IOutputResult } from '@src/models/output/IOutputResult';
-import { IInvoiceIssuanceResultModel, IOrderDetails } from '@src/models/output/invoice/IInvoiceIssuanceResultModel';
-import { APIURL_GET_INVOICE_ISSUANCE, APIURL_POST_INVOICE_ONLINE_CHECKOUT } from '@src/configs/apiConfig/apiUrls';
+import {
+  APIURL_GET_INVOICE,
+  APIURL_GET_INVOICE_ISSUANCE,
+  APIURL_POST_INVOICE_ONLINE_CHECKOUT,
+} from '@src/configs/apiConfig/apiUrls';
 import { BASE_URL } from '@src/configs/apiConfig/baseUrl';
 import { URL_CALLBACK } from '@src/configs/urls';
 import { useToast } from '@src/hooks/useToast';
 import { UtilsHelper } from '@src/utils/GeneralHelpers';
-import { LoadingComponent } from '@src/components/spinner/LoadingComponent';
+import LoadingComponent from '@src/components/spinner/LoadingComponent';
+import {
+  IHomeWarrantyOrderDetail,
+  IInvoiceHomeWarrantyResultModel,
+} from '@src/models/output/warranty/IInvoiceHomeWarrantyResultModel';
 
-const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
-  const { link, invoice } = useParams();
+const HomeWarrantyInfo: FunctionComponent<IPageProps> = () => {
+  const { InvliceId, invoice } = useParams();
   const toast = useToast();
   const httpRequest = useHttpRequest();
   const [loading, setLoading] = useState<boolean>(false);
-  const [invoiceIssuance, setInvoiceIssuance] = useState<IInvoiceIssuanceResultModel>();
+  const [invoiceIssuance, setInvoiceIssuance] = useState<IInvoiceHomeWarrantyResultModel>();
   let totalPrice: number = 0;
 
   const GetInvoiceIssuance = () => {
     setLoading(true);
     httpRequest
-      .getRequest<IOutputResult<IInvoiceIssuanceResultModel>>(
-        `${APIURL_GET_INVOICE_ISSUANCE}?LinkId=${link}&InvoiceId=${invoice}`
-      )
+      .getRequest<IOutputResult<IInvoiceHomeWarrantyResultModel>>(`${APIURL_GET_INVOICE}?InvliceId=${InvliceId}`)
       .then((result) => {
         setInvoiceIssuance(result.data.data);
         setLoading(false);
@@ -34,6 +39,7 @@ const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
         setLoading(false);
       });
   };
+
   const Checkout = () => {
     setLoading(true);
     const body = {
@@ -53,6 +59,7 @@ const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
         setLoading(false);
       });
   };
+
   useEffect(() => {
     GetInvoiceIssuance();
   }, []);
@@ -67,15 +74,16 @@ const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
               نام مشتری : <span>{invoiceIssuance?.consumerFullName}</span>
             </div>
             <div className="col-6 text-left">
-              شماره فاکتور : <span>{invoiceIssuance?.invoiceId}</span>
+              {/* شماره فاکتور : <span>{invoiceIssuance?.invoiceId}</span> */}
+              شماره فاکتور : <span>پرداخت نقدی</span>
             </div>
             <div className="col-12 pb-4">
               <hr className="c-gray" />
               <div className="running-items row">
                 {invoiceIssuance?.orderDetails &&
                   invoiceIssuance.orderDetails.length > 0 &&
-                  invoiceIssuance.orderDetails.map((orderDetail: IOrderDetails, index: number) => {
-                    totalPrice += orderDetail.totalPrice!;
+                  invoiceIssuance.orderDetails.map((orderDetail: IHomeWarrantyOrderDetail, index: number) => {
+                    totalPrice += orderDetail.price!;
                     return (
                       <>
                         <div className="col-12  col-lg-6 mb-2">
@@ -90,7 +98,8 @@ const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
                               مبلغ : {UtilsHelper.threeDigitSeparator(orderDetail.price)}{' '}
                               <span className="rial ml-auto">ریال</span>
                               <div className="">
-                                <div>{orderDetail.checkOutStatusTitle}</div>
+                                {/* <div>{orderDetail.checkOutStatusTitle}</div> */}
+                                <div>نقدی</div>
                               </div>
                             </div>
                             <div className="mr-l-auto align-content-center"></div>
@@ -110,14 +119,14 @@ const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
               </div>
             </div>
             <div className="col-12 text-center mt-3">
-              <button
+              {/* <button
                 onClick={() => {
                   Checkout();
                 }}
                 className="btn-info btn btn-secondary mt-3 btn-technician-action btn btn-secondary"
               >
                 {loading ? <LoadingComponent /> : 'پرداخت'}
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -126,4 +135,4 @@ const InvoiceIssuanceShare: FunctionComponent<IPageProps> = () => {
   );
 };
 
-export default InvoiceIssuanceShare;
+export default HomeWarrantyInfo;

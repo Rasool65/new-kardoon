@@ -298,7 +298,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ displayMenu, handleDisplayMe
               </a>
             </div>
             <div className="col-2 text-center">
-              <a>
+              <a onClick={() => navigate(URL_MY_ORDERS)}>
                 <img src={require(`@src/scss/images/order.svg`)} alt="" />
               </a>
             </div>

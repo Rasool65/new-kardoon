@@ -2276,6 +2276,11 @@ body::-webkit-scrollbar-thumb {
     display: block;
     margin: 2px;
     border: 2px solid transparent;
+    &.home-warranty {
+      display: inline-block;
+      margin-bottom: -17px;
+      margin-right: 15px;
+    }
     &:hover {
       background-color: var(--master-dark-color);
     }
@@ -5304,13 +5309,29 @@ button {
 
 .insurance-tabs {
   flex-wrap: wrap;
+  .account-item {
+    width: calc(50% - 10px);
+    border-radius: 10px;
+    margin: 5px;
+    background-color: #e5e5e5;
+    min-width: 130px;
+    @media (max-width: 340px) {
+      width: 100%;
+    }
+    &.active {
+      background-color: var(--master-color);
+    }
+  }
+  input[type='file'] {
+    margin: 0 !important;
+  }
 }
 .insurance-forms {
   margin-top: 15px;
 }
 .insurance-form {
   background-color: #f4f4f48e;
-  padding: 25px;
+  padding: 10px 15px;
   border-radius: 15px;
   margin-bottom: 15px;
   border: 1px solid #e7e7e7;
@@ -5318,6 +5339,11 @@ button {
   &.active {
     display: block;
   }
+  .form-group.field.field-object {
+  }
+  // #root{
+  //   display: flex;
+  // }
 }
 .insurance-products-details {
   .warranty-selector-header {
@@ -5366,8 +5392,8 @@ button {
     padding: 13px;
     height: 45px !important;
   }
-
   .checkbox {
+    margin-top: 10px;
     margin-bottom: 10px;
     label {
       display: flex;
@@ -5383,7 +5409,7 @@ button {
     }
   }
   .field-number {
-    margin-top: 25px;
+    margin-top: 15px;
     padding-top: 5px;
     position: relative;
     label {
@@ -5411,22 +5437,86 @@ button {
       text-align: center;
     }
   }
+  input[type='range'] {
+    margin: 0 !important;
+  }
   .field-string {
+    cursor: pointer;
     position: relative;
+    width: 60px;
+    height: 80px;
+    display: inline-block;
+    margin: 5px;
+    overflow: hidden;
+
+    &:has(> select) {
+      width: 100% !important;
+    }
+    &:has(> input[type='text']) {
+      width: 100% !important;
+    }
+
+    p {
+      width: 100px;
+      height: 100px;
+      margin: 0;
+    }
+    .file-info {
+      position: absolute;
+      top: 0;
+      width: 100px;
+      left: 0;
+      margin-top: 0 !important;
+      height: 70px;
+      background-color: #4caf50;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      li {
+        color: #4caf50;
+        width: 100px;
+        display: block;
+        overflow: hidden;
+      }
+    }
     input[type='file'] {
       /* Style the color of the message that says 'No file chosen' */
       color: #878787;
       border: none !important;
-      height: auto !important;
-      width: 100%;
+      // heighhast: auto !important;
+      width: 60px;
+      height: 100px !important;
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0 !important;
+      padding: 29px 0 !important;
+      min-width: 60px;
+      min-height: 60px;
+      opacity: 0;
     }
 
     label:has(+ div) {
       position: absolute;
       color: white;
-      top: 34px;
-      right: 50%;
-      transform: translateX(50%);
+      top: 0;
+      right: 0;
+      z-index: 3;
+      // transform: translateX(50%);
+      width: 100% !important;
+
+      background-color: #f9f9f900 !important;
+      color: black;
+      width: 60px;
+      height: 70px;
+      border: 1px solid #c7c7c7;
+      border-radius: 5px;
+      padding: 10px 5px;
+      text-align: center;
+      font-size: var(--fs-xs) !important;
     }
 
     input[type='file']::-webkit-file-upload-button {
@@ -5463,4 +5553,48 @@ button {
       background-color: #009688 !important;
     }
   }
+}
+.initial-request-table {
+  padding-top: 15px;
+  table {
+    margin-top: 15px;
+    width: 100%;
+    img {
+      width: 32px;
+      height: 32px;
+    }
+    thead {
+      th {
+        background-color: var(--master-color);
+        color: white;
+        padding: 7px;
+        text-align: center;
+      }
+    }
+    td {
+      text-align: center !important;
+      img {
+        width: 20px;
+        height: 32px;
+      }
+    }
+    tr:nth-child(odd) {
+      background: rgb(244 244 244) !important;
+      td {
+        background-color: white !important;
+      }
+    }
+    tr:nth-child(even) {
+      background: #f2f2f2;
+      td {
+        background-color: #f2f2f2 !important;
+      }
+    }
+  }
+}
+.mt--1 {
+  margin-top: -1rem;
+}
+.mb--1 {
+  margin-bottom: -1rem;
 }
